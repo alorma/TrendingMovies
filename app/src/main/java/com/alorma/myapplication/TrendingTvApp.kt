@@ -3,6 +3,7 @@ package com.alorma.myapplication
 import android.app.Application
 import com.alorma.myapplication.di.ApplicationComponent
 import com.alorma.myapplication.di.module.ApplicationModule
+import com.alorma.myapplication.di.DaggerApplicationComponent
 
 class TrendingTvApp  : Application() {
 

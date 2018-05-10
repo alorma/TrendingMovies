@@ -12,9 +12,10 @@ open class ShowsAction @Inject constructor() : Action() {
 }
 
 open class ShowsState @Inject constructor() : State() {
-	class Success : ShowsState()
+	data class Loading(val visible: Boolean) : ShowsState()
+	data class Success(val items: List<TvShowVM>) : ShowsState()
 
-	fun success(): ShowsState = Success()
+	fun success(items: List<TvShowVM>): ShowsState = Success(items)
 }
 
 open class ShowsRoute @Inject constructor() : Route() {

@@ -1,47 +1,67 @@
 package com.alorma.myapplication.ui.shows
 
+import com.alorma.myapplication.configureRxThreading
+import com.alorma.myapplication.data.net.ShowsApi
+import com.alorma.myapplication.data.net.ShowsDataSource
+import com.alorma.myapplication.domain.repository.ShowsRepository
+import com.alorma.myapplication.domain.usecase.ObtainShowsUseCase
 import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.shows.ShowsPresenter
-import com.alorma.myapplication.ui.shows.ShowsAction
-import com.alorma.myapplication.ui.shows.ShowsState
-import com.alorma.myapplication.ui.shows.ShowsRoute
-import org.junit.Assert.*
+import com.nhaarman.mockito_kotlin.capture
+import com.nhaarman.mockito_kotlin.given
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import io.reactivex.Single
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.MockitoAnnotations
-import com.nhaarman.mockito_kotlin.*
+import com.alorma.myapplication.data.net.ShowsMapper as NetworkMapper
 
 class ShowsPresenterTest {
 
-	private lateinit var presenter: ShowsPresenter
-	private lateinit var actions: ShowsAction
-	private lateinit var states: ShowsState
-	private lateinit var view: BaseView<ShowsRoute, ShowsState>
+    private lateinit var showsApi: ShowsApi
+
+    private lateinit var mapper: ShowsMapper
+    private lateinit var presenter: ShowsPresenter
+    private lateinit var actions: ShowsAction
+    private lateinit var states: ShowsState
+    private lateinit var view: BaseView<ShowsRoute, ShowsState>
 
     @Captor
-	private lateinit var captor: ArgumentCaptor<ShowsState>
+    private lateinit var captor: ArgumentCaptor<ShowsState>
 
-	@Before
-	fun setup() {
-		MockitoAnnotations.initMocks(this)
-		view = mock()
+    init {
+        configureRxThreading()
+    }
 
-		actions = ShowsAction()
-		states = ShowsState()
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+        showsApi = mock()
+        view = mock()
 
-		presenter = ShowsPresenter(states)
-		presenter init view
-	}
+        mapper = ShowsMapper()
+        actions = ShowsAction()
+        states = ShowsState()
 
-	@Test
-	fun onLoad_renderSuccess() {
-		presenter reduce actions.load()
+        val showsDs = ShowsDataSource(showsApi, NetworkMapper())
+        val showsRepository = ShowsRepository(showsDs)
+        val useCase = ObtainShowsUseCase(showsRepository)
 
-		verify(view).render(capture(captor))
+        presenter = ShowsPresenter(states, mapper, useCase)
+        presenter init view
+    }
 
-		assertTrue(captor.value is ShowsState.Success)
-	}
+    @Test
+    fun onLoad_renderSuccess() {
+        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+        presenter reduce actions.load()
+
+        verify(view).render(capture(captor))
+
+        assertTrue(captor.value is ShowsState.Success)
+    }
 
 }

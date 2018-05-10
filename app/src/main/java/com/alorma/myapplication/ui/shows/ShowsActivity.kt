@@ -1,4 +1,6 @@
 package com.alorma.myapplication.ui.shows
 
-class ShowsActivity {
+import android.support.v7.app.AppCompatActivity
+
+class ShowsActivity : AppCompatActivity() {
 }

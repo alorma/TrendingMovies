@@ -27,15 +27,18 @@ class ShowsPresenterTest {
     private lateinit var presenter: ShowsPresenter
     private lateinit var actions: ShowsAction
     private lateinit var states: ShowsState
+    private lateinit var routes: ShowsRoute
     private lateinit var view: BaseView<ShowsRoute, ShowsState>
 
     @Captor
-    private lateinit var captor: ArgumentCaptor<ShowsState>
+    private lateinit var stateCaptor: ArgumentCaptor<ShowsState>
+
+    @Captor
+    private lateinit var routeCaptor: ArgumentCaptor<ShowsRoute>
 
     init {
         configureRxThreading()
     }
-
 
     @Before
     fun setup() {
@@ -49,12 +52,13 @@ class ShowsPresenterTest {
         mapper = ShowsMapper(resources)
         actions = ShowsAction()
         states = ShowsState()
+        routes = ShowsRoute()
 
         val showsDs = ShowsDataSource(showsApi, NetworkMapper())
         val showsRepository = ShowsRepository(showsDs)
         val useCase = ObtainShowsUseCase(showsRepository)
 
-        presenter = ShowsPresenter(states, mapper, useCase)
+        presenter = ShowsPresenter(states, routes, mapper, useCase)
         presenter init view
     }
 
@@ -64,9 +68,9 @@ class ShowsPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(view, times(3)).render(capture(captor))
+        verify(view, times(3)).render(capture(stateCaptor))
 
-        with(captor.allValues) {
+        with(stateCaptor.allValues) {
             assertTrue(get(0) is ShowsState.Loading)
             assertTrue((get(0) as ShowsState.Loading).visible)
             assertTrue(get(1) is ShowsState.Loading)
@@ -80,9 +84,9 @@ class ShowsPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(view, times(3)).render(capture(captor))
+        verify(view, times(3)).render(capture(stateCaptor))
 
-        assertTrue(captor.allValues[2] is ShowsState.Success)
+        assertTrue(stateCaptor.allValues[2] is ShowsState.Success)
     }
 
     @Test
@@ -91,9 +95,9 @@ class ShowsPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(view, times(3)).render(capture(captor))
+        verify(view, times(3)).render(capture(stateCaptor))
 
-        val state = captor.allValues[2]
+        val state = stateCaptor.allValues[2]
         assertTrue(state is ShowsState.Success)
         assertEquals(3, (state as ShowsState.Success).items.size)
     }
@@ -104,9 +108,19 @@ class ShowsPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(view, times(3)).render(capture(captor))
+        verify(view, times(3)).render(capture(stateCaptor))
 
-        assertTrue(captor.allValues[2] is ShowsState.Error)
+        assertTrue(stateCaptor.allValues[2] is ShowsState.Error)
+    }
+
+    @Test
+    fun onOpenDetail_navigateToDetailRoute() {
+        presenter reduce actions.detail(mock<TvShowVM>().apply { given(id).willReturn(12) })
+
+        verify(view).navigate(capture(routeCaptor))
+
+        assertTrue(routeCaptor.value is ShowsRoute.DetailRoute)
+        assertEquals(12, (routeCaptor.value as ShowsRoute.DetailRoute).id)
     }
 
 }

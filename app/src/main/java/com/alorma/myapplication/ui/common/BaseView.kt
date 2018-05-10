@@ -21,11 +21,11 @@ abstract class BasePresenter<in A : Action, S : State, R : Route> {
         this.view = view
     }
 
-    abstract infix fun reduce(a: A)
+    abstract infix fun reduce(action: A)
 
-    fun render(s: S) = view render s
+    fun render(state: S) = view render state
 
-    fun navigate(r: R) = view navigate r
+    fun navigate(route: R) = view navigate route
 
     fun destroy() {
         disposable.clear()

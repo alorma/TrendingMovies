@@ -7,13 +7,15 @@ import com.alorma.rac1.commons.plusAssign
 import javax.inject.Inject
 
 class ShowsPresenter @Inject constructor(private val states: ShowsState,
+                                         private val routes: ShowsRoute,
                                          private val mapper: ShowsMapper,
                                          private val obtainShowsUseCase: ObtainShowsUseCase) :
         BasePresenter<ShowsAction, ShowsState, ShowsRoute>() {
 
-    override fun reduce(a: ShowsAction) {
-        when (a) {
+    override fun reduce(action: ShowsAction) {
+        when (action) {
             ShowsAction.Load -> onLoad()
+            is ShowsAction.OpenDetail -> onOpenDetail(action)
         }
     }
 
@@ -29,4 +31,6 @@ class ShowsPresenter @Inject constructor(private val states: ShowsState,
                     render(states error mapper.error(it))
                 })
     }
+
+    private fun onOpenDetail(action: ShowsAction.OpenDetail) = navigate(routes.detail(action.id))
 }

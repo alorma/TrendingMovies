@@ -7,8 +7,10 @@ import javax.inject.Inject
 
 open class ShowsAction @Inject constructor() : Action() {
     object Load : ShowsAction()
+    data class OpenDetail(val id: Int): ShowsAction()
 
     fun load(): ShowsAction = Load
+    fun detail(item: TvShowVM): ShowsAction = OpenDetail(item.id)
 }
 
 open class ShowsState @Inject constructor() : State() {
@@ -22,5 +24,7 @@ open class ShowsState @Inject constructor() : State() {
 }
 
 open class ShowsRoute @Inject constructor() : Route() {
+    data class DetailRoute(val id: Int): ShowsRoute()
 
+    fun detail(id: Int): ShowsRoute = DetailRoute(id)
 }

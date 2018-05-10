@@ -6,7 +6,10 @@ import android.view.View
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
+import com.alorma.myapplication.ui.common.DslAdapter
+import com.alorma.myapplication.ui.common.adapterDsl
 import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.row_tv_show_list.view.*
 import javax.inject.Inject
 
 class ShowsActivity : AppCompatActivity(), BaseView<ShowsRoute, ShowsState> {
@@ -17,18 +20,35 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsRoute, ShowsState> {
     @Inject
     lateinit var actions: ShowsAction
 
+    private lateinit var adapter: DslAdapter<TvShowVM>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
         component inject this
 
+        initView()
+
         presenter init this
         presenter reduce actions.load()
     }
 
+    private fun initView() {
+        adapter = adapterDsl(recycler) {
+            layout = R.layout.row_tv_show_list
+            diff { it.id }
+            onBind { view, tvShow ->
+                view.title.text = tvShow.title
+            }
+            onClick {
+                presenter reduce actions.detail(it)
+            }
+        }
+    }
+
     override fun render(state: ShowsState) {
-        when(state) {
+        when (state) {
             is ShowsState.Loading -> onLoading(state)
             is ShowsState.Success -> onSuccess(state)
             is ShowsState.Error -> onError(state)
@@ -41,6 +61,7 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsRoute, ShowsState> {
 
     private fun onSuccess(state: ShowsState.Success) {
         centerText.visibility = View.GONE
+        adapter.update(state.items)
     }
 
     private fun onError(state: ShowsState.Error) {

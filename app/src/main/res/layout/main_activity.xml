@@ -20,4 +20,9 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="TextView"
         tools:visibility="visible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycler"/>
 </android.support.constraint.ConstraintLayout>

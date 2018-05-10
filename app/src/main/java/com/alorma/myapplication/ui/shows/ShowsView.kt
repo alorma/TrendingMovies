@@ -7,9 +7,11 @@ import javax.inject.Inject
 
 open class ShowsAction @Inject constructor() : Action() {
     object Load : ShowsAction()
+    object LoadPage : ShowsAction()
     data class OpenDetail(val id: Int): ShowsAction()
 
     fun load(): ShowsAction = Load
+    fun loadPage(): ShowsAction = LoadPage
     fun detail(item: TvShowVM): ShowsAction = OpenDetail(item.id)
 }
 

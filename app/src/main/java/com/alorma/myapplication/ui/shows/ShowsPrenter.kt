@@ -15,12 +15,26 @@ class ShowsPresenter @Inject constructor(private val states: ShowsState,
     override fun reduce(action: ShowsAction) {
         when (action) {
             ShowsAction.Load -> onLoad()
+            ShowsAction.LoadPage -> onLoadPage()
             is ShowsAction.OpenDetail -> onOpenDetail(action)
         }
     }
 
     private fun onLoad() {
         disposable += obtainShowsUseCase.execute()
+                .observeOnUI()
+                .doOnSubscribe { render(states loading true) }
+                .doOnSuccess { render(states loading false) }
+                .doOnError { render(states loading false) }
+                .subscribe({
+                    render(states success mapper.map(it))
+                }, {
+                    render(states error mapper.error(it))
+                })
+    }
+
+    private fun onLoadPage() {
+        disposable += obtainShowsUseCase.executeNextPage()
                 .observeOnUI()
                 .doOnSubscribe { render(states loading true) }
                 .doOnSuccess { render(states loading false) }

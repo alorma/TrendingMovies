@@ -6,6 +6,12 @@ import com.alorma.myapplication.domain.model.TvShow
 import io.reactivex.Single
 
 class ShowsRepository(private val showsDataSource: ShowsDataSource) {
-    fun listAll(): Single<List<TvShow>> = showsDataSource.listAll().subscribeOnIO()
+    private var page: Int = 0
+
+    fun listAll(): Single<List<TvShow>> = showsDataSource.listAll().doOnSuccess {
+        page = page++
+    }.subscribeOnIO()
+
+    fun listNextPage(): Single<List<TvShow>> = showsDataSource.listAll(page).subscribeOnIO()
 
 }

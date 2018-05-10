@@ -9,4 +9,6 @@ class ObtainShowsUseCase @Inject constructor(
         private val showsRepository: ShowsRepository) {
 
     fun execute(): Single<List<TvShow>> = showsRepository.listAll()
+
+    fun executeNextPage(): Single<List<TvShow>> = showsRepository.listNextPage()
 }

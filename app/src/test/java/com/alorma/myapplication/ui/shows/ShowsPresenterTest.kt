@@ -79,10 +79,38 @@ class ShowsPresenterTest {
     }
 
     @Test
+    fun onLoadPage_renderLoadings() {
+        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+
+        presenter reduce actions.loadPage()
+
+        verify(view, times(3)).render(capture(stateCaptor))
+
+        with(stateCaptor.allValues) {
+            assertTrue(get(0) is ShowsState.Loading)
+            assertTrue((get(0) as ShowsState.Loading).visible)
+            assertTrue(get(1) is ShowsState.Loading)
+            assertFalse((get(1) as ShowsState.Loading).visible)
+        }
+    }
+
+    @Test
     fun onLoad_renderSuccess() {
         given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
 
         presenter reduce actions.load()
+
+        verify(view, times(3)).render(capture(stateCaptor))
+
+        assertTrue(stateCaptor.allValues[2] is ShowsState.Success)
+    }
+
+
+    @Test
+    fun onLoadPage_renderSuccess() {
+        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+
+        presenter reduce actions.loadPage()
 
         verify(view, times(3)).render(capture(stateCaptor))
 
@@ -100,6 +128,25 @@ class ShowsPresenterTest {
         val state = stateCaptor.allValues[2]
         assertTrue(state is ShowsState.Success)
         assertEquals(3, (state as ShowsState.Success).items.size)
+    }
+
+
+    @Test
+    fun onLoadPageSomeItems_renderSameNumberSuccess() {
+        given(showsApi.listAll()).willReturn(Single.just(listOf(mock(), mock(), mock())))
+        given(showsApi.listPage(anyInt())).willReturn(Single.just(listOf(mock())))
+
+        presenter reduce actions.load()
+        presenter reduce actions.loadPage()
+
+        verify(view, times(6)).render(capture(stateCaptor))
+
+        val firstState = stateCaptor.allValues[2]
+        assertTrue(firstState is ShowsState.Success)
+        assertEquals(3, (firstState as ShowsState.Success).items.size)
+        val secondState = stateCaptor.allValues[5]
+        assertTrue(secondState is ShowsState.Success)
+        assertEquals(1, (secondState as ShowsState.Success).items.size)
     }
 
     @Test

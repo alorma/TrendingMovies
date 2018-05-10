@@ -8,7 +8,7 @@ import javax.inject.Inject
 class ShowsMapper @Inject constructor(private val resources: ResourcesProvider) {
 
     fun map(items: List<TvShow>): List<TvShowVM> = items.map {
-        TvShowVM((it.id))
+        TvShowVM(it.id, it.title)
     }
 
     fun error(it: Throwable): String = resources.getString(R.string.generic_error)

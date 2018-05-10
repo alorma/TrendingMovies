@@ -2,6 +2,7 @@ package com.alorma.myapplication.ui.shows
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
@@ -35,15 +36,19 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsRoute, ShowsState> {
     }
 
     private fun initView() {
+        recycler.layoutManager = LinearLayoutManager(this@ShowsActivity)
         adapter = adapterDsl(recycler) {
-            layout = R.layout.row_tv_show_list
+            item {
+                layout = R.layout.row_tv_show_list
+                bindView { view, tvShow ->
+                    view.title.text = tvShow.title
+                }
+                onClick {
+                    presenter reduce actions.detail(it)
+                }
+            }
+
             diff { it.id }
-            onBind { view, tvShow ->
-                view.title.text = tvShow.title
-            }
-            onClick {
-                presenter reduce actions.detail(it)
-            }
         }
     }
 

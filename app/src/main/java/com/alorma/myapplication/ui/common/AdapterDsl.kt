@@ -10,17 +10,14 @@ import android.view.ViewGroup
 annotation class AdapterDsl
 
 @AdapterDsl
-class AdapterDslBuilder<M> {
+class HolderBuilder<M> {
 
     @LayoutRes
     var layout: Int = 0
-    private lateinit var onBind: (View, M) -> Unit
-    private lateinit var onClick: (M) -> Unit
-    private lateinit var comparator: Comparator<M>
+    lateinit var onBind: (View, M) -> Unit
+    lateinit var onClick: (M) -> Unit
 
-    fun build(): DslAdapter<M> = DslAdapter(layout, onBind, onClick, comparator)
-
-    fun onBind(function: (View, M) -> Unit) {
+    fun bindView(function: (View, M) -> Unit) {
         this.onBind = function
     }
 
@@ -28,24 +25,38 @@ class AdapterDslBuilder<M> {
         this.onClick = function
     }
 
+    fun build(parent: ViewGroup): DslAdapter.ViewHolder<M> {
+        val context = parent.context
+        val inflater = LayoutInflater.from(context)
+        return DslAdapter.ViewHolder(inflater.inflate(layout, parent, false), this)
+    }
+}
+
+@AdapterDsl
+class AdapterDslBuilder<M> {
+
+    private lateinit var holderBuilder: HolderBuilder<M>
+    private lateinit var comparator: Comparator<M>
+
+    fun build(): DslAdapter<M> = DslAdapter(holderBuilder, comparator)
+
+    fun item(setup: HolderBuilder<M>.() -> Unit){
+        this.holderBuilder = HolderBuilder<M>().apply(setup)
+    }
+
     fun diff(comparator: (o1: M) -> Int) {
         this.comparator = compareBy { comparator(it) }
     }
 }
 
-class DslAdapter<M>(@LayoutRes val layout: Int,
-                    private val onBind: (View, M) -> Unit,
-                    private val onClick: (M) -> Unit,
+class DslAdapter<M>(@LayoutRes private val holderBuilder: HolderBuilder<M>,
                     private val comparator: Comparator<M>)
     : RecyclerView.Adapter<DslAdapter.ViewHolder<M>>() {
 
     private val items: MutableList<M> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<M> {
-        val context = parent.context
-        val inflater = LayoutInflater.from(context)
-        return ViewHolder(inflater.inflate(layout, parent, false), onBind, onClick)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<M> =
+            holderBuilder.build(parent)
 
     override fun getItemCount(): Int = items.size
 
@@ -62,14 +73,15 @@ class DslAdapter<M>(@LayoutRes val layout: Int,
     }
 
     class ViewHolder<in M>(itemView: View,
-                           private val onBind: (View, M) -> Unit,
-                           private val onClick: (M) -> Unit)
+                           private val holderBuilder: HolderBuilder<M>)
         : RecyclerView.ViewHolder(itemView) {
 
         fun bind(vm: M) {
-            onBind(itemView, vm)
-            itemView.setOnClickListener {
-                onClick(vm)
+            with(holderBuilder) {
+                onBind(itemView, vm)
+                itemView.setOnClickListener {
+                    onClick(vm)
+                }
             }
         }
     }

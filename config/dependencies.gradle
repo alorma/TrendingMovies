@@ -9,7 +9,7 @@ ext {
 
     kotlin = "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    testRunner = "com.alorma.myapplication..config.DexOpenerAndroidJUnitRunner"
+    testRunner = "com.alorma.myapplication.config.DexOpenerAndroidJUnitRunner"
 
     def supportVersion = "27.1.0"
     def supportConstraintVersion = "1.0.2"

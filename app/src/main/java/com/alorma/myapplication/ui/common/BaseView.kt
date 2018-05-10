@@ -7,8 +7,8 @@ open class Route
 open class State
 
 interface BaseView<in R : Route, in S : State> {
-    infix fun render(s: S)
-    infix fun navigate(r: R)
+    infix fun render(state: S)
+    infix fun navigate(route: R)
 }
 
 abstract class BasePresenter<in A : Action, S : State, R : Route> {

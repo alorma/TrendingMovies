@@ -18,9 +18,7 @@ class ProjectTestRule<T : Activity>(activityClass: Class<T>, private val target:
     private val clearPreferencesRule = ClearPreferencesRule()
     private val clearDatabaseRule = ClearDatabaseRule()
     private val clearFilesRule = ClearFilesRule()
-    private val flakyTestRule = FlakyTestRule().apply {
-        allowFlakyAttemptsByDefault(3)
-    }
+    private val flakyTestRule = FlakyTestRule()
     private val baristaRule = BaristaRule.create(activityClass)
 
     override fun apply(base: Statement?, description: Description?): Statement {

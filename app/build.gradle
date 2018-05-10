@@ -13,6 +13,7 @@ android {
         targetSdkVersion targetSdk
         versionCode appCode
         versionName appName
+        testInstrumentationRunner testRunner
     }
 
     buildTypes {
@@ -27,7 +28,6 @@ dependencies {
     implementation kotlin
     implementation support.appcompat
     implementation support.design
-    implementation support.media
     implementation support.cardview
     implementation support.constraint
 
@@ -54,4 +54,20 @@ dependencies {
 
     testImplementation testing.mockito.core
     testImplementation testing.mockito.kotlin
+
+    androidTestImplementation testing.mockito.core
+    androidTestImplementation testing.mockito.kotlin
+    androidTestImplementation testing.mockito.android
+
+    androidTestImplementation testing.espresso.core
+    androidTestImplementation testing.espresso.runner
+    androidTestImplementation testing.espresso.rules
+    androidTestImplementation testing.espresso.intents
+
+    androidTestImplementation testing.espresso.barista
+
+    androidTestImplementation testing.dagger.mock
+    androidTestImplementation testing.dagger.kotlin
+
+    androidTestImplementation testing.dexOpener
 }

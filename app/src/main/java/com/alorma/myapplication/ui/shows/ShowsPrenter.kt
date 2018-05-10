@@ -20,10 +20,13 @@ class ShowsPresenter @Inject constructor(private val states: ShowsState,
     private fun onLoad() {
         disposable += obtainShowsUseCase.execute()
                 .observeOnUI()
+                .doOnSubscribe { render(states loading true) }
+                .doOnSuccess { render(states loading false) }
+                .doOnError { render(states loading false) }
                 .subscribe({
-                    render(states.success(mapper.map(it)))
+                    render(states success mapper.map(it))
                 }, {
-
+                    render(states error mapper.error(it))
                 })
     }
 }

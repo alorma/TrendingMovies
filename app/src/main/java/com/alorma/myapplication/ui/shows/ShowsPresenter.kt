@@ -6,17 +6,16 @@ import com.alorma.myapplication.ui.common.BasePresenter
 import com.alorma.rac1.commons.plusAssign
 import javax.inject.Inject
 
-class ShowsPresenter @Inject constructor(private val states: ShowsState,
-                                         private val routes: ShowsRoute,
-                                         private val mapper: ShowsMapper,
+class ShowsPresenter @Inject constructor(private val states: ShowsStates,
+                                         private val routes: ShowsRoutes,
                                          private val obtainShowsUseCase: ObtainShowsUseCase) :
-        BasePresenter<ShowsAction, ShowsState, ShowsRoute>() {
+        BasePresenter<ShowsActions.ShowsAction, ShowsStates.ShowsState, ShowsRoutes.ShowsRoute>() {
 
-    override fun reduce(action: ShowsAction) {
+    override fun reduce(action: ShowsActions.ShowsAction) {
         when (action) {
-            ShowsAction.Load -> onLoad()
-            ShowsAction.LoadPage -> onLoadPage()
-            is ShowsAction.OpenDetail -> onOpenDetail(action)
+            ShowsActions.ShowsAction.Load -> onLoad()
+            ShowsActions.ShowsAction.LoadPage -> onLoadPage()
+            is ShowsActions.ShowsAction.OpenDetail -> onOpenDetail(action)
         }
     }
 
@@ -27,9 +26,9 @@ class ShowsPresenter @Inject constructor(private val states: ShowsState,
                 .doOnSuccess { render(states loading false) }
                 .doOnError { render(states loading false) }
                 .subscribe({
-                    render(states success mapper.map(it))
+                    render(states success it)
                 }, {
-                    render(states error mapper.error(it))
+                    render(states error it)
                 })
     }
 
@@ -40,11 +39,12 @@ class ShowsPresenter @Inject constructor(private val states: ShowsState,
                 .doOnSuccess { render(states loading false) }
                 .doOnError { render(states loading false) }
                 .subscribe({
-                    render(states success mapper.map(it))
+                    render(states success it)
                 }, {
-                    render(states error mapper.error(it))
+                    render(states error it)
                 })
     }
 
-    private fun onOpenDetail(action: ShowsAction.OpenDetail) = navigate(routes.detail(action.id))
+    private fun onOpenDetail(action: ShowsActions.ShowsAction.OpenDetail) =
+            navigate(routes detail action.id)
 }

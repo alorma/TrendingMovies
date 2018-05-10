@@ -13,13 +13,13 @@ import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_show_list.view.*
 import javax.inject.Inject
 
-class ShowsActivity : AppCompatActivity(), BaseView<ShowsRoute, ShowsState> {
+class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, ShowsRoutes.ShowsRoute> {
 
     @Inject
     lateinit var presenter: ShowsPresenter
 
     @Inject
-    lateinit var actions: ShowsAction
+    lateinit var actions: ShowsActions
 
     private lateinit var adapter: DslAdapter<TvShowVM>
 
@@ -52,31 +52,31 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsRoute, ShowsState> {
         }
     }
 
-    override fun render(state: ShowsState) {
+    override fun render(state: ShowsStates.ShowsState) {
         when (state) {
-            is ShowsState.Loading -> onLoading(state)
-            is ShowsState.Success -> onSuccess(state)
-            is ShowsState.Error -> onError(state)
+            is ShowsStates.ShowsState.Loading -> onLoading(state)
+            is ShowsStates.ShowsState.Success -> onSuccess(state)
+            is ShowsStates.ShowsState.Error -> onError(state)
         }
     }
 
-    private fun onLoading(state: ShowsState.Loading) {
+    private fun onLoading(state: ShowsStates.ShowsState.Loading) {
         centerText.visibility = View.GONE
     }
 
-    private fun onSuccess(state: ShowsState.Success) {
+    private fun onSuccess(state: ShowsStates.ShowsState.Success) {
         centerText.visibility = View.GONE
         adapter.update(state.items)
     }
 
-    private fun onError(state: ShowsState.Error) {
+    private fun onError(state: ShowsStates.ShowsState.Error) {
         with(centerText) {
             visibility = View.VISIBLE
             text = state.text
         }
     }
 
-    override fun navigate(route: ShowsRoute) {
+    override fun navigate(route: ShowsRoutes.ShowsRoute) {
 
     }
 }

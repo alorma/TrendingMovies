@@ -3,6 +3,7 @@ package com.alorma.myapplication.ui.shows
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.ShowsDataSource
+import com.alorma.myapplication.data.net.TvShowDto
 import com.alorma.myapplication.domain.repository.ShowsRepository
 import com.alorma.myapplication.domain.usecase.ObtainShowsUseCase
 import com.alorma.myapplication.ui.common.BaseView
@@ -25,16 +26,16 @@ class ShowsPresenterTest {
 
     private lateinit var mapper: ShowsMapper
     private lateinit var presenter: ShowsPresenter
-    private lateinit var actions: ShowsAction
-    private lateinit var states: ShowsState
-    private lateinit var routes: ShowsRoute
-    private lateinit var view: BaseView<ShowsRoute, ShowsState>
+    private lateinit var actions: ShowsActions
+    private lateinit var states: ShowsStates
+    private lateinit var routes: ShowsRoutes
+    private lateinit var view: BaseView<ShowsStates.ShowsState, ShowsRoutes.ShowsRoute>
 
     @Captor
-    private lateinit var stateCaptor: ArgumentCaptor<ShowsState>
+    private lateinit var stateCaptor: ArgumentCaptor<ShowsStates.ShowsState>
 
     @Captor
-    private lateinit var routeCaptor: ArgumentCaptor<ShowsRoute>
+    private lateinit var routeCaptor: ArgumentCaptor<ShowsRoutes.ShowsRoute>
 
     init {
         configureRxThreading()
@@ -50,91 +51,91 @@ class ShowsPresenterTest {
         }
 
         mapper = ShowsMapper(resources)
-        actions = ShowsAction()
-        states = ShowsState()
-        routes = ShowsRoute()
+        states = ShowsStates(mapper)
+        actions = ShowsActions()
+        routes = ShowsRoutes()
 
         val showsDs = ShowsDataSource(showsApi, NetworkMapper())
         val showsRepository = ShowsRepository(showsDs)
         val useCase = ObtainShowsUseCase(showsRepository)
 
-        presenter = ShowsPresenter(states, routes, mapper, useCase)
+        presenter = ShowsPresenter(states, routes, useCase)
         presenter init view
     }
 
     @Test
     fun onLoad_renderLoadings() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
 
         presenter reduce actions.load()
 
         verify(view, times(3)).render(capture(stateCaptor))
 
         with(stateCaptor.allValues) {
-            assertTrue(get(0) is ShowsState.Loading)
-            assertTrue((get(0) as ShowsState.Loading).visible)
-            assertTrue(get(1) is ShowsState.Loading)
-            assertFalse((get(1) as ShowsState.Loading).visible)
+            assertTrue(get(0) is ShowsStates.ShowsState.Loading)
+            assertTrue((get(0) as ShowsStates.ShowsState.Loading).visible)
+            assertTrue(get(1) is ShowsStates.ShowsState.Loading)
+            assertFalse((get(1) as ShowsStates.ShowsState.Loading).visible)
         }
     }
 
     @Test
     fun onLoadPage_renderLoadings() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
 
         presenter reduce actions.loadPage()
 
         verify(view, times(3)).render(capture(stateCaptor))
 
         with(stateCaptor.allValues) {
-            assertTrue(get(0) is ShowsState.Loading)
-            assertTrue((get(0) as ShowsState.Loading).visible)
-            assertTrue(get(1) is ShowsState.Loading)
-            assertFalse((get(1) as ShowsState.Loading).visible)
+            assertTrue(get(0) is ShowsStates.ShowsState.Loading)
+            assertTrue((get(0) as ShowsStates.ShowsState.Loading).visible)
+            assertTrue(get(1) is ShowsStates.ShowsState.Loading)
+            assertFalse((get(1) as ShowsStates.ShowsState.Loading).visible)
         }
     }
 
     @Test
     fun onLoad_renderSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
 
         presenter reduce actions.load()
 
         verify(view, times(3)).render(capture(stateCaptor))
 
-        assertTrue(stateCaptor.allValues[2] is ShowsState.Success)
+        assertTrue(stateCaptor.allValues[2] is ShowsStates.ShowsState.Success)
     }
 
 
     @Test
     fun onLoadPage_renderSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(mock())))
+        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
 
         presenter reduce actions.loadPage()
 
         verify(view, times(3)).render(capture(stateCaptor))
 
-        assertTrue(stateCaptor.allValues[2] is ShowsState.Success)
+        assertTrue(stateCaptor.allValues[2] is ShowsStates.ShowsState.Success)
     }
 
     @Test
     fun onLoadSomeItems_renderSameNumberSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(mock(), mock(), mock())))
+        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto(), getTvShowDto(), getTvShowDto())))
 
         presenter reduce actions.load()
 
         verify(view, times(3)).render(capture(stateCaptor))
 
         val state = stateCaptor.allValues[2]
-        assertTrue(state is ShowsState.Success)
-        assertEquals(3, (state as ShowsState.Success).items.size)
+        assertTrue(state is ShowsStates.ShowsState.Success)
+        assertEquals(3, (state as ShowsStates.ShowsState.Success).items.size)
     }
 
 
     @Test
     fun onLoadPageSomeItems_renderSameNumberSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(mock(), mock(), mock())))
-        given(showsApi.listPage(anyInt())).willReturn(Single.just(listOf(mock())))
+        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto(), getTvShowDto(), getTvShowDto())))
+        given(showsApi.listPage(anyInt())).willReturn(Single.just(listOf(getTvShowDto())))
 
         presenter reduce actions.load()
         presenter reduce actions.loadPage()
@@ -142,11 +143,11 @@ class ShowsPresenterTest {
         verify(view, times(6)).render(capture(stateCaptor))
 
         val firstState = stateCaptor.allValues[2]
-        assertTrue(firstState is ShowsState.Success)
-        assertEquals(3, (firstState as ShowsState.Success).items.size)
+        assertTrue(firstState is ShowsStates.ShowsState.Success)
+        assertEquals(3, (firstState as ShowsStates.ShowsState.Success).items.size)
         val secondState = stateCaptor.allValues[5]
-        assertTrue(secondState is ShowsState.Success)
-        assertEquals(1, (secondState as ShowsState.Success).items.size)
+        assertTrue(secondState is ShowsStates.ShowsState.Success)
+        assertEquals(1, (secondState as ShowsStates.ShowsState.Success).items.size)
     }
 
     @Test
@@ -157,17 +158,19 @@ class ShowsPresenterTest {
 
         verify(view, times(3)).render(capture(stateCaptor))
 
-        assertTrue(stateCaptor.allValues[2] is ShowsState.Error)
+        assertTrue(stateCaptor.allValues[2] is ShowsStates.ShowsState.Error)
     }
 
     @Test
     fun onOpenDetail_navigateToDetailRoute() {
-        presenter reduce actions.detail(mock<TvShowVM>().apply { given(id).willReturn(12) })
+        presenter reduce actions.detail(getTvShow(12))
 
         verify(view).navigate(capture(routeCaptor))
 
-        assertTrue(routeCaptor.value is ShowsRoute.DetailRoute)
-        assertEquals(12, (routeCaptor.value as ShowsRoute.DetailRoute).id)
+        assertTrue(routeCaptor.value is ShowsRoutes.ShowsRoute.DetailRoute)
+        assertEquals(12, (routeCaptor.value as ShowsRoutes.ShowsRoute.DetailRoute).id)
     }
 
+    fun getTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "")
+    fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "")
 }

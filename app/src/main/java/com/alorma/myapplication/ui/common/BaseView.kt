@@ -6,7 +6,7 @@ open class Action
 open class Route
 open class State
 
-interface BaseView<in R : Route, in S : State> {
+interface BaseView<in S : State, in R : Route> {
     infix fun render(state: S)
     infix fun navigate(route: R)
 }
@@ -15,9 +15,9 @@ abstract class BasePresenter<in A : Action, S : State, R : Route> {
 
     protected val disposable: CompositeDisposable by lazy { CompositeDisposable() }
 
-    lateinit var view: BaseView<R, S>
+    lateinit var view: BaseView<S, R>
 
-    infix fun init(view: BaseView<R, S>) {
+    infix fun init(view: BaseView<S, R>) {
         this.view = view
     }
 

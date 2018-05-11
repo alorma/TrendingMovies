@@ -7,11 +7,17 @@ import javax.inject.Inject
 class ShowsDataSource @Inject constructor(
         private val showsApi: ShowsApi, private val showsMapper: ShowsMapper) {
 
-    fun listAll(page: Int? = null): Single<List<TvShow>> {
-        val items: Single<List<TvShowDto>> = page?.let { showsApi.listPage(it) }
+    fun listAll(page: Int? = null): Single<Triple<Int, Int, List<TvShow>>> {
+        val items: Single<PagedResponse<TvShowDto>> = page?.let { showsApi.listPage(it) }
                 ?: showsApi.listAll()
 
-        return items.map { showsMapper.map(it) }
+        return items.map {
+            Triple(
+                    it.page,
+                    it.totalPages,
+                    showsMapper.map(it.results)
+            )
+        }
     }
 
 }

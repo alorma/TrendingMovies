@@ -1,8 +1,13 @@
 package com.alorma.myapplication.data.net
 
 import io.reactivex.Single
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface ShowsApi {
-    fun listAll(): Single<List<TvShowDto>>
-    fun listPage(page: Int): Single<List<TvShowDto>>
+    @GET("tv/popular")
+    fun listAll(): Single<PagedResponse<TvShowDto>>
+
+    @GET("tv/popular")
+    fun listPage(@Query("page") page: Int): Single<PagedResponse<TvShowDto>>
 }

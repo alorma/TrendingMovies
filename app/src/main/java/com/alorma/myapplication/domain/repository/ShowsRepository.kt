@@ -30,4 +30,7 @@ class ShowsRepository(private val network: Network,
         }
     }
 
+    fun getShow(id: Int): Single<TvShow> = Single.defer {
+        cache.get(id)?.let { Single.just(it) } ?: network.item(id)
+    }
 }

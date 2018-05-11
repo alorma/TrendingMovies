@@ -16,4 +16,6 @@ class ShowsDataSource @Inject constructor() {
     }
 
     fun get(): List<TvShow> = items.toList()
+
+    fun get(id: Int): TvShow? = items.firstOrNull { it.id == id }
 }

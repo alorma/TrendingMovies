@@ -24,9 +24,7 @@ import com.alorma.myapplication.data.net.ShowsMapper as NetworkMapper
 class ShowsPresenterTest {
 
     private lateinit var showsApi: ShowsApi
-    private lateinit var resources: ResourcesProvider
 
-    private lateinit var mapper: ShowsMapper
     private lateinit var presenter: ShowsPresenter
     private lateinit var actions: ShowsActions
     private lateinit var states: ShowsStates
@@ -51,11 +49,11 @@ class ShowsPresenterTest {
         showsApi = mock()
         view = mock()
         navigator = mock()
-        resources = mock<ResourcesProvider>().apply {
+        val resources = mock<ResourcesProvider>().apply {
             given(getString(anyInt())).willReturn("")
         }
 
-        mapper = ShowsMapper(resources)
+        val mapper = ShowsMapper(resources)
         states = ShowsStates(mapper)
         actions = ShowsActions()
         routes = ShowsRoutes()
@@ -143,7 +141,6 @@ class ShowsPresenterTest {
         assertEquals(3, (state as ShowsStates.ShowsState.Success).items.size)
     }
 
-
     @Test
     fun onLoadPageSomeItems_renderAllItems() {
         val response = PagedResponse(0, 0,
@@ -186,6 +183,6 @@ class ShowsPresenterTest {
         assertEquals(12, (routeCaptor.value as ShowsRoutes.ShowsRoute.DetailRoute).id)
     }
 
-    fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
-    fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "")
+    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
+    private fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "")
 }

@@ -6,6 +6,8 @@ import javax.inject.Inject
 class ShowsMapper @Inject constructor() {
 
     fun map(items: List<TvShowDto>): List<TvShow> = items.map {
-        TvShow(it.id, it.title)
+        mapItem(it)
     }
+
+    fun mapItem(it: TvShowDto) = TvShow(it.id, it.title)
 }

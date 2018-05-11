@@ -1,0 +1,13 @@
+package com.alorma.myapplication.ui.detail
+
+import com.alorma.myapplication.R
+import com.alorma.myapplication.domain.model.TvShow
+import com.alorma.myapplication.ui.common.ResourcesProvider
+import javax.inject.Inject
+
+class DetailMapper @Inject constructor(private val resources: ResourcesProvider) {
+
+    infix fun success(tvShow: TvShow): Int = tvShow.id
+
+    infix fun mapError(it: Throwable): String = resources.getString(R.string.generic_error)
+}

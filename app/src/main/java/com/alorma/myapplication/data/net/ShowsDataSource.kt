@@ -20,4 +20,5 @@ class ShowsDataSource @Inject constructor(
         }
     }
 
+    fun item(id: Int): Single<TvShow> = showsApi.item(id).map { showsMapper.mapItem(it) }
 }

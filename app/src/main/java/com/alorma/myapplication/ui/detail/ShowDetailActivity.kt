@@ -9,6 +9,8 @@ import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.dsl
 import com.alorma.myapplication.ui.detail.di.DetailModule
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.detail_activity.*
 import javax.inject.Inject
 
@@ -48,7 +50,7 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     private fun initData() {
         intent.extras?.let {
             it.getString(EXTRA_TITLE)?.let {
-                textTitle.text = it
+                toolbar.title = it
             }
             it.getInt(EXTRA_ID, -1).takeIf { it != -1 }?.let {
                 presenter reduce actions.load(it)
@@ -64,9 +66,18 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
 
     private fun onSuccess(state: DetailStates.DetailState.Success) {
         with(state.detail) {
-            textTitle.text = title
+            toolbar.title = title
             textDescription.text = overView
+            val requestOptions = RequestOptions().apply {
+                placeholder(R.color.grey_300)
+                error(R.color.grey_300)
+            }
+            textDate.text = date
+            textVotes.text = vote
+            Glide.with(heroImage).setDefaultRequestOptions(requestOptions)
+                    .load(image).into(heroImage)
         }
+
     }
 
 }

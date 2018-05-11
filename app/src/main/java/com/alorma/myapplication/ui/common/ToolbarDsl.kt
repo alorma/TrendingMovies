@@ -32,7 +32,7 @@ class ViewItemBuilder {
 @ToolbarDsl
 class BackBuilder {
     var action: (() -> Unit)? = null
-    var icon: Int = R.drawable.ic_arrow_white
+    var icon: Int = R.drawable.ic_arrow
 
     fun setup(toolbar: Toolbar) {
         action?.let { backAction ->

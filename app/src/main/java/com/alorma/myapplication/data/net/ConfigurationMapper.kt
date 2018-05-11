@@ -6,14 +6,16 @@ import javax.inject.Inject
 class ConfigurationMapper @Inject constructor() {
 
     companion object {
-        const val MIN_SIZE = "w300"
+        const val POSTER_MIN_SIZE = "w300"
+        const val BACKDROP_MIN_SIZE = "w1280"
     }
 
-    fun map(it: ConfigurationResponseDto) = Configuration(it.response.imagesUrl,
-            getImageSize(it.response.imageSize), getImageSize(it.response.posterSize))
+    fun map(it: ConfigurationResponseDto): Configuration = Configuration(it.response.imagesUrl,
+            getImageSize(it.response.imageSize),
+            getImageSize(it.response.posterSize, BACKDROP_MIN_SIZE))
 
-    private fun getImageSize(it: List<String>): String {
-        val index = it.indexOfFirst { it == MIN_SIZE }
+    private fun getImageSize(it: List<String>, def: String = POSTER_MIN_SIZE): String {
+        val index = it.indexOfFirst { it == def }
         return if (index != -1) {
             it[index]
         } else {

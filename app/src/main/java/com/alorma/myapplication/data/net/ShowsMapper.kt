@@ -10,7 +10,8 @@ class ShowsMapper @Inject constructor(private val dateParser: DateParser) {
         mapItem(it)
     }
 
-    fun mapItem(it: TvShowDto) = TvShow(it.id, it.title, it.overview, mapImages(it), mapDate(it.airDate))
+    fun mapItem(it: TvShowDto): TvShow = TvShow(it.id, it.title, it.overview, mapImages(it),
+            mapDate(it.airDate), it.vote)
 
     private fun mapImages(it: TvShowDto): Images = Images(it.posterImage, it.backdropImage)
 

@@ -14,7 +14,7 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
     fun success(tvShow: TvShow, conf: Configuration): TvShowDetailVm =
             TvShowDetailVm(tvShow.id, tvShow.title, tvShow.overview,
                     "${conf.imagesUrl}${conf.imageSize}${tvShow.images.backdrop}",
-                    mapDate(tvShow.date))
+                    mapDate(tvShow.date), String.format("%.2f", tvShow.vote))
 
     private fun mapDate(date: Date?): String = date?.let { dateFormatter format it }
             ?: resources.getString(R.string.no_air_date)

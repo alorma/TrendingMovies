@@ -1,10 +1,13 @@
 package com.alorma.myapplication.ui.shows
 
 import android.app.Activity
-import android.widget.Toast
+import android.content.Intent
 import com.alorma.myapplication.ui.common.Navigator
+import com.alorma.myapplication.ui.detail.ShowDetailActivity
 
-class ShowsNavigator(activity: Activity) : Navigator<ShowsRoutes.ShowsRoute>(activity) {
+class ShowsNavigator(activity: Activity, private val routes: ShowsRoutes) :
+        Navigator<ShowsRoutes.ShowsRoute>(activity) {
+
     override fun navigate(route: ShowsRoutes.ShowsRoute) {
         when (route) {
             is ShowsRoutes.ShowsRoute.DetailRoute -> openDetail(route.id)
@@ -12,6 +15,7 @@ class ShowsNavigator(activity: Activity) : Navigator<ShowsRoutes.ShowsRoute>(act
     }
 
     private fun openDetail(id: Int) {
-        Toast.makeText(activity, "Open detail: $id", Toast.LENGTH_SHORT).show()
+        val intent = Intent(activity, ShowDetailActivity::class.java)
+        start(intent)
     }
 }

@@ -1,7 +1,6 @@
 package com.alorma.myapplication.ui.shows
 
 import android.app.Activity
-import android.content.Intent
 import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.detail.ShowDetailActivity
 
@@ -14,8 +13,5 @@ class ShowsNavigator(activity: Activity, private val routes: ShowsRoutes) :
         }
     }
 
-    private fun openDetail(id: Int) {
-        val intent = Intent(activity, ShowDetailActivity::class.java)
-        start(intent)
-    }
+    private fun openDetail(id: Int) = start(ShowDetailActivity.launch(activity, id))
 }

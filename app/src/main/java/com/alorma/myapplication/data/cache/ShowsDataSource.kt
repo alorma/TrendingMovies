@@ -3,7 +3,7 @@ package com.alorma.myapplication.data.cache
 import com.alorma.myapplication.domain.model.TvShow
 import javax.inject.Inject
 
-class ShowsDataSource @Inject constructor() {
+class ShowsDataSource {
 
     private val items: MutableList<TvShow> = mutableListOf()
 

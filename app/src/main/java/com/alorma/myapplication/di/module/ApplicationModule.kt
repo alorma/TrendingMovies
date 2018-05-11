@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
+import com.alorma.myapplication.data.cache.ConfigDataSource as ConfigCache
 import com.alorma.myapplication.data.cache.ShowsDataSource as Cache
 import com.alorma.myapplication.data.net.ConfigDataSource as ConfigNetwork
 import com.alorma.myapplication.data.net.ShowsDataSource as Network
@@ -28,6 +29,6 @@ class ApplicationModule(private val context: Context) {
             ShowsRepository(network, cache)
 
     @Provides
-    fun getConfigurationRepository(network: ConfigNetwork): ConfigurationRepository =
-            ConfigurationRepository(network)
+    fun getConfigurationRepository(network: ConfigNetwork, cache: ConfigCache): ConfigurationRepository =
+            ConfigurationRepository(network, cache)
 }

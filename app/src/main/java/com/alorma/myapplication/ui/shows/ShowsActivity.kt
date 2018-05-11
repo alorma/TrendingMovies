@@ -3,6 +3,7 @@ package com.alorma.myapplication.ui.shows
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
@@ -15,6 +16,10 @@ import javax.inject.Inject
 
 class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, ShowsRoutes.ShowsRoute> {
 
+    companion object {
+        const val OFFSET_LAZY_LOAD = 4
+    }
+
     @Inject
     lateinit var presenter: ShowsPresenter
 
@@ -22,6 +27,20 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, Show
     lateinit var actions: ShowsActions
 
     private lateinit var adapter: DslAdapter<TvShowVM>
+
+    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
+                    val firstVisibleItemPosition = findFirstVisibleItemPosition()
+                    val last = childCount + firstVisibleItemPosition
+                    if (last >= itemCount - OFFSET_LAZY_LOAD) {
+                        presenter reduce actions.loadPage()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,10 +81,12 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, Show
 
     private fun onLoading(state: ShowsStates.ShowsState.Loading) {
         centerText.visibility = View.GONE
+        disablePagination()
     }
 
     private fun onSuccess(state: ShowsStates.ShowsState.Success) {
         centerText.visibility = View.GONE
+        enablePagination()
         adapter.update(state.items)
     }
 
@@ -75,6 +96,10 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, Show
             text = state.text
         }
     }
+
+    private fun enablePagination() = recycler.addOnScrollListener(recyclerViewListener)
+
+    private fun disablePagination() = recycler.removeOnScrollListener(recyclerViewListener)
 
     override fun navigate(route: ShowsRoutes.ShowsRoute) {
 

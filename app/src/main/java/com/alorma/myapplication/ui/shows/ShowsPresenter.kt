@@ -1,6 +1,7 @@
 package com.alorma.myapplication.ui.shows
 
 import com.alorma.myapplication.commons.observeOnUI
+import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.usecase.ObtainShowsUseCase
 import com.alorma.myapplication.ui.common.BasePresenter
 import com.alorma.rac1.commons.plusAssign
@@ -12,6 +13,8 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
                                          private val obtainShowsUseCase: ObtainShowsUseCase) :
         BasePresenter<ShowsActions.ShowsAction, ShowsStates.ShowsState, ShowsRoutes.ShowsRoute>() {
 
+    private val items: MutableList<TvShow> = mutableListOf()
+
     override fun reduce(action: ShowsActions.ShowsAction) {
         when (action) {
             ShowsActions.ShowsAction.Load -> load(action)
@@ -21,21 +24,32 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
     }
 
     private fun load(action: ShowsActions.ShowsAction) {
-        disposable += when (action) {
-            is ShowsActions.ShowsAction.Load -> obtainShowsUseCase.execute()
-            is ShowsActions.ShowsAction.LoadPage -> obtainShowsUseCase.executeNextPage()
-            else -> Single.never()
-        }
+        disposable += obtainLoadUseCase(action)
                 .observeOnUI()
                 .doOnSubscribe { render(states loading true) }
                 .doOnSuccess { render(states loading false) }
                 .doOnError { render(states loading false) }
                 .subscribe({
-                    render(states success it)
+                    saveItems(action, it)
+                    render(states success items)
                 }, {
                     render(states error it)
                 })
     }
+
+    private fun saveItems(action: ShowsActions.ShowsAction, newItems: List<TvShow>) {
+        if (action === ShowsActions.ShowsAction.Load) {
+            this.items.clear()
+        }
+        this.items.addAll(newItems)
+    }
+
+    private fun obtainLoadUseCase(action: ShowsActions.ShowsAction): Single<List<TvShow>> =
+            when (action) {
+                is ShowsActions.ShowsAction.Load -> obtainShowsUseCase.execute()
+                is ShowsActions.ShowsAction.LoadPage -> obtainShowsUseCase.executeNextPage()
+                else -> Single.never()
+            }
 
     private fun onOpenDetail(action: ShowsActions.ShowsAction.OpenDetail) =
             navigate(routes detail action.id)

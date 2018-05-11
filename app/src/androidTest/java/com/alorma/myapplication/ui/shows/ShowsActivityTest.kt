@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
@@ -29,15 +30,33 @@ class ShowsActivityTest {
 
     @Test
     fun onLoadItems_showOnScreen() {
-        val items = listOf(generateItem(1), generateItem(2))
+        val items = generateItems(50)
         given(showsRepository.listAll()).willReturn(Single.just(items))
 
         rule.run()
 
-        assertRecyclerViewItemCount(R.id.recycler, 2)
+        assertRecyclerViewItemCount(R.id.recycler, 50)
         assertDisplayed("Title 1")
         assertDisplayed("Title 2")
     }
+
+    @Test
+    fun onLoadManyItems_onScroll_loadMore() {
+        val items = generateItems(50)
+        given(showsRepository.listAll()).willReturn(Single.just(items))
+        val itemsPage = generateItems(25)
+        given(showsRepository.listNextPage()).willReturn(Single.just(itemsPage))
+
+        rule.run()
+
+        assertRecyclerViewItemCount(R.id.recycler, 50)
+
+        scrollListToPosition(R.id.recycler, 49)
+
+        assertRecyclerViewItemCount(R.id.recycler, 75)
+    }
+
+    private fun generateItems(number: Int): List<TvShow> = (1..number).map { generateItem(it) }
 
     private fun generateItem(id: Int): TvShow = TvShow(id, "Title $id")
 }

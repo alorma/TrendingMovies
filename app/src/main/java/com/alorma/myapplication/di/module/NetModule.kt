@@ -1,6 +1,7 @@
 package com.alorma.myapplication.di.module
 
 import android.content.Context
+import com.alorma.myapplication.data.net.ConfigApi
 import com.alorma.myapplication.data.net.ShowsApi
 import com.readystatesoftware.chuck.ChuckInterceptor
 import dagger.Module
@@ -65,4 +66,8 @@ class NetModule(private val context: Context) {
     @Provides
     @Singleton
     fun providesApi(retrofit: Retrofit): ShowsApi = retrofit.create()
+
+    @Provides
+    @Singleton
+    fun providesConfigApi(retrofit: Retrofit): ConfigApi = retrofit.create()
 }

@@ -69,7 +69,7 @@ class ShowsActivityTest {
     fun onLoadManyItems_onScroll_loadMore() {
         val items = generateItems(50)
         given(showsRepository.listAll()).willReturn(Single.just(items))
-        val itemsPage = generateItems(25)
+        val itemsPage = generateItems(75)
         given(showsRepository.listNextPage()).willReturn(Single.just(itemsPage))
 
         rule.run()

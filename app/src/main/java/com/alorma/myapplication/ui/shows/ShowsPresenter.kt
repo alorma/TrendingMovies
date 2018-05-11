@@ -14,8 +14,6 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
                                          private val showsNavigator: ShowsNavigator) :
         BasePresenter<ShowsActions.ShowsAction, ShowsStates.ShowsState>() {
 
-    private val items: MutableList<TvShow> = mutableListOf()
-
     override fun reduce(action: ShowsActions.ShowsAction) {
         when (action) {
             ShowsActions.ShowsAction.Load -> load(action)
@@ -30,19 +28,10 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
                 .doOnSubscribe { render(states loading true) }
                 .doOnSuccess { render(states loading false) }
                 .doOnError { render(states loading false) }
-                .subscribe({
-                    saveItems(action, it)
-                    render(states success items)
-                }, {
-                    render(states error it)
-                })
-    }
-
-    private fun saveItems(action: ShowsActions.ShowsAction, newItems: List<TvShow>) {
-        if (action === ShowsActions.ShowsAction.Load) {
-            this.items.clear()
-        }
-        this.items.addAll(newItems)
+                .subscribe(
+                        { render(states success it) },
+                        { render(states error it) }
+                )
     }
 
     private fun obtainLoadUseCase(action: ShowsActions.ShowsAction): Single<List<TvShow>> =

@@ -3,7 +3,6 @@ package com.alorma.myapplication.ui.shows
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.PagedResponse
 import com.alorma.myapplication.data.net.ShowsApi
-import com.alorma.myapplication.data.net.ShowsDataSource
 import com.alorma.myapplication.data.net.TvShowDto
 import com.alorma.myapplication.domain.repository.ShowsRepository
 import com.alorma.myapplication.domain.usecase.ObtainShowsUseCase
@@ -18,6 +17,8 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Captor
 import org.mockito.MockitoAnnotations
+import com.alorma.myapplication.data.cache.ShowsDataSource as Cache
+import com.alorma.myapplication.data.net.ShowsDataSource as Network
 import com.alorma.myapplication.data.net.ShowsMapper as NetworkMapper
 
 class ShowsPresenterTest {
@@ -59,8 +60,10 @@ class ShowsPresenterTest {
         actions = ShowsActions()
         routes = ShowsRoutes()
 
-        val showsDs = ShowsDataSource(showsApi, NetworkMapper())
-        val showsRepository = ShowsRepository(showsDs)
+        val networkDs = Network(showsApi, NetworkMapper())
+        val cacheDs = Cache()
+
+        val showsRepository = ShowsRepository(networkDs, cacheDs)
         val useCase = ObtainShowsUseCase(showsRepository)
 
         presenter = ShowsPresenter(states, routes, useCase, navigator)

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ShowsMapper @Inject constructor(private val resources: ResourcesProvider) {
 
     fun mapSuccess(tvShow: TvShow, conf: Configuration): TvShowVM = TvShowVM(tvShow.id, tvShow.title,
-            "${conf.imagesUrl}${conf.imageSize}${tvShow.image}")
+            "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}")
 
     infix fun mapError(it: Throwable): String = resources.getString(R.string.generic_error)
 

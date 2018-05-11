@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.alorma.myapplication.R
-import com.alorma.myapplication.ui.common.dsl
-import kotlinx.android.synthetic.main.detail_activity.*
 import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
+import com.alorma.myapplication.ui.common.dsl
 import com.alorma.myapplication.ui.detail.di.DetailModule
+import kotlinx.android.synthetic.main.detail_activity.*
 import javax.inject.Inject
 
 class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailState> {
@@ -41,28 +41,32 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
         initData()
 
         toolbar.dsl {
-            back {
-                action = {
-                    finish()
-                }
-            }
-        }
-
-        intent.extras?.let {
-            it.getString(EXTRA_TITLE)?.let {
-                textTitle.text = it
-            }
+            back { action = { presenter reduce actions.back() } }
         }
     }
 
     private fun initData() {
-        intent?.extras?.getInt(EXTRA_ID, -1)?.takeIf { it != -1 }?.let {
-            presenter reduce actions.load(it)
+        intent.extras?.let {
+            it.getString(EXTRA_TITLE)?.let {
+                textTitle.text = it
+            }
+            it.getInt(EXTRA_ID, -1).takeIf { it != -1 }?.let {
+                presenter reduce actions.load(it)
+            } ?: presenter reduce actions.back()
         }
     }
 
     override fun render(state: DetailStates.DetailState) {
+        when (state) {
+            is DetailStates.DetailState.Success -> onSuccess(state)
+        }
+    }
 
+    private fun onSuccess(state: DetailStates.DetailState.Success) {
+        with(state.detail) {
+            textTitle.text = title
+            textDescription.text = overView
+        }
     }
 
 }

@@ -8,7 +8,8 @@ import javax.inject.Inject
 
 class DetailMapper @Inject constructor(private val resources: ResourcesProvider) {
 
-    fun success(tvShow: TvShow, configuration: Configuration): Int = tvShow.id
+    fun success(tvShow: TvShow, configuration: Configuration): TvShowDetailVm =
+            TvShowDetailVm(tvShow.id, tvShow.title, tvShow.overview)
 
     infix fun mapError(it: Throwable): String = resources.getString(R.string.generic_error)
 }

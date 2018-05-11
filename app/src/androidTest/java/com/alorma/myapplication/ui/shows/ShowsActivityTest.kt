@@ -9,6 +9,7 @@ import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.ProjectTestRule
 import com.alorma.myapplication.domain.model.TvShow
+import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.ShowsRepository
 import com.alorma.myapplication.ui.detail.ShowDetailActivity
 import com.nhaarman.mockito_kotlin.given
@@ -19,6 +20,7 @@ import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickList
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
 import io.reactivex.Single
 import org.hamcrest.Matcher
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -27,6 +29,12 @@ class ShowsActivityTest {
     val rule = ProjectTestRule(ShowsActivity::class.java, this)
 
     val showsRepository: ShowsRepository = mock()
+    val configRepository: ConfigurationRepository = mock()
+
+    @Before
+    fun setup() {
+        given(configRepository.getConfig()).willReturn(Single.just(mock()))
+    }
 
     @Test
     fun onLoadError_showErrorOnScreen() {
@@ -83,7 +91,7 @@ class ShowsActivityTest {
 
     private fun generateItems(number: Int): List<TvShow> = (1..number).map { generateItem(it) }
 
-    private fun generateItem(id: Int): TvShow = TvShow(id, "Title $id")
+    private fun generateItem(id: Int): TvShow = TvShow(id, "Title $id", "")
 
     private fun getMatcherOpenDetailActivity(): Matcher<Intent> = hasComponent(ShowDetailActivity::class.java.name)
 

@@ -4,7 +4,9 @@ import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.PagedResponse
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
+import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.repository.ShowsRepository
+import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainShowsUseCase
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.ResourcesProvider
@@ -63,8 +65,11 @@ class ShowsPresenterTest {
 
         val showsRepository = ShowsRepository(networkDs, cacheDs)
         val useCase = ObtainShowsUseCase(showsRepository)
+        val configUseCase = mock<ObtainConfigurationUseCase>().apply {
+            given(execute()).willReturn(Single.just(mock()))
+        }
 
-        presenter = ShowsPresenter(states, routes, useCase, navigator)
+        presenter = ShowsPresenter(states, routes, useCase, configUseCase, navigator)
         presenter init view
     }
 
@@ -184,5 +189,5 @@ class ShowsPresenterTest {
     }
 
     private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
-    private fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "")
+    private fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "", "")
 }

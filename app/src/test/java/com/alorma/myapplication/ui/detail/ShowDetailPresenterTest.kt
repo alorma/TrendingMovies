@@ -3,8 +3,10 @@ package com.alorma.myapplication.ui.detail
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
+import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.repository.ShowsRepository
+import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainShowDetailUseCase
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.ResourcesProvider
@@ -41,7 +43,6 @@ class ShowDetailPresenterTest {
 
     private lateinit var view: BaseView<DetailStates.DetailState>
 
-
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
@@ -55,6 +56,9 @@ class ShowDetailPresenterTest {
 
         val showsRepository = ShowsRepository(networkDs, cacheDs)
         val useCase = ObtainShowDetailUseCase(showsRepository)
+        val configUseCase = mock<ObtainConfigurationUseCase>().apply {
+            given(execute()).willReturn(Single.just(mock()))
+        }
 
         val resources = mock<ResourcesProvider>().apply {
             given(getString(ArgumentMatchers.anyInt())).willReturn("")
@@ -62,7 +66,7 @@ class ShowDetailPresenterTest {
 
         val mapper = DetailMapper(resources)
 
-        presenter = ShowDetailPresenter(DetailStates(mapper), DetailRoutes(), navigator, useCase)
+        presenter = ShowDetailPresenter(DetailStates(mapper), DetailRoutes(), navigator, useCase, configUseCase)
         presenter init view
     }
 
@@ -111,5 +115,5 @@ class ShowDetailPresenterTest {
     }
 
     private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
-    private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "")
+    private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "", "")
 }

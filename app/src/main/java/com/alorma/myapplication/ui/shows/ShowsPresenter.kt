@@ -1,16 +1,20 @@
 package com.alorma.myapplication.ui.shows
 
 import com.alorma.myapplication.commons.observeOnUI
+import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.TvShow
+import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainShowsUseCase
 import com.alorma.myapplication.ui.common.BasePresenter
 import com.alorma.rac1.commons.plusAssign
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 class ShowsPresenter @Inject constructor(private val states: ShowsStates,
                                          private val routes: ShowsRoutes,
                                          private val obtainShowsUseCase: ObtainShowsUseCase,
+                                         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
                                          private val showsNavigator: ShowsNavigator) :
         BasePresenter<ShowsActions.ShowsAction, ShowsStates.ShowsState>() {
 
@@ -23,7 +27,10 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
     }
 
     private fun load(action: ShowsActions.ShowsAction) {
-        disposable += obtainLoadUseCase(action)
+        disposable += Single.zip(obtainConfigurationUseCase.execute(), obtainLoadUseCase(action),
+                BiFunction<Configuration, List<TvShow>, Pair<Configuration, List<TvShow>>> { conf, list ->
+                    conf to list
+                })
                 .observeOnUI()
                 .doOnSubscribe { render(states loading true) }
                 .doOnSuccess { render(states loading false) }

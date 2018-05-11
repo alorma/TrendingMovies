@@ -9,5 +9,5 @@ class ShowsMapper @Inject constructor() {
         mapItem(it)
     }
 
-    fun mapItem(it: TvShowDto) = TvShow(it.id, it.title)
+    fun mapItem(it: TvShowDto) = TvShow(it.id, it.title, it.posterImage)
 }

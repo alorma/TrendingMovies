@@ -4,12 +4,15 @@ import android.support.test.InstrumentationRegistry
 import com.alorma.myapplication.TrendingTvApp
 import com.alorma.myapplication.di.ApplicationComponent
 import com.alorma.myapplication.di.module.ApplicationModule
+import com.alorma.myapplication.di.module.NetModule
 import it.cosenonjaviste.daggermock.DaggerMock
+import it.cosenonjaviste.daggermock.DaggerMockRule
 
-fun getDaggerRule() = DaggerMock.rule<ApplicationComponent>(ApplicationModule(app)) {
-    set { component ->
-        app.updateComponent(component)
-    }
-}
+fun getDaggerRule(): DaggerMockRule<ApplicationComponent> =
+        DaggerMock.rule(ApplicationModule(app), NetModule(app)) {
+            set { component ->
+                app.updateComponent(component)
+            }
+        }
 
 val app: TrendingTvApp get() = InstrumentationRegistry.getTargetContext().applicationContext as TrendingTvApp

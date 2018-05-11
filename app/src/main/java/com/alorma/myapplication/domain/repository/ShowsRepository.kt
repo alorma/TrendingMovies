@@ -8,7 +8,9 @@ import io.reactivex.Single
 class ShowsRepository(private val showsDataSource: ShowsDataSource) {
     private var page: Int = 1
 
-    fun listAll(): Single<List<TvShow>> = listNextPage()
+    fun listAll(): Single<List<TvShow>> = showsDataSource.listAll().doOnSuccess {
+        calculatePage(it)
+    }.map { it.third }.subscribeOnIO()
 
     fun listNextPage(): Single<List<TvShow>> = showsDataSource.listAll(page).doOnSuccess {
         calculatePage(it)

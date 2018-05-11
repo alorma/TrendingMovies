@@ -1,6 +1,7 @@
 package com.alorma.myapplication.ui.shows
 
 import com.alorma.myapplication.configureRxThreading
+import com.alorma.myapplication.data.net.PagedResponse
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.ShowsDataSource
 import com.alorma.myapplication.data.net.TvShowDto
@@ -65,7 +66,8 @@ class ShowsPresenterTest {
 
     @Test
     fun onLoad_renderLoadings() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
+        val response = PagedResponse(0, 0, listOf(generateTvShowDto()))
+        given(showsApi.listAll()).willReturn(Single.just(response))
 
         presenter reduce actions.load()
 
@@ -81,7 +83,8 @@ class ShowsPresenterTest {
 
     @Test
     fun onLoadPage_renderLoadings() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
+        val response = PagedResponse(0, 0, listOf(generateTvShowDto()))
+        given(showsApi.listAll()).willReturn(Single.just(response))
 
         presenter reduce actions.loadPage()
 
@@ -97,7 +100,8 @@ class ShowsPresenterTest {
 
     @Test
     fun onLoad_renderSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
+        val response = PagedResponse(0, 0, listOf(generateTvShowDto()))
+        given(showsApi.listAll()).willReturn(Single.just(response))
 
         presenter reduce actions.load()
 
@@ -109,7 +113,8 @@ class ShowsPresenterTest {
 
     @Test
     fun onLoadPage_renderSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto())))
+        val response = PagedResponse(0, 0, listOf(generateTvShowDto()))
+        given(showsApi.listAll()).willReturn(Single.just(response))
 
         presenter reduce actions.loadPage()
 
@@ -120,7 +125,8 @@ class ShowsPresenterTest {
 
     @Test
     fun onLoadSomeItems_renderSameNumberSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto(), getTvShowDto(), getTvShowDto())))
+        val response = PagedResponse(0, 0, listOf(generateTvShowDto(), generateTvShowDto(), generateTvShowDto()))
+        given(showsApi.listAll()).willReturn(Single.just(response))
 
         presenter reduce actions.load()
 
@@ -133,9 +139,12 @@ class ShowsPresenterTest {
 
 
     @Test
-    fun onLoadPageSomeItems_renderSameNumberSuccess() {
-        given(showsApi.listAll()).willReturn(Single.just(listOf(getTvShowDto(), getTvShowDto(), getTvShowDto())))
-        given(showsApi.listPage(anyInt())).willReturn(Single.just(listOf(getTvShowDto())))
+    fun onLoadPageSomeItems_renderAllItems() {
+        val response = PagedResponse(0, 0,
+                listOf(generateTvShowDto(), generateTvShowDto(), generateTvShowDto()))
+        given(showsApi.listAll()).willReturn(Single.just(response))
+        val responsePage = PagedResponse(0, 0, listOf(generateTvShowDto()))
+        given(showsApi.listPage(anyInt())).willReturn(Single.just(responsePage))
 
         presenter reduce actions.load()
         presenter reduce actions.loadPage()
@@ -147,7 +156,7 @@ class ShowsPresenterTest {
         assertEquals(3, (firstState as ShowsStates.ShowsState.Success).items.size)
         val secondState = stateCaptor.allValues[5]
         assertTrue(secondState is ShowsStates.ShowsState.Success)
-        assertEquals(1, (secondState as ShowsStates.ShowsState.Success).items.size)
+        assertEquals(4, (secondState as ShowsStates.ShowsState.Success).items.size)
     }
 
     @Test
@@ -171,6 +180,6 @@ class ShowsPresenterTest {
         assertEquals(12, (routeCaptor.value as ShowsRoutes.ShowsRoute.DetailRoute).id)
     }
 
-    fun getTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "")
+    fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
     fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "")
 }

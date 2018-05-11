@@ -4,6 +4,7 @@ import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
 import com.alorma.myapplication.domain.model.Configuration
+import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.repository.ShowsRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
@@ -20,6 +21,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.Captor
 import org.mockito.MockitoAnnotations
+import java.util.*
 import com.alorma.myapplication.data.cache.ShowsDataSource as Cache
 import com.alorma.myapplication.data.net.ShowsDataSource as Network
 import com.alorma.myapplication.data.net.ShowsMapper as NetworkMapper
@@ -87,7 +89,6 @@ class ShowDetailPresenterTest {
         verify(view).render(capture(stateCaptor))
 
         assertTrue(stateCaptor.value is DetailStates.DetailState.Success)
-        assertEquals(12, (stateCaptor.value as DetailStates.DetailState.Success).id)
     }
 
     @Test
@@ -100,7 +101,6 @@ class ShowDetailPresenterTest {
         verify(view).render(capture(stateCaptor))
 
         assertTrue(stateCaptor.value is DetailStates.DetailState.Success)
-        assertEquals(12, (stateCaptor.value as DetailStates.DetailState.Success).id)
     }
 
     @Test
@@ -114,6 +114,6 @@ class ShowDetailPresenterTest {
         assertTrue(stateCaptor.value is DetailStates.DetailState.Error)
     }
 
-    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
-    private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "", "")
+    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", "", "", 0f)
+    private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "", "", Images("", ""), Date())
 }

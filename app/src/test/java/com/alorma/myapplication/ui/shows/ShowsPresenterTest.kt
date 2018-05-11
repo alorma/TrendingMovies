@@ -180,7 +180,7 @@ class ShowsPresenterTest {
     fun onOpenDetail_navigateToDetailRoute() {
         presenter reduce actions.detail(getTvShow(12))
 
-        verify(navigator).navigate(capture(routeCaptor))
+        verify(navigator) navigate capture(routeCaptor)
 
         assertTrue(routeCaptor.value is ShowsRoutes.ShowsRoute.DetailRoute)
         assertEquals(12, (routeCaptor.value as ShowsRoutes.ShowsRoute.DetailRoute).id)

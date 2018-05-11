@@ -11,5 +11,5 @@ class ShowsModule(private val activity: Activity) {
 
     @Provides
     fun provideNavigator(showsRoutes: ShowsRoutes): ShowsNavigator =
-            ShowsNavigator(activity, showsRoutes)
+            ShowsNavigator(activity)
 }

@@ -8,5 +8,5 @@ abstract class Navigator<in R>(val activity: Activity) {
         activity.startActivity(intent)
     }
 
-    abstract fun navigate(route: R)
+    abstract infix fun navigate(route: R)
 }

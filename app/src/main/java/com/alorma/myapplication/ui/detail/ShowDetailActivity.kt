@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.alorma.myapplication.R
+import com.alorma.myapplication.TrendingTvApp.Companion.component
+import com.alorma.myapplication.ui.common.BaseView
+import com.alorma.myapplication.ui.detail.di.DetailModule
+import javax.inject.Inject
 
-class ShowDetailActivity : AppCompatActivity() {
-
+class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailState> {
     companion object {
         private const val EXTRA_ID = "extra_id"
         fun launch(context: Context, id: Int): Intent =
@@ -16,8 +19,31 @@ class ShowDetailActivity : AppCompatActivity() {
                 }
     }
 
+    @Inject
+    lateinit var actions: DetailActions
+
+    @Inject
+    lateinit var presenter: ShowDetailPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detail_activity)
+
+        component add DetailModule(this) inject this
+
+        presenter init this
+
+        initData()
     }
+
+    private fun initData() {
+        intent?.extras?.getInt(EXTRA_ID, -1)?.takeIf { it != -1 }?.let {
+            presenter reduce actions.load(it)
+        }
+    }
+
+    override fun render(state: DetailStates.DetailState) {
+
+    }
+
 }

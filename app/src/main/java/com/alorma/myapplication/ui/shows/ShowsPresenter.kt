@@ -49,5 +49,5 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
             }
 
     private fun onOpenDetail(action: ShowsActions.ShowsAction.OpenDetail) =
-            showsNavigator navigate (routes detail action.id)
+            showsNavigator.navigate(routes.detail(action.id, action.title))
 }

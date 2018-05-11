@@ -8,9 +8,10 @@ class ShowsNavigator(activity: Activity) : Navigator<ShowsRoutes.ShowsRoute>(act
 
     override fun navigate(route: ShowsRoutes.ShowsRoute) {
         when (route) {
-            is ShowsRoutes.ShowsRoute.DetailRoute -> openDetail(route.id)
+            is ShowsRoutes.ShowsRoute.DetailRoute -> openDetail(route)
         }
     }
 
-    private fun openDetail(id: Int) = start(ShowDetailActivity.launch(activity, id))
+    private fun openDetail(route: ShowsRoutes.ShowsRoute.DetailRoute)
+            = start(ShowDetailActivity.launch(activity, route.id, route.title))
 }

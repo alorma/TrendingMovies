@@ -5,8 +5,8 @@ import javax.inject.Inject
 
 class ShowsRoutes @Inject constructor() {
     sealed class ShowsRoute : Route() {
-        data class DetailRoute(val id: Int) : ShowsRoute()
+        data class DetailRoute(val id: Int, val title: String) : ShowsRoute()
     }
 
-    infix fun detail(id: Int): ShowsRoute = ShowsRoute.DetailRoute(id)
+    fun detail(id: Int, title: String): ShowsRoute = ShowsRoute.DetailRoute(id, title)
 }

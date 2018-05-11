@@ -10,8 +10,9 @@ import javax.inject.Inject
 
 class ShowsPresenter @Inject constructor(private val states: ShowsStates,
                                          private val routes: ShowsRoutes,
-                                         private val obtainShowsUseCase: ObtainShowsUseCase) :
-        BasePresenter<ShowsActions.ShowsAction, ShowsStates.ShowsState, ShowsRoutes.ShowsRoute>() {
+                                         private val obtainShowsUseCase: ObtainShowsUseCase,
+                                         private val showsNavigator: ShowsNavigator) :
+        BasePresenter<ShowsActions.ShowsAction, ShowsStates.ShowsState>() {
 
     private val items: MutableList<TvShow> = mutableListOf()
 
@@ -52,5 +53,5 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
             }
 
     private fun onOpenDetail(action: ShowsActions.ShowsAction.OpenDetail) =
-            navigate(routes detail action.id)
+            showsNavigator.navigate(routes detail action.id)
 }

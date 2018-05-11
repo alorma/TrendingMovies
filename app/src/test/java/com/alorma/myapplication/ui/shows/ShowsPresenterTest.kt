@@ -30,13 +30,15 @@ class ShowsPresenterTest {
     private lateinit var actions: ShowsActions
     private lateinit var states: ShowsStates
     private lateinit var routes: ShowsRoutes
-    private lateinit var view: BaseView<ShowsStates.ShowsState, ShowsRoutes.ShowsRoute>
+    private lateinit var view: BaseView<ShowsStates.ShowsState>
 
     @Captor
     private lateinit var stateCaptor: ArgumentCaptor<ShowsStates.ShowsState>
 
     @Captor
     private lateinit var routeCaptor: ArgumentCaptor<ShowsRoutes.ShowsRoute>
+
+    private lateinit var navigator: ShowsNavigator
 
     init {
         configureRxThreading()
@@ -47,6 +49,7 @@ class ShowsPresenterTest {
         MockitoAnnotations.initMocks(this)
         showsApi = mock()
         view = mock()
+        navigator = mock()
         resources = mock<ResourcesProvider>().apply {
             given(getString(anyInt())).willReturn("")
         }
@@ -60,7 +63,7 @@ class ShowsPresenterTest {
         val showsRepository = ShowsRepository(showsDs)
         val useCase = ObtainShowsUseCase(showsRepository)
 
-        presenter = ShowsPresenter(states, routes, useCase)
+        presenter = ShowsPresenter(states, routes, useCase, navigator)
         presenter init view
     }
 
@@ -174,7 +177,7 @@ class ShowsPresenterTest {
     fun onOpenDetail_navigateToDetailRoute() {
         presenter reduce actions.detail(getTvShow(12))
 
-        verify(view).navigate(capture(routeCaptor))
+        verify(navigator).navigate(capture(routeCaptor))
 
         assertTrue(routeCaptor.value is ShowsRoutes.ShowsRoute.DetailRoute)
         assertEquals(12, (routeCaptor.value as ShowsRoutes.ShowsRoute.DetailRoute).id)

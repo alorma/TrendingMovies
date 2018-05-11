@@ -10,11 +10,12 @@ import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.shows.di.ShowsModule
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_show_list.view.*
 import javax.inject.Inject
 
-class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, ShowsRoutes.ShowsRoute> {
+class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState> {
 
     companion object {
         const val OFFSET_LAZY_LOAD = 4
@@ -46,7 +47,7 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, Show
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        component inject this
+        component add ShowsModule(this) inject this
 
         initView()
 
@@ -100,8 +101,4 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState, Show
     private fun enablePagination() = recycler.addOnScrollListener(recyclerViewListener)
 
     private fun disablePagination() = recycler.removeOnScrollListener(recyclerViewListener)
-
-    override fun navigate(route: ShowsRoutes.ShowsRoute) {
-
-    }
 }

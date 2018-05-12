@@ -3,7 +3,6 @@ package com.alorma.myapplication.ui.detail
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
-import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.repository.ShowsRepository
@@ -13,7 +12,6 @@ import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
-import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test

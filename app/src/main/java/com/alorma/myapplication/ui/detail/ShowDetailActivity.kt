@@ -12,6 +12,7 @@ import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.detail_activity.*
+import kotlinx.android.synthetic.main.detail_content.*
 import javax.inject.Inject
 
 class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailState> {

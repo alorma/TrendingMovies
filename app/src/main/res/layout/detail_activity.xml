@@ -23,90 +23,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="4dp">
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/detail_front">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="0dp"
-                android:layout_height="?actionBarSize"
-                android:background="@android:color/transparent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:title="The Big Bang Theory" />
-
-            <TextView
-                android:id="@+id/textDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintBottom_toTopOf="@+id/textDescription"
-                app:layout_constraintEnd_toStartOf="@+id/textVotes"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                tools:text="@tools:sample/date/ddmmyy" />
-
-            <TextView
-                android:id="@+id/textVotes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawableEnd="@drawable/ic_vote"
-                android:drawablePadding="8dp"
-                android:drawableRight="@drawable/ic_vote"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintBottom_toTopOf="@+id/textDescription"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                tools:text="5.4" />
-
-            <TextView
-                android:id="@+id/textDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintBottom_toTopOf="@+id/similarShowsRecycler"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textVotes"
-                tools:text="@tools:sample/lorem/random" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/similarShowsRecycler"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:clipToPadding="false"
-                android:paddingEnd="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingStart="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textDescription" />
-
-        </android.support.constraint.ConstraintLayout>
+        <include layout="@layout/detail_content" />
     </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>

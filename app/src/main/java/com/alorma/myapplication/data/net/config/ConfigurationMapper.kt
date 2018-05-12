@@ -1,4 +1,4 @@
-package com.alorma.myapplication.data.net
+package com.alorma.myapplication.data.net.config
 
 import com.alorma.myapplication.domain.model.Configuration
 import javax.inject.Inject
@@ -10,9 +10,11 @@ class ConfigurationMapper @Inject constructor() {
         const val BACKDROP_MIN_SIZE = "w1280"
     }
 
-    fun map(it: ConfigurationResponseDto): Configuration = Configuration(it.response.imagesUrl,
-            getImageSize(it.response.imageSize),
-            getImageSize(it.response.posterSize, BACKDROP_MIN_SIZE))
+    fun map(conf: ConfigurationResponseDto, genres: GenreDtoResponse): Configuration =
+            Configuration(conf.response.imagesUrl,
+                    getImageSize(conf.response.imageSize),
+                    getImageSize(conf.response.posterSize, BACKDROP_MIN_SIZE),
+                    map(genres))
 
     private fun getImageSize(it: List<String>, def: String = POSTER_MIN_SIZE): String {
         val index = it.indexOfFirst { it == def }
@@ -22,4 +24,6 @@ class ConfigurationMapper @Inject constructor() {
             it.last()
         }
     }
+
+    private fun map(it: GenreDtoResponse): List<Pair<Int, String>> = it.results.map { it.id to it.name }
 }

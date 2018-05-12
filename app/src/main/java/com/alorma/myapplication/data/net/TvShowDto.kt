@@ -8,4 +8,5 @@ data class TvShowDto(@SerializedName("id") val id: Int,
                      @SerializedName("first_air_date") val airDate: String?,
                      @SerializedName("backdrop_path") val backdropImage: String,
                      @SerializedName("poster_path") val posterImage: String,
-                     @SerializedName("vote_average") val vote: Float)
+                     @SerializedName("vote_average") val vote: Float,
+                     @SerializedName("genre_ids") val genres: List<Int>)

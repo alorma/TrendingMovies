@@ -15,7 +15,11 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
             TvShowDetailVm(tvShow.id, tvShow.title, tvShow.overview,
                     "${conf.imagesUrl}${conf.imageSize}${tvShow.images.backdrop}",
                     "${conf.imagesUrl}${conf.posterSize}${tvShow.images.backdrop}",
-                    mapDate(tvShow.date), String.format("%.2f", tvShow.vote))
+                    mapDate(tvShow.date), String.format("%.1f", tvShow.vote),
+                    addGenres(tvShow.genres, conf.genres))
+
+    private fun addGenres(ids: List<Int>, config: List<Pair<Int, String>>): List<String> =
+            config.toMap().filterKeys { ids.contains(it) }.values.toList()
 
     private fun mapDate(date: Date?): String = date?.let { dateFormatter format it }
             ?: resources.getString(R.string.no_air_date)

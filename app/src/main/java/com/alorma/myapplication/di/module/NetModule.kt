@@ -1,7 +1,7 @@
 package com.alorma.myapplication.di.module
 
 import android.content.Context
-import com.alorma.myapplication.data.net.ConfigApi
+import com.alorma.myapplication.data.net.config.ConfigApi
 import com.alorma.myapplication.data.net.ShowsApi
 import com.readystatesoftware.chuck.ChuckInterceptor
 import dagger.Module

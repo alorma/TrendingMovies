@@ -13,4 +13,42 @@
         <item name="android:windowBackground">@drawable/cold_start</item>
     </style>
 
+    <style name="Detail" />
+
+    <style name="Detail.Text" />
+
+    <style name="Detail.Text.Date">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
+    <style name="Detail.Text.Vote">
+        <item name="android:background">@drawable/detail_vote_background</item>
+        <item name="android:drawableEnd">@drawable/ic_vote</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableRight">@drawable/ic_vote</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
+    <style name="Detail.Text.Overview">
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+
+    <style name="Detail.SimilarShows">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+    </style>
+
 </resources>

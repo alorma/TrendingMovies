@@ -10,7 +10,7 @@ import dagger.Provides
 import javax.inject.Singleton
 import com.alorma.myapplication.data.cache.ConfigDataSource as ConfigCache
 import com.alorma.myapplication.data.cache.ShowsDataSource as Cache
-import com.alorma.myapplication.data.net.ConfigDataSource as ConfigNetwork
+import com.alorma.myapplication.data.net.config.ConfigDataSource as ConfigNetwork
 import com.alorma.myapplication.data.net.ShowsDataSource as Network
 
 @Module

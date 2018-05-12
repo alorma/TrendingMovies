@@ -50,8 +50,12 @@ class ShowDetailPresenter @Inject constructor(
                 })
                 .observeOnUI()
                 .subscribe(
-                        { render(detailStates success it) },
-                        { render(detailStates error it) }
+                        {
+                            render(detailStates success it)
+                        },
+                        {
+                            render(detailStates error it)
+                        }
                 )
     }
 
@@ -64,12 +68,8 @@ class ShowDetailPresenter @Inject constructor(
                 })
                 .observeOnUI()
                 .subscribe(
-                        {
-                            render(detailStates successSimilarShows it)
-                        },
-                        {
-                            render(detailStates errorSimilarShows it)
-                        }
+                        { render(detailStates successSimilarShows it) },
+                        { render(detailStates errorSimilarShows it) }
                 )
     }
 

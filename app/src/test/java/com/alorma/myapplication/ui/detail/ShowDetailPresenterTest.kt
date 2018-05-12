@@ -1,6 +1,7 @@
 package com.alorma.myapplication.ui.detail
 
 import com.alorma.myapplication.configureRxThreading
+import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
 import com.alorma.myapplication.domain.model.Images
@@ -8,7 +9,9 @@ import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.repository.ShowsRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainShowDetailUseCase
+import com.alorma.myapplication.domain.usecase.ObtainSimilarShowsUseCase
 import com.alorma.myapplication.ui.common.BaseView
+import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
@@ -51,11 +54,12 @@ class ShowDetailPresenterTest {
         showsApi = mock()
         view = mock()
 
-        val networkDs = Network(showsApi, NetworkMapper())
+        val networkDs = Network(showsApi, NetworkMapper(DateParser()))
         cacheDs = mock()
 
         val showsRepository = ShowsRepository(networkDs, cacheDs)
-        val useCase = ObtainShowDetailUseCase(showsRepository)
+        val showDetailUseCase = ObtainShowDetailUseCase(showsRepository)
+        val similarShowsUseCase = ObtainSimilarShowsUseCase(showsRepository)
         val configUseCase = mock<ObtainConfigurationUseCase>().apply {
             given(execute()).willReturn(Single.just(mock()))
         }
@@ -64,9 +68,12 @@ class ShowDetailPresenterTest {
             given(getString(ArgumentMatchers.anyInt())).willReturn("")
         }
 
-        val mapper = DetailMapper(resources)
+        val mapper = DetailMapper(resources, DateFormatter())
 
-        presenter = ShowDetailPresenter(DetailStates(mapper), DetailRoutes(), navigator, useCase, configUseCase)
+        presenter = ShowDetailPresenter(DetailStates(mapper), DetailRoutes(), navigator,
+                showDetailUseCase,
+                configUseCase,
+                similarShowsUseCase)
         presenter init view
     }
 
@@ -84,9 +91,14 @@ class ShowDetailPresenterTest {
 
         presenter reduce actions.load(12)
 
-        verify(view).render(capture(stateCaptor))
+        verify(view, times(2)).render(capture(stateCaptor))
 
-        assertTrue(stateCaptor.value is DetailStates.DetailState.Success)
+        stateCaptor.allValues.forEach {
+            System.out.println(it)
+        }
+
+        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
+        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarShows)
     }
 
     @Test
@@ -96,9 +108,10 @@ class ShowDetailPresenterTest {
 
         presenter reduce actions.load(12)
 
-        verify(view).render(capture(stateCaptor))
+        verify(view, times(2)).render(capture(stateCaptor))
 
-        assertTrue(stateCaptor.value is DetailStates.DetailState.Success)
+        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
+        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarShows)
     }
 
     @Test
@@ -107,11 +120,12 @@ class ShowDetailPresenterTest {
 
         presenter reduce actions.load(12)
 
-        verify(view).render(capture(stateCaptor))
+        verify(view, times((2))).render(capture(stateCaptor))
 
-        assertTrue(stateCaptor.value is DetailStates.DetailState.Error)
+        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Error)
+        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarShows)
     }
 
-    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", "", "", 0f)
-    private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "", "", Images("", ""), Date())
+    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
+    private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "", "", Images("", ""), Date(), 0f, listOf())
 }

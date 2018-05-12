@@ -37,7 +37,9 @@ class ShowsPresenter @Inject constructor(private val states: ShowsStates,
                 .doOnError { render(states loading false) }
                 .subscribe(
                         { render(states success it) },
-                        { render(states error it) }
+                        {
+                            render(states error it)
+                        }
                 )
     }
 

@@ -1,6 +1,7 @@
 package com.alorma.myapplication.ui.shows
 
 import com.alorma.myapplication.configureRxThreading
+import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.PagedResponse
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
@@ -60,7 +61,7 @@ class ShowsPresenterTest {
         actions = ShowsActions()
         routes = ShowsRoutes()
 
-        val networkDs = Network(showsApi, NetworkMapper())
+        val networkDs = Network(showsApi, NetworkMapper(DateParser()))
         val cacheDs = Cache()
 
         val showsRepository = ShowsRepository(networkDs, cacheDs)
@@ -188,6 +189,6 @@ class ShowsPresenterTest {
         assertEquals(12, (routeCaptor.value as ShowsRoutes.ShowsRoute.DetailRoute).id)
     }
 
-    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "", 0f)
+    private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
     private fun getTvShow(id: Int = 0): TvShowVM = TvShowVM(id, "", "")
 }

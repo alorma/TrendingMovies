@@ -65,7 +65,9 @@ class ShowDetailPresenter @Inject constructor(
                 .observeOnUI()
                 .subscribe(
                         { render(detailStates successSimilarShows it) },
-                        { render(detailStates errorSimilarShows it) }
+                        {
+                            render(detailStates errorSimilarShows it)
+                        }
                 )
     }
 

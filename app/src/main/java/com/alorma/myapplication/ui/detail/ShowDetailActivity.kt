@@ -11,6 +11,7 @@ import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
+import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.dsl
 import com.alorma.myapplication.ui.detail.di.DetailModule
@@ -41,6 +42,8 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
 
     @Inject
     lateinit var presenter: ShowDetailPresenter
+
+    private lateinit var adapter: DslAdapter<TvShowVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         object : RecyclerView.OnScrollListener() {
@@ -80,6 +83,20 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             it.getInt(EXTRA_ID, -1).takeIf { it != -1 }?.let {
                 presenter reduce actions.load(it)
             } ?: presenter reduce actions.back()
+        }
+
+        adapter = adapterDsl(similarShowsRecycler) {
+            item {
+                layout = R.layout.row_similar_show
+                bindView { view, tvShow ->
+                    loadSimilarShowImage(view.image, tvShow)
+                    view.text.text = tvShow.title
+                }
+                onClick {
+                    presenter reduce actions.openSimilarShow(it)
+                }
+            }
+            diff { it.id }
         }
     }
 
@@ -137,19 +154,7 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             return
         }
         similarShowsLabel.visibility = View.VISIBLE
-        adapterDsl<TvShowVM>(similarShowsRecycler) {
-            item {
-                layout = R.layout.row_similar_show
-                bindView { view, tvShow ->
-                    loadSimilarShowImage(view.image, tvShow)
-                    view.text.text = tvShow.title
-                }
-                onClick {
-                    presenter reduce actions.openSimilarShow(it)
-                }
-            }
-            diff { it.id }
-        }.update(state.shows)
+        adapter.update(state.shows)
         similarShowsRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
                 LinearLayoutManager.HORIZONTAL, false)
         enablePagination()

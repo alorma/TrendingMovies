@@ -8,6 +8,7 @@ import android.support.test.espresso.intent.Intents.intending
 import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.ProjectTestRule
+import com.alorma.myapplication.config.configureRxThreading
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
@@ -32,6 +33,10 @@ class ShowsActivityTest {
 
     val showsRepository: ShowsRepository = mock()
     val configRepository: ConfigurationRepository = mock()
+
+    init {
+        configureRxThreading()
+    }
 
     @Before
     fun setup() {

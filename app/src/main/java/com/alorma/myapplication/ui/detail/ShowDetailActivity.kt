@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
@@ -131,6 +132,11 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     }
 
     private fun onSimilarShows(state: DetailStates.DetailState.SimilarShows) {
+        if (state.shows.isEmpty()) {
+            similarShowsLabel.visibility = View.INVISIBLE
+            return
+        }
+        similarShowsLabel.visibility = View.VISIBLE
         adapterDsl<TvShowVM>(similarShowsRecycler) {
             item {
                 layout = R.layout.row_similar_show

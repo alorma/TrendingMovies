@@ -2,6 +2,7 @@ package com.alorma.myapplication.config
 
 
 import android.app.Activity
+import android.content.Intent
 import com.schibsted.spain.barista.rule.BaristaRule
 import com.schibsted.spain.barista.rule.cleardata.ClearDatabaseRule
 import com.schibsted.spain.barista.rule.cleardata.ClearFilesRule
@@ -34,4 +35,5 @@ class ProjectTestRule<T : Activity>(activityClass: Class<T>, private val target:
     }
 
     fun run() = baristaRule.launchActivity()
+    fun run(intent: Intent) = baristaRule.launchActivity(intent)
 }

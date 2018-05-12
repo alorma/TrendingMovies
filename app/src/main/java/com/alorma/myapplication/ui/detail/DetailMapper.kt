@@ -14,10 +14,17 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
 
     fun success(tvShow: TvShow, conf: Configuration): TvShowDetailVm =
             TvShowDetailVm(tvShow.id, tvShow.title, tvShow.overview,
-                    "${conf.imagesUrl}${conf.imageSize}${tvShow.images.backdrop}",
-                    "${conf.imagesUrl}${conf.posterSize}${tvShow.images.backdrop}",
+                    getHeroImage(conf, tvShow),
                     mapDate(tvShow.date), String.format("%.1f", tvShow.vote),
                     addGenres(tvShow.genres, conf.genres))
+
+    private fun getHeroImage(conf: Configuration, tvShow: TvShow) =
+            if (tvShow.images.backdrop.isNullOrBlank() && tvShow.images.poster.isNullOrBlank()) {
+                null
+            } else {
+                "${conf.imagesUrl}${conf.imageSize}${tvShow.images.backdrop
+                        ?: tvShow.images.poster}"
+            }
 
     fun mapSimilar(tvShow: TvShow, conf: Configuration): TvShowVM = TvShowVM(tvShow.id, tvShow.title,
             "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}")

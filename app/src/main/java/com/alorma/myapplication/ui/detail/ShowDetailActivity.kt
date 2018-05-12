@@ -103,16 +103,17 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     }
 
     private fun showImage(tvShowDetailVm: TvShowDetailVm) {
-        val requestOptions = RequestOptions().apply {
-            placeholder(R.color.grey_300)
-            error(R.color.grey_300)
-        }
+        tvShowDetailVm.image?.let {
+            val requestOptions = RequestOptions().apply {
+                placeholder(R.color.grey_300)
+                error(R.color.grey_300)
+            }
 
-        val requestManager = Glide.with(heroImage).setDefaultRequestOptions(requestOptions)
-        requestManager
-                .load(tvShowDetailVm.image)
-                .thumbnail(requestManager.load(tvShowDetailVm.thumb))
-                .into(heroImage)
+            val requestManager = Glide.with(heroImage).setDefaultRequestOptions(requestOptions)
+            requestManager
+                    .load(it)
+                    .into(heroImage)
+        } ?: heroImage.setImageResource(R.color.grey_300)
     }
 
     private fun showGenres(tvShowDetailVm: TvShowDetailVm) {
@@ -149,15 +150,17 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     }
 
     private fun loadSimilarShowImage(image: ImageView, tvShow: TvShowVM) {
-        val requestOptions = RequestOptions().apply {
-            placeholder(R.color.grey_300)
-            error(R.color.grey_300)
-        }
+        tvShow.image?.let {
+            val requestOptions = RequestOptions().apply {
+                placeholder(R.color.grey_300)
+                error(R.color.grey_300)
+            }
 
-        val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
-        requestManager
-                .load(tvShow.image)
-                .into(image)
+            val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
+            requestManager
+                    .load(it)
+                    .into(image)
+        } ?: image.setImageResource(R.color.grey_300)
     }
 
     private fun enablePagination() = similarShowsRecycler.addOnScrollListener(recyclerViewListener)

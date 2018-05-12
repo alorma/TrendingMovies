@@ -9,7 +9,14 @@ import javax.inject.Inject
 class ShowsMapper @Inject constructor(private val resources: ResourcesProvider) {
 
     fun mapSuccess(tvShow: TvShow, conf: Configuration): TvShowVM = TvShowVM(tvShow.id, tvShow.title,
-            "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}")
+            getPosterImage(conf, tvShow))
+
+    private fun getPosterImage(conf: Configuration, tvShow: TvShow) =
+            if (tvShow.images.poster.isNullOrBlank()) {
+                null
+            } else {
+                "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}"
+            }
 
     infix fun mapError(it: Throwable): String = resources.getString(R.string.generic_error)
 

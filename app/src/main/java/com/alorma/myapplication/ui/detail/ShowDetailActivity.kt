@@ -43,7 +43,8 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     @Inject
     lateinit var presenter: ShowDetailPresenter
 
-    private lateinit var adapter: DslAdapter<TvShowVM>
+    private lateinit var similarShowsAdapter: DslAdapter<TvShowVM>
+    private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         object : RecyclerView.OnScrollListener() {
@@ -85,7 +86,7 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             } ?: presenter reduce actions.back()
         }
 
-        adapter = adapterDsl(similarShowsRecycler) {
+        similarShowsAdapter = adapterDsl(similarShowsRecycler) {
             item {
                 layout = R.layout.row_similar_show
                 bindView { view, tvShow ->
@@ -97,6 +98,15 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
                 }
             }
             diff { it.id }
+        }
+        genresAdapter = adapterDsl(genresRecycler) {
+            item {
+                layout = R.layout.detail_genre_chip
+                bindView { view, genre ->
+                    view.genreText.text = genre
+                }
+            }
+            diff { it.hashCode() }
         }
     }
 
@@ -135,15 +145,7 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     }
 
     private fun showGenres(tvShowDetailVm: TvShowDetailVm) {
-        adapterDsl<String>(genresRecycler) {
-            item {
-                layout = R.layout.detail_genre_chip
-                bindView { view, genre ->
-                    view.genreText.text = genre
-                }
-            }
-            diff { it.hashCode() }
-        }.update(tvShowDetailVm.genres)
+        genresAdapter.update(tvShowDetailVm.genres)
         genresRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
                 LinearLayoutManager.HORIZONTAL, false)
     }
@@ -154,7 +156,7 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             return
         }
         similarShowsLabel.visibility = View.VISIBLE
-        adapter.update(state.shows)
+        similarShowsAdapter.update(state.shows)
         similarShowsRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
                 LinearLayoutManager.HORIZONTAL, false)
         enablePagination()

@@ -6,7 +6,7 @@ import javax.inject.Inject
 class ConfigurationMapper @Inject constructor() {
 
     companion object {
-        const val POSTER_MIN_SIZE = "w300"
+        const val POSTER_MIN_SIZE = "w500"
         const val BACKDROP_MIN_SIZE = "w1280"
     }
 

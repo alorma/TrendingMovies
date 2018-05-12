@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/detail_front"
     tools:layout_editor_absoluteY="205dp"
     tools:showIn="@layout/detail_activity">
 
@@ -51,14 +50,24 @@
         app:layout_constraintTop_toBottomOf="@+id/genresRecycler"
         tools:text="Overview" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/similarShowsRecycler"
-        style="@style/Detail.SimilarShows"
+    <TextView
+        android:id="@+id/similarShowsLabel"
+        style="@style/Detail.Text.SimilarShowsLabel"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textDescription" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/similarShowsRecycler"
+        style="@style/Detail.SimilarShows"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/similarShowsLabel" />
 
 </android.support.constraint.ConstraintLayout>

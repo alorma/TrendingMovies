@@ -35,6 +35,14 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
     </style>
 
+
+    <style name="Detail.Text.SimilarShowsLabel">
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:text">@string/detail_similar_shows_label</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
     <style name="Detail.Genres">
         <item name="android:clipToPadding">false</item>
         <item name="android:paddingTop">8dp</item>
@@ -60,9 +68,10 @@
     <style name="Detail.SimilarShows">
         <item name="android:clipToPadding">false</item>
         <item name="android:paddingEnd">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingStart">8dp</item>
     </style>
 
+    <string name="detail_similar_shows_label">Similar shows</string>
 </resources>

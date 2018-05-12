@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">TrendingTV</string>
     <string name="generic_error">An error occurred</string>
     <string name="detail_description">Show image</string>
     <string name="no_air_date">No air date available</string>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
@@ -13,6 +14,7 @@ import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.dsl
 import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.shows.ShowsActivity
+import com.alorma.myapplication.ui.shows.TvShowVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.detail_activity.*
@@ -104,10 +106,9 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
         val requestOptions = RequestOptions().apply {
             placeholder(R.color.grey_300)
             error(R.color.grey_300)
-
         }
-        val requestManager = Glide.with(heroImage)
-                .setDefaultRequestOptions(requestOptions)
+
+        val requestManager = Glide.with(heroImage).setDefaultRequestOptions(requestOptions)
         requestManager
                 .load(tvShowDetailVm.image)
                 .thumbnail(requestManager.load(tvShowDetailVm.thumb))
@@ -129,17 +130,31 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     }
 
     private fun onSimilarShows(state: DetailStates.DetailState.SimilarShows) {
-        adapterDsl<TvShowDetailVm>(similarShowsRecycler) {
+        adapterDsl<TvShowVM>(similarShowsRecycler) {
             item {
                 layout = R.layout.row_similar_show
                 bindView { view, tvShow ->
+                    loadSimilarShowImage(view.image, tvShow)
                     view.text.text = tvShow.title
                 }
             }
             diff { it.id }
         }.update(state.shows)
-        similarShowsRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity)
+        similarShowsRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
+                LinearLayoutManager.HORIZONTAL, false)
         enablePagination()
+    }
+
+    private fun loadSimilarShowImage(image: ImageView, tvShow: TvShowVM) {
+        val requestOptions = RequestOptions().apply {
+            placeholder(R.color.grey_300)
+            error(R.color.grey_300)
+        }
+
+        val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
+        requestManager
+                .load(tvShow.image)
+                .into(image)
     }
 
     private fun enablePagination() = similarShowsRecycler.addOnScrollListener(recyclerViewListener)

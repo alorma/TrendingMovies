@@ -8,6 +8,7 @@ import android.support.test.espresso.intent.Intents.intending
 import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.ProjectTestRule
+import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.TvShow
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.ShowsRepository
@@ -23,6 +24,7 @@ import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 class ShowsActivityTest {
     @get:Rule
@@ -91,7 +93,7 @@ class ShowsActivityTest {
 
     private fun generateItems(number: Int): List<TvShow> = (1..number).map { generateItem(it) }
 
-    private fun generateItem(id: Int): TvShow = TvShow(id, "Title $id", "")
+    private fun generateItem(id: Int): TvShow = TvShow(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
 
     private fun getMatcherOpenDetailActivity(): Matcher<Intent> = hasComponent(ShowDetailActivity::class.java.name)
 

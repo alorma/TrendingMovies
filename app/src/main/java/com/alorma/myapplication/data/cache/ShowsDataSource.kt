@@ -3,6 +3,9 @@ package com.alorma.myapplication.data.cache
 import com.alorma.myapplication.domain.model.TvShow
 
 class ShowsDataSource {
+
+    private val allItems: MutableList<TvShow> = mutableListOf()
+
     private val pageSimilarShowsMap: MutableMap<Int, Int> = mutableMapOf()
 
     private val items: MutableList<TvShow> = mutableListOf()
@@ -15,11 +18,12 @@ class ShowsDataSource {
 
     fun save(items: List<TvShow>) {
         this.items.addAll(items)
+        this.allItems.addAll(items)
     }
 
     fun get(): List<TvShow> = items.toList()
 
-    fun get(id: Int): TvShow? = items.firstOrNull { it.id == id }
+    fun get(id: Int): TvShow? = allItems.firstOrNull { it.id == id }
 
     fun clearSimilar(id: Int) {
         similarShowsMap[id]?.clear()
@@ -32,6 +36,7 @@ class ShowsDataSource {
             similarShowsMap[id] = mutableListOf()
         }
         this.similarShowsMap[id]?.addAll(items)
+        this.allItems.addAll(items)
     }
 
     fun setPageSimilarShows(id: Int, it: Int) {

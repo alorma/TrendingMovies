@@ -31,6 +31,8 @@ class ShowDetailPresenter @Inject constructor(
             }
             DetailActions.DetailAction.LoadSimilarPage -> loadSimilarShows(id, action)
             DetailActions.DetailAction.Back -> detailNavigator navigate detailRoutes.back()
+            is DetailActions.DetailAction.OpenShow ->
+                detailNavigator navigate detailRoutes.detail(action.id, action.text)
         }
     }
 

@@ -7,8 +7,13 @@ class DetailNavigator(activity: Activity) :
         Navigator<DetailRoutes.DetailRoute>(activity) {
 
     override fun navigate(route: DetailRoutes.DetailRoute) {
-        when(route) {
+        when (route) {
             DetailRoutes.DetailRoute.Back -> activity.finish()
+            is DetailRoutes.DetailRoute.Detail -> openDetail(route)
         }
+    }
+
+    private fun openDetail(route: DetailRoutes.DetailRoute.Detail) {
+        start(ShowDetailActivity.launch(activity, route.id, route.title))
     }
 }

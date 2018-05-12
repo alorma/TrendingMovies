@@ -18,6 +18,6 @@ interface ShowsApi {
     @GET("tv/{tv_id}/similar")
     fun similarPage(@Path("tv_id") id: Int, @Query("page") page: Int): Single<PagedResponse<TvShowDto>>
 
-    @GET("/tv/{tv_id}")
+    @GET("tv/{tv_id}")
     fun item(@Path("tv_id") id: Int): Single<TvShowDto>
 }

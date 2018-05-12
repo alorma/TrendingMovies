@@ -137,6 +137,9 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
                     loadSimilarShowImage(view.image, tvShow)
                     view.text.text = tvShow.title
                 }
+                onClick {
+                    presenter reduce actions.openSimilarShow(it)
+                }
             }
             diff { it.id }
         }.update(state.shows)

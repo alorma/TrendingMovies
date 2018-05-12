@@ -10,23 +10,12 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="384dp"
+        android:layout_width="0dp"
         android:layout_height="?actionBarSize"
         android:background="@android:color/transparent"
-        tools:title="The Big Bang Theory" />
-
-    <TextView
-        android:id="@+id/textDate"
-        style="@style/Detail.Text.Date"
-        android:layout_width="293dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@+id/textVotes"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:text="@tools:sample/date/ddmmyy" />
+        tools:title="The Big Bang Theory" />
 
     <TextView
         android:id="@+id/textVotes"
@@ -34,9 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
         tools:text="5.4" />
 
     <android.support.v7.widget.RecyclerView
@@ -48,7 +37,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textDate" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/textDescription"

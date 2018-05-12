@@ -76,8 +76,8 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
 
     private fun setTexts(tvShowDetailVm: TvShowDetailVm) {
         toolbar.title = tvShowDetailVm.title
+        toolbar.subtitle = tvShowDetailVm.date
         textDescription.text = tvShowDetailVm.overView
-        textDate.text = tvShowDetailVm.date
         textVotes.text = tvShowDetailVm.vote
     }
 

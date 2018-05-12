@@ -17,18 +17,10 @@
 
     <style name="Detail.Text" />
 
-    <style name="Detail.Text.Date">
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
-    </style>
-
     <style name="Detail.Text.Vote">
-        <item name="android:background">@drawable/detail_vote_background</item>
         <item name="android:drawableEnd">@drawable/ic_vote</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:drawableRight">@drawable/ic_vote</item>
-        <item name="android:elevation">8dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">8dp</item>
         <item name="android:paddingEnd">8dp</item>

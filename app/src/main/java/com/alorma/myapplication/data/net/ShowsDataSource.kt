@@ -20,5 +20,18 @@ class ShowsDataSource @Inject constructor(
         }
     }
 
+    fun similar(id: Int, page: Int? = null): Single<Triple<Int, Int, List<TvShow>>> {
+        val items: Single<PagedResponse<TvShowDto>> = page?.let { showsApi.similarPage(id, it) }
+                ?: showsApi.similar(id)
+
+        return items.map {
+            Triple(
+                    it.page,
+                    it.totalPages,
+                    showsMapper.map(it.results)
+            )
+        }
+    }
+
     fun item(id: Int): Single<TvShow> = showsApi.item(id).map { showsMapper.mapItem(it) }
 }

@@ -2,6 +2,7 @@ package com.alorma.myapplication.ui.detail
 
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.DateParser
+import com.alorma.myapplication.data.net.PagedResponse
 import com.alorma.myapplication.data.net.ShowsApi
 import com.alorma.myapplication.data.net.TvShowDto
 import com.alorma.myapplication.domain.model.Images
@@ -94,10 +95,6 @@ class ShowDetailPresenterTest {
 
         verify(view, times(2)).render(capture(stateCaptor))
 
-        stateCaptor.allValues.forEach {
-            System.out.println(it)
-        }
-
         assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
         assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarShows)
     }
@@ -133,6 +130,21 @@ class ShowDetailPresenterTest {
 
         verify(navigator).navigate(capture(routeCaptor))
         assertTrue(routeCaptor.value is DetailRoutes.DetailRoute.Detail)
+    }
+
+    @Test
+    fun onLoad_renderSimilarShows() {
+        given(cacheDs.get(eq(12))).willReturn(getTvShow(12))
+        val response = PagedResponse(0, 0,
+                listOf(generateTvShowDto(), generateTvShowDto(), generateTvShowDto()))
+        given(showsApi.similar(eq(12))).willReturn(Single.just(response))
+
+        presenter reduce actions.load(12)
+
+        verify(view, times(2)).render(capture(stateCaptor))
+
+        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
+        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.SimilarShows)
     }
 
     private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "2017-04-10", "", "", 0f, listOf())

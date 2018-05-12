@@ -15,7 +15,7 @@ class HolderBuilder<M> {
     @LayoutRes
     var layout: Int = 0
     lateinit var onBind: (View, M) -> Unit
-    lateinit var onClick: (M) -> Unit
+    var onClick: ((M) -> Unit)? = null
 
     fun bindView(function: (View, M) -> Unit) {
         this.onBind = function
@@ -80,7 +80,7 @@ class DslAdapter<M>(@LayoutRes private val holderBuilder: HolderBuilder<M>,
             with(holderBuilder) {
                 onBind(itemView, vm)
                 itemView.setOnClickListener {
-                    onClick(vm)
+                    onClick?.invoke(vm)
                 }
             }
         }

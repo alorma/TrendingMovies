@@ -71,11 +71,16 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             val requestOptions = RequestOptions().apply {
                 placeholder(R.color.grey_300)
                 error(R.color.grey_300)
+
             }
             textDate.text = date
             textVotes.text = vote
-            Glide.with(heroImage).setDefaultRequestOptions(requestOptions)
-                    .load(image).into(heroImage)
+            val requestManager = Glide.with(heroImage)
+                    .setDefaultRequestOptions(requestOptions)
+            requestManager
+                    .load(image)
+                    .thumbnail(requestManager.load(thumb))
+                    .into(heroImage)
         }
 
     }

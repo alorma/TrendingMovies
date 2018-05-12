@@ -86,6 +86,25 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             } ?: presenter reduce actions.back()
         }
 
+        initGenres()
+        initSimilarShows()
+    }
+
+    private fun initSimilarShows() {
+        genresAdapter = adapterDsl(genresRecycler) {
+            item {
+                layout = R.layout.detail_genre_chip
+                bindView { view, genre ->
+                    view.genreText.text = genre
+                }
+            }
+            diff { it.hashCode() }
+        }
+        similarShowsRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
+                LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    private fun initGenres() {
         similarShowsAdapter = adapterDsl(similarShowsRecycler) {
             item {
                 layout = R.layout.row_similar_show
@@ -99,15 +118,8 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
             }
             diff { it.id }
         }
-        genresAdapter = adapterDsl(genresRecycler) {
-            item {
-                layout = R.layout.detail_genre_chip
-                bindView { view, genre ->
-                    view.genreText.text = genre
-                }
-            }
-            diff { it.hashCode() }
-        }
+        genresRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
+                LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun render(state: DetailStates.DetailState) {
@@ -146,8 +158,6 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
 
     private fun showGenres(tvShowDetailVm: TvShowDetailVm) {
         genresAdapter.update(tvShowDetailVm.genres)
-        genresRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
-                LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun onSimilarShows(state: DetailStates.DetailState.SimilarShows) {
@@ -157,8 +167,6 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
         }
         similarShowsLabel.visibility = View.VISIBLE
         similarShowsAdapter.update(state.shows)
-        similarShowsRecycler.layoutManager = LinearLayoutManager(this@ShowDetailActivity,
-                LinearLayoutManager.HORIZONTAL, false)
         enablePagination()
     }
 

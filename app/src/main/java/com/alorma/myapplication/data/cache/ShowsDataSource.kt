@@ -12,6 +12,8 @@ class ShowsDataSource {
 
     private val similarShowsMap: MutableMap<Int, MutableList<TvShow>> = mutableMapOf()
 
+    var page: Int = 0
+
     fun clear() {
         items.clear()
     }

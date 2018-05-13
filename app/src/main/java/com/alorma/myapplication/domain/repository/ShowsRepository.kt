@@ -12,15 +12,24 @@ class ShowsRepository(private val network: Network,
     private var page: Int = 1
     private var similarPage: Int = 1
 
-    fun listAll(): Single<List<TvShow>> = execute(network.listAll()
-            .doOnSubscribe { cache.clear() })
+    fun listAll(): Single<List<TvShow>> = execute(Single.defer {
+        val cacheItems = cache.get()
+        if (cacheItems.isNotEmpty()) {
+            Single.just(Triple(cache.page, cache.page + 1, cacheItems))
+        } else {
+            network.listAll()
+        }
+    }.doOnSubscribe { cache.clear() })
 
     fun listNextPage(): Single<List<TvShow>> = execute(network.listAll(page))
 
     private fun execute(operation: Single<Triple<Int, Int, List<TvShow>>>):
             Single<List<TvShow>> =
             operation.doOnSuccess { page = calculatePage(it) }
-                    .doOnSuccess { cache.save(it.third) }
+                    .doOnSuccess {
+                        cache.save(it.third)
+                        cache.page = page
+                    }
                     .map { cache.get() }.subscribeOnIO()
 
     fun similar(id: Int): Single<List<TvShow>> = executeSimilar(id, getSimilarShows(id))

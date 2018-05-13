@@ -77,6 +77,9 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
     }
 
     private fun initData() {
+        initGenres()
+        initSimilarShows()
+
         intent.extras?.let {
             it.getString(EXTRA_TITLE)?.let {
                 toolbar.title = it
@@ -85,9 +88,6 @@ class ShowDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailStat
                 presenter reduce actions.load(it)
             } ?: presenter reduce actions.back()
         }
-
-        initGenres()
-        initSimilarShows()
     }
 
     private fun initSimilarShows() {

@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.detail
 
-import android.app.Instrumentation
 import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.intent.Intents
@@ -150,6 +149,4 @@ class ShowDetailActivityTest {
             listOf(1 to "Comedy", 2 to "Drama"))
 
     private fun getMatcherOpenDetailActivity(): Matcher<Intent> = IntentMatchers.hasComponent(ShowDetailActivity::class.java.name)
-
-    private fun getGenericResult(): Instrumentation.ActivityResult = Instrumentation.ActivityResult(2, Intent())
 }

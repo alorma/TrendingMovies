@@ -13,6 +13,24 @@
         <item name="android:windowBackground">@drawable/cold_start</item>
     </style>
 
+
+    <style name="Shows" />
+
+    <style name="Shows.Text" />
+
+    <style name="Shows.Text.Vote">
+        <item name="android:drawableEnd">@drawable/ic_vote</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableRight">@drawable/ic_vote</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
     <style name="Detail" />
 
     <style name="Detail.Text" />

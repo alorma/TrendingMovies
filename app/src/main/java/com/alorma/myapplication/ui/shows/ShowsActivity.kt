@@ -67,6 +67,7 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState> {
                 layout = R.layout.row_tv_show_list
                 bindView { view, tvShow ->
                     view.text.text = tvShow.title
+                    view.votes.text = tvShow.votes
                     loadShowImage(view.image, tvShow)
                 }
                 onClick {
@@ -84,6 +85,8 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState> {
                 placeholder(R.color.grey_300)
                 error(R.color.grey_300)
             }
+
+            image.contentDescription = tvShow.title
 
             val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
             requestManager

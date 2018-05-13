@@ -27,7 +27,8 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
             }
 
     fun mapSimilar(tvShow: TvShow, conf: Configuration): TvShowVM = TvShowVM(tvShow.id, tvShow.title,
-            "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}")
+            "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}",
+            String.format("%.1f", tvShow.vote))
 
     private fun addGenres(ids: List<Int>, config: List<Pair<Int, String>>): List<String> =
             config.toMap().filterKeys { ids.contains(it) }.values.toList()

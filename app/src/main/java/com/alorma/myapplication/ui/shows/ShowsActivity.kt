@@ -2,15 +2,19 @@ package com.alorma.myapplication.ui.shows
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingTvApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.shows.di.ShowsModule
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_show_list.view.*
 import javax.inject.Inject
@@ -56,12 +60,14 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState> {
     }
 
     private fun initView() {
-        recycler.layoutManager = LinearLayoutManager(this@ShowsActivity)
+        val columns = resources.getInteger(R.integer.columns_shows)
+        recycler.layoutManager = GridLayoutManager(this@ShowsActivity, columns)
         adapter = adapterDsl(recycler) {
             item {
                 layout = R.layout.row_tv_show_list
                 bindView { view, tvShow ->
-                    view.title.text = tvShow.title
+                    view.text.text = tvShow.title
+                    loadShowImage(view.image, tvShow)
                 }
                 onClick {
                     presenter reduce actions.detail(it)
@@ -70,6 +76,20 @@ class ShowsActivity : AppCompatActivity(), BaseView<ShowsStates.ShowsState> {
 
             diff { it.id }
         }
+    }
+
+    private fun loadShowImage(image: ImageView, tvShow: TvShowVM) {
+        tvShow.image?.let {
+            val requestOptions = RequestOptions().apply {
+                placeholder(R.color.grey_300)
+                error(R.color.grey_300)
+            }
+
+            val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
+            requestManager
+                    .load(it)
+                    .into(image)
+        } ?: image.setImageResource(R.color.grey_300)
     }
 
     override fun render(state: ShowsStates.ShowsState) {

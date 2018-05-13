@@ -149,5 +149,5 @@ class ShowDetailPresenterTest {
 
     private fun generateTvShowDto(id: Int = 0): TvShowDto = TvShowDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
     private fun getTvShow(id: Int = 0): TvShow = TvShow(id, "", "", Images("", ""), Date(), 0f, listOf())
-    private fun getTvShowVM(id: Int = 0): TvShowVM = TvShowVM(id, "", "")
+    private fun getTvShowVM(id: Int = 0): TvShowVM = TvShowVM(id, "", "", "5.4")
 }

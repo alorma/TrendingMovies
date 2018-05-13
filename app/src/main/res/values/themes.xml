@@ -1,0 +1,16 @@
+<resources>
+
+    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="Base.AppTheme.Splash">
+        <item name="android:windowBackground">@drawable/cold_start</item>
+    </style>
+
+    <style name="AppTheme.Splash" parent="Base.AppTheme.Splash" />
+</resources>

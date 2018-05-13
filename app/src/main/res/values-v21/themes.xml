@@ -1,9 +1,6 @@
 <resources>
-
     <style name="AppTheme.Splash">
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowBackground">@drawable/cold_start</item>
     </style>
-
 </resources>

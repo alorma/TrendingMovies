@@ -60,7 +60,7 @@ class SearchPresenter @Inject constructor(
                 })
                 .observeOnUI()
                 .subscribe(
-                        { render(states.success(it)) },
+                        { render(states.success(it, true)) },
                         { render(states error it) }
                 )
     }

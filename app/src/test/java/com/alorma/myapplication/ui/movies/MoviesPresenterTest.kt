@@ -9,6 +9,7 @@ import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseView
+import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single

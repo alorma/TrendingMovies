@@ -6,7 +6,7 @@ import javax.inject.Inject
 class MoviesRoutes @Inject constructor() {
     sealed class MovieRoute : Route() {
         data class DetailRoute(val id: Int, val title: String) : MovieRoute()
-        object Search: MovieRoute()
+        object Search : MovieRoute()
     }
 
     fun detail(id: Int, title: String): MovieRoute = MovieRoute.DetailRoute(id, title)

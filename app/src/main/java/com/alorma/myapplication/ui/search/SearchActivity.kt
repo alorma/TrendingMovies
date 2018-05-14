@@ -23,7 +23,7 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        component add SearchModule() inject this
+        component add SearchModule(this) inject this
 
         presenter init this
     }

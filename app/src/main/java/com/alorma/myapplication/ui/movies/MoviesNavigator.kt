@@ -14,8 +14,7 @@ class MoviesNavigator(activity: Activity) : Navigator<MoviesRoutes.MovieRoute>(a
         }
     }
 
-    private fun openDetail(route: MoviesRoutes.MovieRoute.DetailRoute)
-            = start(MovieDetailActivity.launch(activity, route.id, route.title))
+    private fun openDetail(route: MoviesRoutes.MovieRoute.DetailRoute) = start(MovieDetailActivity.launch(activity, route.id, route.title))
 
     private fun openSearch() = start(SearchActivity.launch(activity))
 }

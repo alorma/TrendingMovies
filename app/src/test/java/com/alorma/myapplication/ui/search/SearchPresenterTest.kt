@@ -17,17 +17,22 @@ class SearchPresenterTest {
     private lateinit var actions: SearchActions
     private lateinit var presenter: SearchPresenter
     private lateinit var view: BaseView<SearchStates.SearchState>
+    private lateinit var navigator: SearchNavigator
 
     @Captor
     private lateinit var stateCaptor: ArgumentCaptor<SearchStates.SearchState>
+
+    @Captor
+    private lateinit var routeCaptor: ArgumentCaptor<SearchRoutes.SearchRoute>
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
         actions = SearchActions()
         view = mock()
+        navigator = mock()
 
-        presenter = SearchPresenter(SearchStates())
+        presenter = SearchPresenter(SearchStates(), SearchRoutes(), navigator)
         presenter init view
     }
 
@@ -54,4 +59,15 @@ class SearchPresenterTest {
         verifyZeroInteractions(view)
     }
 
+    @Test
+    fun onActionOpenDetail_navigateToDetail() {
+        presenter reduce actions.detail(getMovieSearchVM(12))
+
+        verify(navigator) navigate capture(routeCaptor)
+
+        assertTrue(routeCaptor.value is SearchRoutes.SearchRoute.OpenDetail)
+    }
+
+    private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
+            MovieSearchItemVM(id, "", "", "", "")
 }

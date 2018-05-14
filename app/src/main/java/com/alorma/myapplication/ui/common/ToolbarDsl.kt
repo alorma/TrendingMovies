@@ -24,7 +24,7 @@ class ViewItemBuilder {
     lateinit var setupAction: (View) -> Unit
 
     @Suppress("UNCHECKED_CAST")
-    inline fun <reified V: View> setup(noinline setup: (V) -> Unit) {
+    inline fun <reified V : View> setup(noinline setup: (V) -> Unit) {
         this.setupAction = setup as (View) -> Unit
     }
 }

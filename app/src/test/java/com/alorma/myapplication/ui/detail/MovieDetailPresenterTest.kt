@@ -13,6 +13,7 @@ import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DateFormatter
+import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*

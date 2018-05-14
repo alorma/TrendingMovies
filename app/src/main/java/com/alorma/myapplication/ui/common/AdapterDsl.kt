@@ -40,7 +40,7 @@ class AdapterDslBuilder<M> {
 
     fun build(): DslAdapter<M> = DslAdapter(holderBuilder, comparator)
 
-    fun item(setup: HolderBuilder<M>.() -> Unit){
+    fun item(setup: HolderBuilder<M>.() -> Unit) {
         this.holderBuilder = HolderBuilder<M>().apply(setup)
     }
 

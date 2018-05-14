@@ -51,8 +51,8 @@
         tools:text="Overview" />
 
     <TextView
-        android:id="@+id/similarShowsLabel"
-        style="@style/Detail.Text.SimilarShowsLabel"
+        android:id="@+id/similarMoviesLabel"
+        style="@style/Detail.Text.SimilarMoviesLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -63,13 +63,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textDescription" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/similarShowsRecycler"
-        style="@style/Detail.SimilarShows"
+        android:id="@+id/similarMoviesRecycler"
+        style="@style/Detail.SimilarMovies"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/similarShowsLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/similarMoviesLabel" />
 
 </android.support.constraint.ConstraintLayout>

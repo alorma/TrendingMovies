@@ -5,5 +5,5 @@ import dagger.Subcomponent
 
 @Subcomponent(modules = [DetailModule::class])
 interface DetailComponent {
-    infix fun inject(detailActivity: ShowDetailActivity)
+    infix fun inject(detailActivity: MovieDetailActivity)
 }

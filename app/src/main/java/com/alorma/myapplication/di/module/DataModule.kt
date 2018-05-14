@@ -1,7 +1,7 @@
 package com.alorma.myapplication.di.module
 
 import com.alorma.myapplication.data.cache.ConfigDataSource
-import com.alorma.myapplication.data.cache.ShowsDataSource
+import com.alorma.myapplication.data.cache.MoviesDataSource
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -11,7 +11,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideShowsCache(): ShowsDataSource = ShowsDataSource()
+    fun provideMoviesCache(): MoviesDataSource = MoviesDataSource()
 
     @Provides
     @Singleton

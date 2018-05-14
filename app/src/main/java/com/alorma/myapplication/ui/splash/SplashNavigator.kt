@@ -5,7 +5,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.alorma.myapplication.R
 import com.alorma.myapplication.ui.common.Navigator
-import com.alorma.myapplication.ui.shows.ShowsActivity
+import com.alorma.myapplication.ui.movies.MoviesActivity
 
 class SplashNavigator(activity: Activity) : Navigator<SplashRoutes.SplashRoute>(activity) {
 
@@ -16,7 +16,7 @@ class SplashNavigator(activity: Activity) : Navigator<SplashRoutes.SplashRoute>(
         }
     }
 
-    private fun openMain() = start(Intent(activity, ShowsActivity::class.java)).also {
+    private fun openMain() = start(Intent(activity, MoviesActivity::class.java)).also {
         activity.finish()
     }
 

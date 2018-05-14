@@ -1,15 +1,15 @@
 <resources>
-    <style name="Shows" />
+    <style name="Movies" />
 
-    <style name="Shows.List">
+    <style name="Movies.List">
         <item name="android:paddingTop">30dp</item>
         <item name="android:paddingBottom">60dp</item>
         <item name="android:clipToPadding">false</item>
     </style>
 
-    <style name="Shows.Text" />
+    <style name="Movies.Text" />
 
-    <style name="Shows.Text.Vote">
+    <style name="Movies.Text.Vote">
         <item name="android:drawableEnd">@drawable/ic_vote</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:drawableRight">@drawable/ic_vote</item>
@@ -45,10 +45,10 @@
     </style>
 
 
-    <style name="Detail.Text.SimilarShowsLabel">
+    <style name="Detail.Text.SimilarMoviesLabel">
         <item name="android:padding">8dp</item>
         <item name="android:textColor">?colorAccent</item>
-        <item name="android:text">@string/detail_similar_shows_label</item>
+        <item name="android:text">@string/detail_similar_movies_label</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
     </style>
 
@@ -74,7 +74,7 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
-    <style name="Detail.SimilarShows">
+    <style name="Detail.SimilarMovies">
         <item name="android:clipToPadding">false</item>
         <item name="android:paddingEnd">16dp</item>
         <item name="android:paddingLeft">8dp</item>
@@ -82,5 +82,5 @@
         <item name="android:paddingStart">8dp</item>
     </style>
 
-    <string name="detail_similar_shows_label">Similar shows</string>
+    <string name="detail_similar_movies_label">Similar movies</string>
 </resources>

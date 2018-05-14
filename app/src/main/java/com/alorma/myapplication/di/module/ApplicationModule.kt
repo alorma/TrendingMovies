@@ -2,16 +2,16 @@ package com.alorma.myapplication.di.module
 
 import android.content.Context
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
-import com.alorma.myapplication.domain.repository.ShowsRepository
+import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 import com.alorma.myapplication.data.cache.ConfigDataSource as ConfigCache
-import com.alorma.myapplication.data.cache.ShowsDataSource as Cache
+import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
 import com.alorma.myapplication.data.net.config.ConfigDataSource as ConfigNetwork
-import com.alorma.myapplication.data.net.ShowsDataSource as Network
+import com.alorma.myapplication.data.net.MoviesDataSource as Network
 
 @Module
 class ApplicationModule(private val context: Context) {
@@ -25,8 +25,8 @@ class ApplicationModule(private val context: Context) {
     fun getGlide(): RequestManager = Glide.with(context)
 
     @Provides
-    fun getShowsRepository(network: Network, cache: Cache): ShowsRepository =
-            ShowsRepository(network, cache)
+    fun getMoviesRepository(network: Network, cache: Cache): MoviesRepository =
+            MoviesRepository(network, cache)
 
     @Provides
     fun getConfigurationRepository(network: ConfigNetwork, cache: ConfigCache): ConfigurationRepository =

@@ -2,7 +2,7 @@ package com.alorma.myapplication.ui.splash
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.alorma.myapplication.TrendingTvApp.Companion.component
+import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.State
 import com.alorma.myapplication.ui.splash.di.SplashModule

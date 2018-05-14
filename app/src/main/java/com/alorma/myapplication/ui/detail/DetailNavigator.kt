@@ -14,6 +14,6 @@ class DetailNavigator(activity: Activity) :
     }
 
     private fun openDetail(route: DetailRoutes.DetailRoute.Detail) {
-        start(ShowDetailActivity.launch(activity, route.id, route.title))
+        start(MovieDetailActivity.launch(activity, route.id, route.title))
     }
 }

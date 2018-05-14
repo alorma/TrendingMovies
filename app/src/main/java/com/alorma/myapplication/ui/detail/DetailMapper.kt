@@ -2,33 +2,33 @@ package com.alorma.myapplication.ui.detail
 
 import com.alorma.myapplication.R
 import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.TvShow
+import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
-import com.alorma.myapplication.ui.shows.TvShowVM
+import com.alorma.myapplication.ui.movies.MoviewItemVM
 import java.util.*
 import javax.inject.Inject
 
 class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
                                        private val dateFormatter: DateFormatter) {
 
-    fun success(tvShow: TvShow, conf: Configuration): TvShowDetailVm =
-            TvShowDetailVm(tvShow.id, tvShow.title, tvShow.overview,
-                    getHeroImage(conf, tvShow),
-                    mapDate(tvShow.date), String.format("%.1f", tvShow.vote),
-                    addGenres(tvShow.genres, conf.genres))
+    fun success(movie: Movie, conf: Configuration): MovieDetailVM =
+            MovieDetailVM(movie.id, movie.title, movie.overview,
+                    getHeroImage(conf, movie),
+                    mapDate(movie.date), String.format("%.1f", movie.vote),
+                    addGenres(movie.genres, conf.genres))
 
-    private fun getHeroImage(conf: Configuration, tvShow: TvShow) =
-            if (tvShow.images.backdrop.isNullOrBlank() && tvShow.images.poster.isNullOrBlank()) {
+    private fun getHeroImage(conf: Configuration, movie: Movie) =
+            if (movie.images.backdrop.isNullOrBlank() && movie.images.poster.isNullOrBlank()) {
                 null
             } else {
-                "${conf.imagesUrl}${conf.imageSize}${tvShow.images.backdrop
-                        ?: tvShow.images.poster}"
+                "${conf.imagesUrl}${conf.imageSize}${movie.images.backdrop
+                        ?: movie.images.poster}"
             }
 
-    fun mapSimilar(tvShow: TvShow, conf: Configuration): TvShowVM = TvShowVM(tvShow.id, tvShow.title,
-            "${conf.imagesUrl}${conf.imageSize}${tvShow.images.poster}",
-            String.format("%.1f", tvShow.vote))
+    fun mapSimilar(movie: Movie, conf: Configuration): MoviewItemVM = MoviewItemVM(movie.id, movie.title,
+            "${conf.imagesUrl}${conf.imageSize}${movie.images.poster}",
+            String.format("%.1f", movie.vote))
 
     private fun addGenres(ids: List<Int>, config: List<Pair<Int, String>>): List<String> =
             config.toMap().filterKeys { ids.contains(it) }.values.toList()

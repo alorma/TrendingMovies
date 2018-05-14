@@ -1,7 +1,7 @@
 package com.alorma.myapplication.config
 
 import android.support.test.InstrumentationRegistry
-import com.alorma.myapplication.TrendingTvApp
+import com.alorma.myapplication.TrendingMoviesApp
 import com.alorma.myapplication.di.ApplicationComponent
 import com.alorma.myapplication.di.module.ApplicationModule
 import com.alorma.myapplication.di.module.NetModule
@@ -15,4 +15,4 @@ fun getDaggerRule(): DaggerMockRule<ApplicationComponent> =
             }
         }
 
-val app: TrendingTvApp get() = InstrumentationRegistry.getTargetContext().applicationContext as TrendingTvApp
+val app: TrendingMoviesApp get() = InstrumentationRegistry.getTargetContext().applicationContext as TrendingMoviesApp

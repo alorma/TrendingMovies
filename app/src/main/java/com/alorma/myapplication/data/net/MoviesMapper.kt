@@ -15,7 +15,7 @@ class MoviesMapper @Inject constructor(private val dateParser: DateParser) {
 
     private fun mapImages(it: MovieDto): Images = Images(it.posterImage, it.backdropImage)
 
-    private fun mapDate(airDate: String?): Date? = airDate?.let {
+    private fun mapDate(airDate: String?): Date? = airDate?.takeIf { it.isNotEmpty() }?.let {
         dateParser parse it
     }
 }

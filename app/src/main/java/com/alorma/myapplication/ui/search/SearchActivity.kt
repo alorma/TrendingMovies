@@ -26,9 +26,11 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
         component add SearchModule(this) inject this
 
         presenter init this
+
+        presenter reduce actions.query("ready")
     }
 
     override fun render(state: SearchStates.SearchState) {
-
+        presenter reduce actions.page()
     }
 }

@@ -9,13 +9,19 @@ class MoviesDataSource {
     private val pageSimilarMoviesMap: MutableMap<Int, Int> = mutableMapOf()
 
     private val items: MutableList<Movie> = mutableListOf()
+    private val itemsSearch: MutableList<Movie> = mutableListOf()
 
     private val similarMoviesMap: MutableMap<Int, MutableList<Movie>> = mutableMapOf()
 
     var page: Int = 0
+    var searchPage: Int = 0
 
     fun clear() {
         items.clear()
+    }
+
+    fun clearSearch() {
+        itemsSearch.clear()
     }
 
     fun save(items: List<Movie>) {
@@ -23,7 +29,14 @@ class MoviesDataSource {
         this.allItems.addAll(items)
     }
 
+    fun saveSearch(items: List<Movie>) {
+        this.itemsSearch.addAll(items)
+        this.allItems.addAll(items)
+    }
+
     fun get(): List<Movie> = items.toList()
+
+    fun getSearch(): List<Movie> = itemsSearch.toList()
 
     fun get(id: Int): Movie? = allItems.firstOrNull { it.id == id }
 

@@ -20,6 +20,19 @@ class MoviesDataSource @Inject constructor(
         }
     }
 
+    fun search(query: String, page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
+        val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.searchPage(query, it) }
+                ?: movieApi.search(query)
+
+        return items.map {
+            Triple(
+                    it.page,
+                    it.totalPages,
+                    moviesMapper.map(it.results)
+            )
+        }
+    }
+
     fun similar(id: Int, page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
         val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.similarPage(id, it) }
                 ?: movieApi.similar(id)

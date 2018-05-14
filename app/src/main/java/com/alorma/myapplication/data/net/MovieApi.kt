@@ -12,6 +12,12 @@ interface MovieApi {
     @GET("movie/popular")
     fun listPage(@Query("page") page: Int): Single<PagedResponse<MovieDto>>
 
+    @GET("search/movie")
+    fun search(@Query("query") query: String): Single<PagedResponse<MovieDto>>
+
+    @GET("search/movie")
+    fun searchPage(@Query("query") query: String, @Query("page") page: Int): Single<PagedResponse<MovieDto>>
+
     @GET("movie/{movie_id}/similar")
     fun similar(@Path("movie_id") id: Int): Single<PagedResponse<MovieDto>>
 

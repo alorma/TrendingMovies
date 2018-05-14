@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SearchMoviesUseCase @Inject constructor(
         private val moviesRepository: MoviesRepository) {
 
-    fun execute(query: String): Single<List<Movie>> = moviesRepository.listAll()
+    fun execute(query: String): Single<List<Movie>> = moviesRepository.search(query)
 
-    fun executeNextPage(query: String): Single<List<Movie>> = moviesRepository.listNextPage()
+    fun executeNextPage(query: String): Single<List<Movie>> = moviesRepository.searchNextPage(query)
 }

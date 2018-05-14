@@ -10,6 +10,7 @@ class MoviesRepository(private val network: Network,
                        private val cache: Cache) {
 
     private var page: Int = 1
+    private var searchPage: Int = 1
     private var similarPage: Int = 1
 
     fun listAll(): Single<List<Movie>> = execute(Single.defer {
@@ -31,6 +32,27 @@ class MoviesRepository(private val network: Network,
                         cache.page = page
                     }
                     .map { cache.get() }.subscribeOnIO()
+
+    fun search(query: String): Single<List<Movie>> = executeSearch(Single.defer {
+        val cacheItems = cache.getSearch()
+        if (cacheItems.isNotEmpty()) {
+            Single.just(Triple(cache.searchPage, cache.searchPage + 1, cacheItems))
+        } else {
+            network.search(query)
+        }
+    }.doOnSubscribe { cache.clearSearch() })
+
+    fun searchNextPage(query: String): Single<List<Movie>> =
+            executeSearch(network.search(query, searchPage))
+
+    private fun executeSearch(operation: Single<Triple<Int, Int, List<Movie>>>):
+            Single<List<Movie>> =
+            operation.doOnSuccess { searchPage = calculatePage(it) }
+                    .doOnSuccess {
+                        cache.saveSearch(it.third)
+                        cache.searchPage = searchPage
+                    }
+                    .map { cache.getSearch() }.subscribeOnIO()
 
     fun similar(id: Int): Single<List<Movie>> = executeSimilar(id, getSimilarMovies(id))
 

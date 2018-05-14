@@ -89,6 +89,7 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
                     view.year.text = movie.year
                     loadMovieImage(view.image, movie)
                 }
+                onClick { presenter reduce actions.detail(it) }
             }
             diff { it.id }
         }

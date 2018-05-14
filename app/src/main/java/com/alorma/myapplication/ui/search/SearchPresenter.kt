@@ -27,7 +27,7 @@ class SearchPresenter @Inject constructor(
                 this.query = action.query
                 search()
             }
-            is SearchActions.SearchAction.LoadPage -> searchPage(action)
+            is SearchActions.SearchAction.LoadPage -> searchPage()
             SearchActions.SearchAction.CleanSearch -> {
                 this.query = ""
             }
@@ -46,17 +46,23 @@ class SearchPresenter @Inject constructor(
                 })
                 .observeOnUI()
                 .subscribe(
-                        {
-                            render(states.success(it))
-                        },
-                        {
-                            render(states error it)
-                        }
+                        { render(states.success(it)) },
+                        { render(states error it) }
                 )
     }
 
-    private fun searchPage(action: SearchActions.SearchAction) {
-
+    private fun searchPage() {
+        disposable += Single.zip(
+                obtainConfigurationUseCase.execute(),
+                obtainMoviesUseCase.executeNextPage(query),
+                BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
+                    conf to list
+                })
+                .observeOnUI()
+                .subscribe(
+                        { render(states.success(it)) },
+                        { render(states error it) }
+                )
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {

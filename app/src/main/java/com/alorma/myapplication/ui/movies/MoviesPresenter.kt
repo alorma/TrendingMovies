@@ -29,7 +29,10 @@ class MoviesPresenter @Inject constructor(private val states: MoviesStates,
                 .doOnError { render(states loading false) }
                 .subscribe(
                         { render(states success it) },
-                        { render(states error it) }
+                        {
+                            render(states error it)
+                            it.printStackTrace()
+                        }
                 )
     }
 

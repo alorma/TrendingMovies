@@ -1,8 +1,9 @@
 package com.alorma.myapplication.domain.repository
 
 import android.arch.paging.PagedList
+import com.alorma.myapplication.commons.observeOnUI
+import com.alorma.myapplication.commons.subscribeOnIO
 import com.alorma.myapplication.domain.model.Movie
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
 import com.alorma.myapplication.data.net.MoviesDataSource as Network
@@ -31,8 +32,8 @@ class PageListMovieBoundaryCallback @Inject constructor(
                     cache.save(it)
                     requestedPage++
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
+                .subscribeOnIO()
+                .observeOnUI()
                 .toCompletable()
                 .doFinally { isRequestRunning = false }
                 .subscribe(

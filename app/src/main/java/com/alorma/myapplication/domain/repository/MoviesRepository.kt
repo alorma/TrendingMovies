@@ -17,14 +17,11 @@ class MoviesRepository(private val cache: Cache,
             .setBoundaryCallback(callback)
             .buildObservable()
 
-
     fun search(query: String): Single<List<Movie>> = Single.never()
 
     fun searchNextPage(query: String): Single<List<Movie>> = Single.never()
 
     fun similar(id: Int): Single<List<Movie>> = Single.never()
-
-    private fun getSimilarMovies(id: Int): Single<Triple<Int, Int, List<Movie>>> = Single.never()
 
     fun similarPage(id: Int): Single<List<Movie>> = Single.never()
 

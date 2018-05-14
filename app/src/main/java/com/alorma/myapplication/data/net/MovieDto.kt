@@ -3,9 +3,9 @@ package com.alorma.myapplication.data.net
 import com.google.gson.annotations.SerializedName
 
 data class MovieDto(@SerializedName("id") val id: Int,
-                    @SerializedName("name") val title: String,
+                    @SerializedName("original_title") val title: String,
                     @SerializedName("overview") val overview: String,
-                    @SerializedName("first_air_date") val airDate: String?,
+                    @SerializedName("release_date") val releaseDate: String?,
                     @SerializedName("backdrop_path") val backdropImage: String,
                     @SerializedName("poster_path") val posterImage: String,
                     @SerializedName("vote_average") val vote: Float,

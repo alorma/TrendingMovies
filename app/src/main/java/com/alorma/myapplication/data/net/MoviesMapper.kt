@@ -11,7 +11,7 @@ class MoviesMapper @Inject constructor(private val dateParser: DateParser) {
     }
 
     fun mapItem(it: MovieDto): Movie = Movie(it.id, it.title, it.overview, mapImages(it),
-            mapDate(it.airDate), it.vote, it.genres)
+            mapDate(it.releaseDate), it.vote, it.genres)
 
     private fun mapImages(it: MovieDto): Images = Images(it.posterImage, it.backdropImage)
 

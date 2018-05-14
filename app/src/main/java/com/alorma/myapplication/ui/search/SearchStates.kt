@@ -13,7 +13,7 @@ class SearchStates @Inject constructor(private val mapper: SearchMapper) {
         data class Error(val text: String) : SearchState()
     }
 
-    fun success(it: Pair<Configuration, List<Movie>>, page: Boolean): SearchState =
+    fun success(it: Pair<Configuration, List<Movie>>, page: Boolean = false): SearchState =
             when {
                 it.second.isEmpty() && !page -> SearchState.Empty
                 it.second.isEmpty() && page -> SearchState.EmptyPage

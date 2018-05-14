@@ -61,6 +61,10 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
                 presenter reduce actions.query(it)
                 true
             }
+            textChange {
+                presenter reduce actions.query(it)
+                true
+            }
             onClose {
                 presenter reduce actions.back()
                 true

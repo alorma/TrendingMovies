@@ -25,9 +25,9 @@ class SearchPresenter @Inject constructor(
         when (action) {
             is SearchActions.SearchAction.NewQuery -> {
                 this.query = action.query
-                onSearch(action)
+                search()
             }
-            is SearchActions.SearchAction.LoadPage -> onSearch(action)
+            is SearchActions.SearchAction.LoadPage -> searchPage(action)
             SearchActions.SearchAction.CleanSearch -> {
                 this.query = ""
             }
@@ -36,24 +36,28 @@ class SearchPresenter @Inject constructor(
         }
     }
 
-    private fun onSearch(action: SearchActions.SearchAction) {
-        disposable += Single.zip(obtainConfigurationUseCase.execute(), obtainLoadUseCase(action),
+    private fun search() {
+        disposable.clear()
+        disposable += Single.zip(
+                obtainConfigurationUseCase.execute(),
+                obtainMoviesUseCase.execute(query),
                 BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
                     conf to list
                 })
                 .observeOnUI()
                 .subscribe(
-                        { render(states.success(it, action === SearchActions.SearchAction.LoadPage)) },
-                        { render(states error it) }
+                        {
+                            render(states.success(it))
+                        },
+                        {
+                            render(states error it)
+                        }
                 )
     }
 
-    private fun obtainLoadUseCase(action: SearchActions.SearchAction): Single<List<Movie>> =
-            when (action) {
-                is SearchActions.SearchAction.NewQuery -> obtainMoviesUseCase.execute(action.query)
-                is SearchActions.SearchAction.LoadPage -> obtainMoviesUseCase.executeNextPage(query)
-                else -> Single.never()
-            }
+    private fun searchPage(action: SearchActions.SearchAction) {
+
+    }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {
         navigator navigate searchRoutes.detail(action.movie)

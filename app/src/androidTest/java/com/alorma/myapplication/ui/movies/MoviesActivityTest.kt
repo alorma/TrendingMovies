@@ -13,11 +13,13 @@ import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.myapplication.ui.SearchActivity
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
 import io.reactivex.Single
@@ -81,6 +83,22 @@ class MoviesActivityTest {
     }
 
     @Test
+    fun onClickSearch_openSearch() {
+        Intents.init()
+        intending(getMatcherOpenSearchActivity()).respondWith(getGenericResult())
+
+        val items = generateItems(50)
+        given(moviesRepository.listAll()).willReturn(Single.just(items))
+
+        rule.run()
+
+        clickOn(R.id.fabSearch)
+
+        intended(getMatcherOpenSearchActivity())
+        Intents.release()
+    }
+
+    @Test
     fun onLoadManyItems_onScroll_loadMore() {
         val items = generateItems(50)
         given(moviesRepository.listAll()).willReturn(Single.just(items))
@@ -101,6 +119,8 @@ class MoviesActivityTest {
     private fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
 
     private fun getMatcherOpenDetailActivity(): Matcher<Intent> = hasComponent(MovieDetailActivity::class.java.name)
+
+    private fun getMatcherOpenSearchActivity(): Matcher<Intent> = hasComponent(SearchActivity::class.java.name)
 
     private fun getGenericResult(): Instrumentation.ActivityResult = Instrumentation.ActivityResult(2, Intent())
 }

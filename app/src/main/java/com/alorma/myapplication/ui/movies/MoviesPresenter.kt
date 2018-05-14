@@ -23,6 +23,7 @@ class MoviesPresenter @Inject constructor(private val states: MoviesStates,
             MoviesActions.MovieAction.Load -> load(action)
             MoviesActions.MovieAction.LoadPage -> load(action)
             is MoviesActions.MovieAction.OpenDetail -> onOpenDetail(action)
+            MoviesActions.MovieAction.Search -> moviesNavigator navigate routes.search()
         }
     }
 

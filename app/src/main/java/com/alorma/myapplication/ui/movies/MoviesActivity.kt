@@ -77,6 +77,10 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
 
             diff { it.id }
         }
+
+        fabSearch.setOnClickListener {
+            presenter reduce actions.search()
+        }
     }
 
     private fun loadMovieImage(image: ImageView, moviewItem: MoviewItemVM) {

@@ -10,12 +10,8 @@ import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.common.DslAdapter
-import com.alorma.myapplication.ui.common.adapterDsl
-import com.alorma.myapplication.ui.common.dsl
+import com.alorma.myapplication.ui.common.*
 import com.alorma.myapplication.ui.detail.di.DetailModule
-import com.alorma.myapplication.ui.movies.MoviesActivity
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -47,17 +43,9 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
     private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
-                    val firstVisibleItemPosition = findFirstVisibleItemPosition()
-                    val last = childCount + firstVisibleItemPosition
-                    if (last >= itemCount - MoviesActivity.OFFSET_LAZY_LOAD) {
-                        disablePagination()
-                        presenter reduce actions.loadSimilarPage()
-                    }
-                }
-            }
+        similarMoviesRecycler.pagination {
+            presenter reduce actions.loadSimilarPage()
+            disablePagination()
         }
     }
 

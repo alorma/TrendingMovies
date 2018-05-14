@@ -11,7 +11,7 @@ import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
-import com.alorma.myapplication.ui.movies.MoviesActivity
+import com.alorma.myapplication.ui.common.pagination
 import com.alorma.myapplication.ui.search.di.SearchModule
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_search.view.*
@@ -31,17 +31,9 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
-                    val firstVisibleItemPosition = findFirstVisibleItemPosition()
-                    val last = childCount + firstVisibleItemPosition
-                    if (last >= itemCount - MoviesActivity.OFFSET_LAZY_LOAD) {
-                        presenter reduce actions.page()
-                        disablePagination()
-                    }
-                }
-            }
+        recycler.pagination {
+            presenter reduce actions.page()
+            disablePagination()
         }
     }
 

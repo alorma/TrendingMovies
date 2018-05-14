@@ -3,7 +3,6 @@ package com.alorma.myapplication.ui.movies
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -12,6 +11,7 @@ import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.pagination
 import com.alorma.myapplication.ui.movies.di.MoviesModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -34,16 +34,9 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
     private lateinit var adapter: DslAdapter<MovieItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
-                    val firstVisibleItemPosition = findFirstVisibleItemPosition()
-                    val last = childCount + firstVisibleItemPosition
-                    if (last >= itemCount - OFFSET_LAZY_LOAD) {
-                        presenter reduce actions.loadPage()
-                    }
-                }
-            }
+        recycler.pagination {
+            presenter reduce actions.loadPage()
+            disablePagination()
         }
     }
 
@@ -109,7 +102,6 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
 
     private fun onLoading(state: MoviesStates.MovieState.Loading) {
         centerText.visibility = View.GONE
-        disablePagination()
     }
 
     private fun onSuccess(state: MoviesStates.MovieState.Success) {

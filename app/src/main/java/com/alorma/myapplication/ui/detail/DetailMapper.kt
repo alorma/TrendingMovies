@@ -5,7 +5,7 @@ import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
-import com.alorma.myapplication.ui.movies.MoviewItemVM
+import com.alorma.myapplication.ui.movies.MovieItemVM
 import java.util.*
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
                         ?: movie.images.poster}"
             }
 
-    fun mapSimilar(movie: Movie, conf: Configuration): MoviewItemVM = MoviewItemVM(movie.id, movie.title,
+    fun mapSimilar(movie: Movie, conf: Configuration): MovieItemVM = MovieItemVM(movie.id, movie.title,
             "${conf.imagesUrl}${conf.imageSize}${movie.images.poster}",
             String.format("%.1f", movie.vote))
 

@@ -13,6 +13,6 @@ class MoviesActions @Inject constructor() {
 
     fun load(): MovieAction = MovieAction.Load
     fun loadPage(): MovieAction = MovieAction.LoadPage
-    fun detail(item: MoviewItemVM): MovieAction = MovieAction.OpenDetail(item.id, item.title)
+    fun detail(item: MovieItemVM): MovieAction = MovieAction.OpenDetail(item.id, item.title)
     fun search(): MovieAction = MovieAction.Search
 }

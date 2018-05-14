@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class MoviesMapper @Inject constructor(private val resources: ResourcesProvider) {
 
-    fun mapSuccess(movie: Movie, conf: Configuration): MoviewItemVM = MoviewItemVM(movie.id, movie.title,
+    fun mapSuccess(movie: Movie, conf: Configuration): MovieItemVM = MovieItemVM(movie.id, movie.title,
             getPosterImage(conf, movie),
             String.format("%.1f", movie.vote))
 

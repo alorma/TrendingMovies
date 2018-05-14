@@ -31,7 +31,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
     @Inject
     lateinit var actions: MoviesActions
 
-    private lateinit var adapter: DslAdapter<MoviewItemVM>
+    private lateinit var adapter: DslAdapter<MovieItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         object : RecyclerView.OnScrollListener() {
@@ -83,14 +83,14 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
         }
     }
 
-    private fun loadMovieImage(image: ImageView, moviewItem: MoviewItemVM) {
-        moviewItem.image?.let {
+    private fun loadMovieImage(image: ImageView, movieItem: MovieItemVM) {
+        movieItem.image?.let {
             val requestOptions = RequestOptions().apply {
                 placeholder(R.color.grey_300)
                 error(R.color.grey_300)
             }
 
-            image.contentDescription = moviewItem.title
+            image.contentDescription = movieItem.title
 
             val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
             requestManager

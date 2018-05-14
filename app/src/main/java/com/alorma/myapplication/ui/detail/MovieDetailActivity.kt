@@ -16,7 +16,7 @@ import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.dsl
 import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.MoviesActivity
-import com.alorma.myapplication.ui.movies.MoviewItemVM
+import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.detail_activity.*
@@ -43,7 +43,7 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
     @Inject
     lateinit var presenter: MovieDetailPresenter
 
-    private lateinit var similarMoviesAdapter: DslAdapter<MoviewItemVM>
+    private lateinit var similarMoviesAdapter: DslAdapter<MovieItemVM>
     private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
@@ -170,8 +170,8 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
         enablePagination()
     }
 
-    private fun loadSimilarMovieImage(image: ImageView, moviewItem: MoviewItemVM) {
-        moviewItem.image?.let {
+    private fun loadSimilarMovieImage(image: ImageView, movieItem: MovieItemVM) {
+        movieItem.image?.let {
             val requestOptions = RequestOptions().apply {
                 placeholder(R.color.grey_300)
                 error(R.color.grey_300)

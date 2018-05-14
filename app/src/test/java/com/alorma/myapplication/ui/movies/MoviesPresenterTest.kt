@@ -189,5 +189,5 @@ class MoviesPresenterTest {
     }
 
     private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
-    private fun getMovie(id: Int = 0): MoviewItemVM = MoviewItemVM(id, "", "", "5.4")
+    private fun getMovie(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class MoviesStates @Inject constructor(private val mapper: MoviesMapper) {
     sealed class MovieState : State() {
         data class Loading(val visible: Boolean) : MovieState()
-        data class Success(val items: List<MoviewItemVM>) : MovieState()
+        data class Success(val items: List<MovieItemVM>) : MovieState()
         data class Error(val text: String) : MovieState()
     }
 

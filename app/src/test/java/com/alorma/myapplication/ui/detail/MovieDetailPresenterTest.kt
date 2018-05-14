@@ -14,7 +14,7 @@ import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
-import com.alorma.myapplication.ui.movies.MoviewItemVM
+import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import junit.framework.Assert.assertTrue
@@ -149,5 +149,5 @@ class MovieDetailPresenterTest {
 
     private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
     private fun getMovie(id: Int = 0): Movie = Movie(id, "", "", Images("", ""), Date(), 0f, listOf())
-    private fun getMovieVM(id: Int = 0): MoviewItemVM = MoviewItemVM(id, "", "", "5.4")
+    private fun getMovieVM(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")
 }

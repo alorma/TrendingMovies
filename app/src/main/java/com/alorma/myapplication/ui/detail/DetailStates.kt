@@ -3,13 +3,13 @@ package com.alorma.myapplication.ui.detail
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.State
-import com.alorma.myapplication.ui.movies.MoviewItemVM
+import com.alorma.myapplication.ui.movies.MovieItemVM
 import javax.inject.Inject
 
 class DetailStates @Inject constructor(private val mapper: DetailMapper) {
     sealed class DetailState : State() {
         data class Success(val detail: MovieDetailVM) : DetailState()
-        data class SimilarMovies(val movies: List<MoviewItemVM>) : DetailState()
+        data class SimilarMovies(val movies: List<MovieItemVM>) : DetailState()
         data class Error(val text: String) : DetailState()
         data class ErrorSimilarMovies(val text: String) : DetailState()
     }

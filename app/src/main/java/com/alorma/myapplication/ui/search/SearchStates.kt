@@ -9,7 +9,7 @@ class SearchStates @Inject constructor(private val mapper: SearchMapper) {
     sealed class SearchState : State() {
         object Empty : SearchState()
         object EmptyPage : SearchState()
-        data class SearchResult(val itemVMS: List<MovieSearchItemVM>) : SearchState()
+        data class SearchResult(val items: List<MovieSearchItemVM>) : SearchState()
         data class Error(val text: String) : SearchState()
     }
 

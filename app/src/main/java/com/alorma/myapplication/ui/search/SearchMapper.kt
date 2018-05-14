@@ -13,7 +13,8 @@ class SearchMapper @Inject constructor(private val dateFormatter: DateFormatter,
 
     fun map(movie: Movie, conf: Configuration): MovieSearchItemVM = MovieSearchItemVM(movie.id, movie.title,
             movie.overview,
-            getPosterImage(conf, movie), mapDate(movie.date))
+            getPosterImage(conf, movie), mapDate(movie.date),
+            String.format("%.1f", movie.vote))
 
     private fun getPosterImage(conf: Configuration, movie: Movie) =
             if (movie.images.poster.isNullOrBlank()) {

@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.*
 import com.alorma.myapplication.ui.search.di.SearchModule
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.row_search.view.*
 import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
@@ -77,12 +80,32 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
             item {
                 layout = R.layout.row_search
                 bindView { view, movie ->
-                    view.text.text = movie.title
+                    view.title.text = movie.title
+                    view.overview.text = movie.overview
+                    view.votes.text = movie.votes
+                    view.year.text = movie.year
+                    loadMovieImage(view.image, movie)
                 }
             }
             diff { it.id }
         }
         recycler.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun loadMovieImage(image: ImageView, movieItem: MovieSearchItemVM) {
+        movieItem.image?.let {
+            val requestOptions = RequestOptions().apply {
+                placeholder(R.color.grey_300)
+                error(R.color.grey_300)
+            }
+
+            image.contentDescription = movieItem.title
+
+            val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
+            requestManager
+                    .load(it)
+                    .into(image)
+        } ?: image.setImageResource(R.color.grey_300)
     }
 
     override fun render(state: SearchStates.SearchState) {

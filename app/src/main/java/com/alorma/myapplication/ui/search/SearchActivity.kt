@@ -56,6 +56,9 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
     private fun initToolbar() {
         toolbar.dsl {
             menu = R.menu.search_menu
+            back {
+                action = { presenter reduce actions.back() }
+            }
         }
         toolbar.searchDsl {
             id = R.id.action_search

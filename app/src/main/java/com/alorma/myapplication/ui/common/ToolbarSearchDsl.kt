@@ -32,7 +32,7 @@ class ToolbarSearchBuilder {
 
         val menuItem = toolbar.menu?.findItem(id)
         (menuItem?.actionView as? SearchView)?.apply {
-            setIconifiedByDefault(open.not())
+            isIconified = open.not()
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     return textSubmitted?.action?.invoke(query) ?: false

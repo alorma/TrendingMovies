@@ -14,4 +14,7 @@ interface MoviesDao {
 
     @Query("SELECT * FROM ${MovieEntity.TABLE_NAME}")
     fun getMovies(): DataSource.Factory<Int, MovieEntity>
+
+    @Query("SELECT * FROM ${MovieEntity.TABLE_NAME} WHERE id = :id")
+    fun getMovie(id: Int): MovieEntity?
 }

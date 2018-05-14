@@ -33,7 +33,6 @@ class PageListMovieBoundaryCallback @Inject constructor(
                     requestedPage++
                 }
                 .subscribeOnIO()
-                .observeOnUI()
                 .toCompletable()
                 .doFinally { isRequestRunning = false }
                 .subscribe(

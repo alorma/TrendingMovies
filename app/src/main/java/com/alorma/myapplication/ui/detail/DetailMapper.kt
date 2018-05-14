@@ -12,18 +12,17 @@ import javax.inject.Inject
 class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
                                        private val dateFormatter: DateFormatter) {
 
-    fun success(movie: Movie, conf: Configuration): MovieDetailVM =
+    fun success(movie: Movie): MovieDetailVM =
             MovieDetailVM(movie.id, movie.title, movie.overview,
-                    getHeroImage(conf, movie),
+                    getHeroImage(movie),
                     mapDate(movie.date), String.format("%.1f", movie.vote),
-                    addGenres(movie.genres, conf.genres))
+                    addGenres(movie.genres, listOf()))
 
-    private fun getHeroImage(conf: Configuration, movie: Movie) =
+    private fun getHeroImage(movie: Movie) =
             if (movie.images.backdrop.isNullOrBlank() && movie.images.poster.isNullOrBlank()) {
                 null
             } else {
-                "${conf.imagesUrl}${conf.imageSize}${movie.images.backdrop
-                        ?: movie.images.poster}"
+                "https://image.tmdb.org/t/p/w500${movie.images.backdrop}"
             }
 
     fun mapSimilar(movie: Movie, conf: Configuration): MovieItemVM = MovieItemVM(movie.id, movie.title,

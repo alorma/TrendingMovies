@@ -2,7 +2,9 @@ package com.alorma.myapplication.domain.repository
 
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
+import com.alorma.myapplication.commons.subscribeOnIO
 import com.alorma.myapplication.domain.model.Movie
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -16,6 +18,7 @@ class MoviesRepository(private val cache: Cache,
             .setFetchScheduler(Schedulers.io())
             .setBoundaryCallback(callback)
             .buildObservable()
+            .subscribeOnIO()
 
     fun search(query: String): Single<List<Movie>> = Single.never()
 
@@ -28,5 +31,5 @@ class MoviesRepository(private val cache: Cache,
     private fun executeSimilar(id: Int, operation: Single<Triple<Int, Int, List<Movie>>>):
             Single<List<Movie>> = Single.never()
 
-    fun getMovie(id: Int): Single<Movie> = Single.never()
+    fun getMovie(id: Int): Maybe<Movie> = cache.get(id).subscribeOnIO()
 }

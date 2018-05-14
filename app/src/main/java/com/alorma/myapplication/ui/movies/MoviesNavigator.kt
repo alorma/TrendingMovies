@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.movies
 
 import android.app.Activity
-import com.alorma.myapplication.ui.SearchActivity
+import com.alorma.myapplication.ui.search.SearchActivity
 import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 

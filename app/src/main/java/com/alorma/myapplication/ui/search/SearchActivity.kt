@@ -1,4 +1,4 @@
-package com.alorma.myapplication.ui
+package com.alorma.myapplication.ui.search
 
 import android.content.Context
 import android.content.Intent

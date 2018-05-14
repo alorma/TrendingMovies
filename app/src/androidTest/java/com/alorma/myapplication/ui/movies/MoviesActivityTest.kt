@@ -13,7 +13,7 @@ import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.MoviesRepository
-import com.alorma.myapplication.ui.SearchActivity
+import com.alorma.myapplication.ui.search.SearchActivity
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock

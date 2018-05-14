@@ -15,7 +15,6 @@ class MoviesPresenter @Inject constructor(private val states: MoviesStates,
     override fun reduce(action: MoviesActions.MovieAction) {
         when (action) {
             MoviesActions.MovieAction.Load -> load()
-            MoviesActions.MovieAction.LoadPage -> load()
             is MoviesActions.MovieAction.OpenDetail -> onOpenDetail(action)
             MoviesActions.MovieAction.Search -> moviesNavigator navigate routes.search()
         }

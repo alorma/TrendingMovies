@@ -34,7 +34,7 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
             config.toMap().filterKeys { ids.contains(it) }.values.toList()
 
     private fun mapDate(date: Date?): String = date?.let { dateFormatter format it }
-            ?: resources.getString(R.string.no_air_date)
+            ?: resources.getString(R.string.no_release_date)
 
     infix fun mapError(it: Throwable): String = resources.getString(R.string.generic_error)
 }

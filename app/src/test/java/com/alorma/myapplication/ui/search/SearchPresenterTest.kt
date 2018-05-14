@@ -1,14 +1,19 @@
 package com.alorma.myapplication.ui.search
 
+import com.alorma.myapplication.configureRxThreading
+import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseView
-import com.nhaarman.mockito_kotlin.capture
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.alorma.myapplication.ui.common.DateFormatter
+import com.alorma.myapplication.ui.common.ResourcesProvider
+import com.nhaarman.mockito_kotlin.*
+import io.reactivex.Single
 import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Captor
 import org.mockito.MockitoAnnotations
 
@@ -25,6 +30,13 @@ class SearchPresenterTest {
     @Captor
     private lateinit var routeCaptor: ArgumentCaptor<SearchRoutes.SearchRoute>
 
+    private lateinit var moviesUseCase: SearchMoviesUseCase
+    private lateinit var configUseCase: ObtainConfigurationUseCase
+
+    init {
+        configureRxThreading()
+    }
+
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
@@ -32,17 +44,42 @@ class SearchPresenterTest {
         view = mock()
         navigator = mock()
 
-        presenter = SearchPresenter(SearchStates(), SearchRoutes(), navigator)
+        moviesUseCase = mock()
+        configUseCase = mock()
+
+        val resources: ResourcesProvider = mock<ResourcesProvider>().apply {
+            given(getString(anyInt())).willReturn("")
+        }
+
+        val states = SearchStates(SearchMapper(DateFormatter(), resources))
+        presenter = SearchPresenter(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
         presenter init view
     }
 
     @Test
-    fun onActionNewQuery_renderSearchResult() {
+    fun onActionNewQuery_withNoResults_renderEmpty() {
+        given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
+        given(configUseCase.execute()).willReturn(Single.just(mock()))
+
         presenter reduce actions.query("search test")
 
         verify(view) render capture(stateCaptor)
 
-        assertTrue(stateCaptor.value is SearchStates.SearchState.SearchResult)
+        assertTrue(stateCaptor.value === SearchStates.SearchState.Empty)
+    }
+
+    @Test
+    fun onActionPageQuery_withNoResults_renderEmptyPage() {
+        given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
+        given(moviesUseCase.executeNextPage(anyString())).willReturn(Single.just(listOf()))
+        given(configUseCase.execute()).willReturn(Single.just(mock()))
+
+        presenter reduce actions.query("search test")
+        presenter reduce actions.page()
+
+        verify(view, times(2)) render capture(stateCaptor)
+
+        assertTrue(stateCaptor.allValues[1] === SearchStates.SearchState.EmptyPage)
     }
 
     @Test

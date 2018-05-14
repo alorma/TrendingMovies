@@ -105,6 +105,16 @@ class SearchPresenterTest {
         assertTrue(routeCaptor.value is SearchRoutes.SearchRoute.OpenDetail)
     }
 
+
+    @Test
+    fun onActionBack_navigateToBack() {
+        presenter reduce actions.back()
+
+        verify(navigator) navigate capture(routeCaptor)
+
+        assertTrue(routeCaptor.value === SearchRoutes.SearchRoute.Back)
+    }
+
     private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
             MovieSearchItemVM(id, "", "", "", "")
 }

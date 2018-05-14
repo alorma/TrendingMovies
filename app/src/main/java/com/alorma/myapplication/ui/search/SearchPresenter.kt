@@ -31,6 +31,7 @@ class SearchPresenter @Inject constructor(
             SearchActions.SearchAction.CleanSearch -> {
                 this.query = ""
             }
+            SearchActions.SearchAction.Back -> navigator navigate searchRoutes.back()
             is SearchActions.SearchAction.OpenDetail -> openDetail(action)
         }
     }

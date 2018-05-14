@@ -8,6 +8,7 @@ class SearchNavigator(activity: Activity) : Navigator<SearchRoutes.SearchRoute>(
     override fun navigate(route: SearchRoutes.SearchRoute) {
         when (route) {
             is SearchRoutes.SearchRoute.OpenDetail -> openDetail(route)
+            SearchRoutes.SearchRoute.Back -> activity.finish()
         }
     }
 

@@ -72,6 +72,10 @@ class DslAdapter<M>(@LayoutRes private val holderBuilder: HolderBuilder<M>,
         }
     }
 
+    fun clear() {
+
+    }
+
     class ViewHolder<in M>(itemView: View,
                            private val holderBuilder: HolderBuilder<M>)
         : RecyclerView.ViewHolder(itemView) {

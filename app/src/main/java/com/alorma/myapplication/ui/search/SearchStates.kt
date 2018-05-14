@@ -9,7 +9,7 @@ class SearchStates @Inject constructor(private val mapper: SearchMapper) {
     sealed class SearchState : State() {
         object Empty : SearchState()
         object EmptyPage : SearchState()
-        data class SearchResult(val items: List<MovieSearchItemVM>) : SearchState()
+        data class SearchResult(val items: List<MovieSearchItemVM>, val page: Boolean) : SearchState()
         data class Error(val text: String) : SearchState()
     }
 
@@ -20,7 +20,7 @@ class SearchStates @Inject constructor(private val mapper: SearchMapper) {
                 else -> {
                     val configuration = it.first
                     val items = it.second.map { mapper.map(it, configuration) }
-                    SearchStates.SearchState.SearchResult(items)
+                    SearchStates.SearchState.SearchResult(items, page)
                 }
             }
 

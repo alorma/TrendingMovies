@@ -8,13 +8,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.common.DslAdapter
-import com.alorma.myapplication.ui.common.adapterDsl
-import com.alorma.myapplication.ui.common.pagination
+import com.alorma.myapplication.ui.common.*
 import com.alorma.myapplication.ui.search.di.SearchModule
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_search.view.*
+import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
@@ -46,11 +43,32 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
         presenter init this
 
         initView()
-
-        presenter reduce actions.query("ready")
     }
 
     private fun initView() {
+        initToolbar()
+        initRecycler()
+    }
+
+    private fun initToolbar() {
+        toolbar.dsl {
+            menu = R.menu.search_menu
+        }
+        toolbar.searchDsl {
+            id = R.id.action_search
+            open = true
+            textSubmitted {
+                presenter reduce actions.query(it)
+                true
+            }
+            onClose {
+                presenter reduce actions.back()
+                true
+            }
+        }
+    }
+
+    private fun initRecycler() {
         adapter = adapterDsl(recycler) {
             item {
                 layout = R.layout.row_search

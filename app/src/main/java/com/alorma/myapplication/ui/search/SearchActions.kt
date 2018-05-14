@@ -8,8 +8,11 @@ class SearchActions @Inject constructor() {
         data class NewQuery(val query: String) : SearchAction()
         data class OpenDetail(val movie: MovieSearchItemVM) : SearchAction()
         object LoadPage : SearchAction()
+        object Back : SearchAction()
         object CleanSearch : SearchAction()
     }
+
+    fun back(): SearchAction = SearchAction.Back
 
     fun query(text: String?): SearchAction = text?.takeIf { it.isNotBlank() }?.let {
         SearchAction.NewQuery(it)

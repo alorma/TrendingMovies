@@ -33,14 +33,8 @@ class MoviesRepository(private val network: Network,
                     }
                     .map { cache.get() }.subscribeOnIO()
 
-    fun search(query: String): Single<List<Movie>> = executeSearch(Single.defer {
-        val cacheItems = cache.getSearch()
-        if (cacheItems.isNotEmpty()) {
-            Single.just(Triple(cache.searchPage, cache.searchPage + 1, cacheItems))
-        } else {
-            network.search(query)
-        }
-    }.doOnSubscribe { cache.clearSearch() })
+    fun search(query: String): Single<List<Movie>> =
+            executeSearch(network.search(query).doOnSubscribe { cache.clearSearch() })
 
     fun searchNextPage(query: String): Single<List<Movie>> =
             executeSearch(network.search(query, searchPage))

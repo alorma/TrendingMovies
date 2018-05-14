@@ -8,9 +8,10 @@ import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
+import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.common.DslAdapter
-import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.PagedDslAdapter
+import com.alorma.myapplication.ui.common.pagedAdapterDsl
 import com.alorma.myapplication.ui.common.pagination
 import com.alorma.myapplication.ui.movies.di.MoviesModule
 import com.bumptech.glide.Glide
@@ -31,7 +32,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
     @Inject
     lateinit var actions: MoviesActions
 
-    private lateinit var adapter: DslAdapter<MovieItemVM>
+    private lateinit var adapter: PagedDslAdapter<Movie>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
@@ -55,12 +56,11 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
     private fun initView() {
         val columns = resources.getInteger(R.integer.columns_movies)
         recycler.layoutManager = GridLayoutManager(this@MoviesActivity, columns)
-        adapter = adapterDsl(recycler) {
+        adapter = pagedAdapterDsl(recycler) {
             item {
                 layout = R.layout.row_tv_movie_list
                 bindView { view, movie ->
                     view.text.text = movie.title
-                    view.votes.text = movie.votes
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
@@ -76,8 +76,8 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
         }
     }
 
-    private fun loadMovieImage(image: ImageView, movieItem: MovieItemVM) {
-        movieItem.image?.let {
+    private fun loadMovieImage(image: ImageView, movieItem: Movie) {
+        getPosterImage(movieItem)?.let {
             val requestOptions = RequestOptions().apply {
                 placeholder(R.color.grey_300)
                 error(R.color.grey_300)
@@ -91,6 +91,13 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
                     .into(image)
         } ?: image.setImageResource(R.color.grey_300)
     }
+
+    private fun getPosterImage(movie: Movie) =
+            if (movie.images.poster.isNullOrBlank()) {
+                null
+            } else {
+                "https://image.tmdb.org/t/p/w500${movie.images.poster}"
+            }
 
     override fun render(state: MoviesStates.MovieState) {
         when (state) {

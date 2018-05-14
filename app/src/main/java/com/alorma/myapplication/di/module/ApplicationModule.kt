@@ -1,8 +1,11 @@
 package com.alorma.myapplication.di.module
 
+import android.arch.paging.PagedList
 import android.content.Context
+import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.myapplication.domain.repository.PageListMovieBoundaryCallback
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import dagger.Module
@@ -25,8 +28,13 @@ class ApplicationModule(private val context: Context) {
     fun getGlide(): RequestManager = Glide.with(context)
 
     @Provides
-    fun getMoviesRepository(network: Network, cache: Cache): MoviesRepository =
-            MoviesRepository(network, cache)
+    fun providesPageCallback(network: Network, cache: Cache): PagedList.BoundaryCallback<Movie> =
+            PageListMovieBoundaryCallback(network, cache)
+
+    @Provides
+    fun getMoviesRepository(cache: Cache, callback: PagedList.BoundaryCallback<Movie>): MoviesRepository {
+        return MoviesRepository(cache, callback)
+    }
 
     @Provides
     fun getConfigurationRepository(network: ConfigNetwork, cache: ConfigCache): ConfigurationRepository =

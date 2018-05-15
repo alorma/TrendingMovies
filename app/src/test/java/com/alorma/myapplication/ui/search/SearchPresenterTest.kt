@@ -116,5 +116,5 @@ class SearchPresenterTest {
     }
 
     private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
-            MovieSearchItemVM(id, "", "", "", "")
+            MovieSearchItemVM(id, "", "", "", "", "")
 }

@@ -10,7 +10,7 @@ interface MovieApi {
     fun listAll(): Single<PagedResponse<MovieDto>>
 
     @GET("movie/popular")
-    fun listPage(@Query("page") page: Int): Single<PagedResponse<MovieDto>>
+    fun listPage(@Query("page") page: Int?): Single<PagedResponse<MovieDto>>
 
     @GET("search/movie")
     fun search(@Query("query") query: String): Single<PagedResponse<MovieDto>>

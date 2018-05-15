@@ -14,8 +14,8 @@ class DetailStates @Inject constructor(private val mapper: DetailMapper) {
         data class ErrorSimilarMovies(val text: String) : DetailState()
     }
 
-    infix fun success(it: Pair<Configuration, Movie>): DetailState =
-            DetailState.Success(mapper.success(it.second, it.first))
+    infix fun success(it: Movie): DetailState =
+            DetailState.Success(mapper.success(it))
 
     infix fun successSimilarMovies(items: Pair<Configuration, List<Movie>>): DetailState =
             DetailState.SimilarMovies(items.second.map { mapper.mapSimilar(it, items.first) })

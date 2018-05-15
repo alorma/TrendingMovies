@@ -44,6 +44,16 @@ dependencies {
     implementation network.okhttp.library
     implementation network.okhttp.logging
 
+
+    implementation cache.room.runtime
+    kapt cache.room.compiler
+
+    implementation cache.page.runtime
+    implementation cache.page.rx2
+
+    implementation 'android.arch.paging:runtime:1.0.0'
+    implementation 'android.arch.paging:rxjava2:1.0.0-alpha1'
+
     debugImplementation network.okhttp.chuck.debug
     releaseImplementation network.okhttp.chuck.release
 

@@ -3,15 +3,14 @@ package com.alorma.myapplication.ui.movies
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
+import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.common.DslAdapter
-import com.alorma.myapplication.ui.common.adapterDsl
-import com.alorma.myapplication.ui.common.pagination
+import com.alorma.myapplication.ui.common.PagedDslAdapter
+import com.alorma.myapplication.ui.common.pagedAdapterDsl
 import com.alorma.myapplication.ui.movies.di.MoviesModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -31,14 +30,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
     @Inject
     lateinit var actions: MoviesActions
 
-    private lateinit var adapter: DslAdapter<MovieItemVM>
-
-    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        recycler.pagination {
-            presenter reduce actions.loadPage()
-            disablePagination()
-        }
-    }
+    private lateinit var adapter: PagedDslAdapter<Movie>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +47,11 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
     private fun initView() {
         val columns = resources.getInteger(R.integer.columns_movies)
         recycler.layoutManager = GridLayoutManager(this@MoviesActivity, columns)
-        adapter = adapterDsl(recycler) {
+        adapter = pagedAdapterDsl(recycler) {
             item {
                 layout = R.layout.row_tv_movie_list
                 bindView { view, movie ->
                     view.text.text = movie.title
-                    view.votes.text = movie.votes
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
@@ -76,8 +67,8 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
         }
     }
 
-    private fun loadMovieImage(image: ImageView, movieItem: MovieItemVM) {
-        movieItem.image?.let {
+    private fun loadMovieImage(image: ImageView, movieItem: Movie) {
+        getPosterImage(movieItem)?.let {
             val requestOptions = RequestOptions().apply {
                 placeholder(R.color.grey_300)
                 error(R.color.grey_300)
@@ -91,6 +82,13 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
                     .into(image)
         } ?: image.setImageResource(R.color.grey_300)
     }
+
+    private fun getPosterImage(movie: Movie) =
+            if (movie.images.poster.isNullOrBlank()) {
+                null
+            } else {
+                "https://image.tmdb.org/t/p/w500${movie.images.poster}"
+            }
 
     override fun render(state: MoviesStates.MovieState) {
         when (state) {
@@ -106,7 +104,6 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
 
     private fun onSuccess(state: MoviesStates.MovieState.Success) {
         centerText.visibility = View.GONE
-        enablePagination()
         adapter.update(state.items)
     }
 
@@ -116,8 +113,4 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
             text = state.text
         }
     }
-
-    private fun enablePagination() = recycler.addOnScrollListener(recyclerViewListener)
-
-    private fun disablePagination() = recycler.removeOnScrollListener(recyclerViewListener)
 }

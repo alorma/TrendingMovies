@@ -9,7 +9,6 @@ import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
@@ -70,7 +69,7 @@ class MoviesPresenterTest {
             given(execute()).willReturn(Single.just(mock()))
         }
 
-        presenter = MoviesPresenter(states, routes, useCase, configUseCase, navigator)
+        presenter = MoviesPresenter(states, routes, useCase, navigator)
         presenter init view
     }
 

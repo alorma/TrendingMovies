@@ -9,6 +9,7 @@ import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BasePresenter
 import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.rac1.commons.plusAssign
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -43,16 +44,17 @@ class MovieDetailPresenter @Inject constructor(
     }
 
     private fun loadMovie(id: Int) {
-        disposable += Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainMovieDetailUseCase.execute(id),
-                BiFunction<Configuration, Movie, Pair<Configuration, Movie>> { conf, movie ->
-                    conf to movie
-                })
+        disposable +=
+                obtainMovieDetailUseCase.execute(id)
                 .observeOnUI()
                 .subscribe(
-                        { render(detailStates success it) },
-                        { render(detailStates error it) }
+                        {
+                            render(detailStates success it)
+                        },
+                        {
+                            render(detailStates error it)
+                            it.printStackTrace()
+                        }
                 )
     }
 

@@ -5,20 +5,13 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class MoviesDataSource @Inject constructor(
-        private val movieApi: MovieApi, private val moviesMapper: MoviesMapper) {
+        private val movieApi: MovieApi,
+        private val moviesMapper: MoviesMapper) {
 
-    fun listAll(page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
-        val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.listPage(it) }
-                ?: movieApi.listAll()
-
-        return items.map {
-            Triple(
-                    it.page,
-                    it.totalPages,
-                    moviesMapper.map(it.results)
-            )
-        }
-    }
+    fun listAll(page: Int? = null): Single<List<Movie>> =
+            movieApi.listPage(page)
+                    .map { it.results }
+                    .map { moviesMapper.map(it) }
 
     fun search(query: String, page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
         val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.searchPage(query, it) }

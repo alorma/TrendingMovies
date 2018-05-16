@@ -3,12 +3,10 @@ package com.alorma.myapplication.ui.splash
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.BaseView
-import com.alorma.myapplication.ui.common.State
 import com.alorma.myapplication.ui.splash.di.SplashModule
 import javax.inject.Inject
 
-class SplashActivity : AppCompatActivity(), BaseView<State> {
+class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var actions: SplashActions
 
@@ -20,11 +18,7 @@ class SplashActivity : AppCompatActivity(), BaseView<State> {
 
         component add SplashModule(this) inject this
 
-        presenter init this
+        presenter.init()
         presenter reduce actions.load()
-    }
-
-    override fun render(state: State) {
-
     }
 }

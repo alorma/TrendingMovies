@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.detail
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +11,10 @@ import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.*
+import com.alorma.myapplication.ui.common.DslAdapter
+import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.dsl
+import com.alorma.myapplication.ui.common.pagination
 import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
@@ -21,7 +25,7 @@ import kotlinx.android.synthetic.main.detail_genre_chip.view.*
 import kotlinx.android.synthetic.main.row_similar_movie.view.*
 import javax.inject.Inject
 
-class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailState> {
+class MovieDetailActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_ID = "extra_id"
         private const val EXTRA_TITLE = "extra_title"
@@ -55,7 +59,9 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
 
         component add DetailModule(this) inject this
 
-        presenter init this
+        presenter.init().observe(this, Observer<DetailStates.DetailState> {
+            it?.let { render(it) }
+        })
 
         initData()
 
@@ -110,7 +116,7 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
                 LinearLayoutManager.HORIZONTAL, false)
     }
 
-    override fun render(state: DetailStates.DetailState) {
+    fun render(state: DetailStates.DetailState) {
         when (state) {
             is DetailStates.DetailState.Success -> onSuccess(state)
             is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state)

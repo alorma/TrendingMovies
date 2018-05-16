@@ -1,12 +1,12 @@
 package com.alorma.myapplication.ui.movies
 
+import android.arch.lifecycle.MutableLiveData
 import com.alorma.myapplication.commons.observeOnUI
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.common.BasePresenter
-import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.rac1.commons.plusAssign
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -16,8 +16,9 @@ class MoviesPresenter @Inject constructor(private val states: MoviesStates,
                                           private val routes: MoviesRoutes,
                                           private val obtainMoviesUseCase: ObtainMoviesUseCase,
                                           private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-                                          private val moviesNavigator: MoviesNavigator) :
-        BasePresenter<MoviesActions.MovieAction, MoviesStates.MovieState>() {
+                                          private val moviesNavigator: MoviesNavigator,
+                                          liveData: MutableLiveData<MoviesStates.MovieState>) :
+        BasePresenter<MoviesActions.MovieAction, MoviesStates.MovieState>(liveData) {
 
     override fun reduce(action: MoviesActions.MovieAction) {
         when (action) {

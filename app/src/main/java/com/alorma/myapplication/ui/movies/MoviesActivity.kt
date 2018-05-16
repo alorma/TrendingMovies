@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.movies
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -8,7 +9,6 @@ import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.pagination
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
 import javax.inject.Inject
 
-class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
+class MoviesActivity : AppCompatActivity() {
 
     companion object {
         const val OFFSET_LAZY_LOAD = 4
@@ -48,7 +48,12 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
 
         initView()
 
-        presenter init this
+        presenter.init().observe(this, Observer<MoviesStates.MovieState> {
+            it?.let {
+                render(it)
+            }
+        })
+
         presenter reduce actions.load()
     }
 
@@ -92,7 +97,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    override fun render(state: MoviesStates.MovieState) {
+    fun render(state: MoviesStates.MovieState) {
         when (state) {
             is MoviesStates.MovieState.Loading -> onLoading(state)
             is MoviesStates.MovieState.Success -> onSuccess(state)

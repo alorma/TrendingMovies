@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.splash
 
+import android.arch.lifecycle.MutableLiveData
 import com.alorma.myapplication.commons.observeOnUI
 import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.common.BasePresenter
@@ -11,7 +12,7 @@ class SplashPresenter @Inject constructor(
         private val splashRoute: SplashRoutes,
         private val splashNavigator: SplashNavigator,
         private val loadConfigurationUseCase: LoadConfigurationUseCase) :
-        BasePresenter<SplashActions.SplashAction, State>() {
+        BasePresenter<SplashActions.SplashAction, State>(MutableLiveData()) {
 
     override fun reduce(action: SplashActions.SplashAction) {
         when (action) {

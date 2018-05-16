@@ -1,28 +1,22 @@
 package com.alorma.myapplication.ui.common
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import io.reactivex.disposables.CompositeDisposable
 
 open class Action
 open class Route
 open class State
 
-interface BaseView<in S : State> {
-    infix fun render(state: S)
-}
-
-abstract class BasePresenter<in A : Action, S : State> {
+abstract class BasePresenter<in A : Action, S : State>(private val liveData: MutableLiveData<S>) {
 
     protected val disposable: CompositeDisposable by lazy { CompositeDisposable() }
 
-    lateinit var view: BaseView<S>
-
-    infix fun init(view: BaseView<S>) {
-        this.view = view
-    }
+    fun init(): LiveData<S> = liveData
 
     abstract infix fun reduce(action: A)
 
-    fun render(state: S) = view render state
+    fun render(state: S) = liveData.postValue(state)
 
     fun destroy() {
         disposable.clear()

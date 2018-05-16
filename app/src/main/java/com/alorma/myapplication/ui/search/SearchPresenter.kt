@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.search
 
+import android.arch.lifecycle.MutableLiveData
 import com.alorma.myapplication.commons.observeOnUI
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
@@ -16,8 +17,9 @@ class SearchPresenter @Inject constructor(
         private val searchRoutes: SearchRoutes,
         private val navigator: SearchNavigator,
         private val obtainMoviesUseCase: SearchMoviesUseCase,
-        private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BasePresenter<SearchActions.SearchAction, SearchStates.SearchState>() {
+        private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
+        liveData: MutableLiveData<SearchStates.SearchState>) :
+        BasePresenter<SearchActions.SearchAction, SearchStates.SearchState>(liveData) {
 
     private lateinit var query: String
 

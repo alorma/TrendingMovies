@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.detail
 
+import android.arch.lifecycle.MutableLiveData
 import com.alorma.myapplication.commons.observeOnUI
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
@@ -7,7 +8,6 @@ import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BasePresenter
-import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.rac1.commons.plusAssign
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -19,9 +19,10 @@ class MovieDetailPresenter @Inject constructor(
         private val detailNavigator: DetailNavigator,
         private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-        private val obtainMovieUseCase: ObtainMovieUseCase
+        private val obtainMovieUseCase: ObtainMovieUseCase,
+        liveData: MutableLiveData<DetailStates.DetailState>
 ) :
-        BasePresenter<DetailActions.DetailAction, DetailStates.DetailState>() {
+        BasePresenter<DetailActions.DetailAction, DetailStates.DetailState>(liveData) {
 
     private var id: Int = -1
 

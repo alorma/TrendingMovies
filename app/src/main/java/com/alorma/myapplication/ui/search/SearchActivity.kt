@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.search
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.row_search.view.*
 import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
 
-class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
+class SearchActivity : AppCompatActivity() {
     companion object {
         fun launch(context: Context): Intent = Intent(context, SearchActivity::class.java)
     }
@@ -43,7 +44,9 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
 
         component add SearchModule(this) inject this
 
-        presenter init this
+        presenter.init().observe(this, Observer<SearchStates.SearchState> {
+            it?.let { render(it) }
+        })
 
         initView()
     }
@@ -112,7 +115,7 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    override fun render(state: SearchStates.SearchState) {
+    fun render(state: SearchStates.SearchState) {
         when (state) {
             is SearchStates.SearchState.SearchResult -> onResult(state)
         }

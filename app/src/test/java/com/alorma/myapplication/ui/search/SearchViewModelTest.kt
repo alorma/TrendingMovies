@@ -1,25 +1,39 @@
 package com.alorma.myapplication.ui.search
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
-import com.nhaarman.mockito_kotlin.given
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.*
+import io.reactivex.Single
+import junit.framework.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestRule
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Captor
+import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class SearchVieweModelTest {
+class SearchViewModelTest {
+
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
     private lateinit var actions: SearchActions
     private lateinit var viewModel: SearchViewModel
     private lateinit var liveData: LiveData<SearchStates.SearchState>
     private lateinit var navigator: SearchNavigator
+
+    @Mock
+    lateinit var observer: Observer<SearchStates.SearchState>
 
     @Captor
     private lateinit var stateCaptor: ArgumentCaptor<SearchStates.SearchState>
@@ -29,6 +43,7 @@ class SearchVieweModelTest {
 
     private lateinit var moviesUseCase: SearchMoviesUseCase
     private lateinit var configUseCase: ObtainConfigurationUseCase
+
 
     init {
         configureRxThreading()
@@ -50,10 +65,11 @@ class SearchVieweModelTest {
 
         val states = SearchStates(SearchMapper(DateFormatter(), resources))
         viewModel = SearchViewModel(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
-        liveData = viewModel.init(mock())
+
+        liveData = viewModel.liveData
+        liveData.observeForever(observer)
     }
 
-    /*
     @Test
     fun onActionNewQuery_withNoResults_renderEmpty() {
         given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
@@ -61,7 +77,7 @@ class SearchVieweModelTest {
 
         viewModel reduce actions.query("search test")
 
-        verify(view) render capture(stateCaptor)
+        verify(observer).onChanged(capture(stateCaptor))
 
         assertTrue(stateCaptor.value === SearchStates.SearchState.Empty)
     }
@@ -75,7 +91,7 @@ class SearchVieweModelTest {
         viewModel reduce actions.query("search test")
         viewModel reduce actions.page()
 
-        verify(view, times(2)) render capture(stateCaptor)
+        verify(observer, times(2)).onChanged(capture(stateCaptor))
 
         assertTrue(stateCaptor.allValues[1] === SearchStates.SearchState.EmptyPage)
     }
@@ -84,14 +100,14 @@ class SearchVieweModelTest {
     fun onActionEmptyQuery_noRender() {
         viewModel reduce actions.query("")
 
-        verifyZeroInteractions(view)
+        verifyZeroInteractions(observer)
     }
 
     @Test
     fun onActionNullQuery_noRender() {
         viewModel reduce actions.query(null)
 
-        verifyZeroInteractions(view)
+        verifyZeroInteractions(observer)
     }
 
     @Test
@@ -112,7 +128,6 @@ class SearchVieweModelTest {
 
         assertTrue(routeCaptor.value === SearchRoutes.SearchRoute.Back)
     }
-*/
 
     private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
             MovieSearchItemVM(id, "", "", "", "", "")

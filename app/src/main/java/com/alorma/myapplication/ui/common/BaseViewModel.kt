@@ -8,8 +8,8 @@ abstract class BaseViewModel<T : State, in A : Action> : ViewModel() {
 
     protected val disposable: CompositeDisposable by lazy { CompositeDisposable() }
 
-    fun init(owner: LifecycleOwner, observer: Observer<T>? = null): LiveData<T> = liveData.also {
-        liveData.observe(owner, observer ?: Observer<T> { })
+    fun init(owner: LifecycleOwner? = null, observer: Observer<T> = Observer { }): LiveData<T> = liveData.also {
+        owner?.let { liveData.observe(it, observer) }
     }
 
     abstract infix fun reduce(action: A)

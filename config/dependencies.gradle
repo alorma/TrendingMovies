@@ -22,8 +22,9 @@ ext {
 
     def lifecycle_version = "1.1.1"
     archComponents = [
-            extensions  : "android.arch.lifecycle:extensions:$lifecycle_version",
-            processor : "android.arch.lifecycle:compiler:$lifecycle_version"
+            extensions: "android.arch.lifecycle:extensions:$lifecycle_version",
+            processor : "android.arch.lifecycle:compiler:$lifecycle_version",
+            test      : "android.arch.core:core-testing:$lifecycle_version"
     ]
 
     def daggerVersion = "2.14.1"

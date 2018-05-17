@@ -50,7 +50,7 @@ class MovieDetailViewModel @Inject constructor(
                             render(detailStates success it)
                         },
                         {
-                            render(detailStates errorSimilarMovies it)
+                            render(detailStates error it)
                         }
                 )
     }

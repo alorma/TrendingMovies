@@ -4,7 +4,7 @@ import android.arch.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseViewModel<T : State, in A : Action> : ViewModel() {
-    private val liveData: MutableLiveData<T> = MutableLiveData()
+    val liveData: MutableLiveData<T> = MutableLiveData()
 
     protected val disposable: CompositeDisposable by lazy { CompositeDisposable() }
 

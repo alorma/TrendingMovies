@@ -1,6 +1,8 @@
 package com.alorma.myapplication.ui.movies
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.MovieApi
@@ -12,18 +14,24 @@ import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
-import org.junit.Assert.*
+import junit.framework.Assert.*
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Captor
+import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
 import com.alorma.myapplication.data.net.MoviesDataSource as Network
 import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
 
 class MoviesPresenterTest {
+
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
     private lateinit var movieApi: MovieApi
 
@@ -33,6 +41,9 @@ class MoviesPresenterTest {
     private lateinit var routes: MoviesRoutes
 
     private lateinit var liveData: LiveData<MoviesStates.MovieState>
+
+    @Mock
+    lateinit var observer: Observer<MoviesStates.MovieState>
 
     @Captor
     private lateinit var stateCaptor: ArgumentCaptor<MoviesStates.MovieState>
@@ -71,10 +82,11 @@ class MoviesPresenterTest {
         }
 
         presenter = MoviesViewModel(states, routes, useCase, configUseCase, navigator)
-        presenter.init(mock())
+
+        liveData = presenter.liveData
+        liveData.observeForever(observer)
     }
 
-    /*
     @Test
     fun onLoad_renderLoadings() {
         val response = PagedResponse(0, 0, listOf(generateMovieDto()))
@@ -82,7 +94,7 @@ class MoviesPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(liveData, times(3)).render(capture(stateCaptor))
+        verify(observer, times(3)).onChanged(capture(stateCaptor))
 
         with(stateCaptor.allValues) {
             assertTrue(get(0) is MoviesStates.MovieState.Loading)
@@ -99,7 +111,7 @@ class MoviesPresenterTest {
 
         presenter reduce actions.loadPage()
 
-        verify(liveData, times(3)).render(capture(stateCaptor))
+        verify(observer, times(3)).onChanged(capture(stateCaptor))
 
         with(stateCaptor.allValues) {
             assertTrue(get(0) is MoviesStates.MovieState.Loading)
@@ -116,7 +128,7 @@ class MoviesPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(liveData, times(3)).render(capture(stateCaptor))
+        verify(observer, times(3)).onChanged(capture(stateCaptor))
 
         assertTrue(stateCaptor.allValues[2] is MoviesStates.MovieState.Success)
     }
@@ -129,7 +141,7 @@ class MoviesPresenterTest {
 
         presenter reduce actions.loadPage()
 
-        verify(liveData, times(3)).render(capture(stateCaptor))
+        verify(observer, times(3)).onChanged(capture(stateCaptor))
 
         assertTrue(stateCaptor.allValues[2] is MoviesStates.MovieState.Success)
     }
@@ -141,7 +153,7 @@ class MoviesPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(liveData, times(3)).render(capture(stateCaptor))
+        verify(observer, times(3)).onChanged(capture(stateCaptor))
 
         val state = stateCaptor.allValues[2]
         assertTrue(state is MoviesStates.MovieState.Success)
@@ -159,7 +171,7 @@ class MoviesPresenterTest {
         presenter reduce actions.load()
         presenter reduce actions.loadPage()
 
-        verify(liveData, times(6)).render(capture(stateCaptor))
+        verify(observer, times(6)).onChanged(capture(stateCaptor))
 
         val firstState = stateCaptor.allValues[2]
         assertTrue(firstState is MoviesStates.MovieState.Success)
@@ -175,7 +187,7 @@ class MoviesPresenterTest {
 
         presenter reduce actions.load()
 
-        verify(liveData, times(3)).render(capture(stateCaptor))
+        verify(observer, times(3)).onChanged(capture(stateCaptor))
 
         assertTrue(stateCaptor.allValues[2] is MoviesStates.MovieState.Error)
     }
@@ -189,7 +201,6 @@ class MoviesPresenterTest {
         assertTrue(routeCaptor.value is MoviesRoutes.MovieRoute.DetailRoute)
         assertEquals(12, (routeCaptor.value as MoviesRoutes.MovieRoute.DetailRoute).id)
     }
-    */
 
     private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
     private fun getMovie(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")

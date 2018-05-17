@@ -13,7 +13,6 @@ import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
@@ -39,7 +38,7 @@ class MovieDetailPresenterTest {
     private lateinit var movieApi: MovieApi
     private lateinit var cacheDs: Cache
     private lateinit var navigator: DetailNavigator
-    private lateinit var presenter: MovieDetailPresenter
+    private lateinit var viewModel: MovieDetailViewModel
     private val actions: DetailActions = DetailActions()
 
     @Captor
@@ -73,16 +72,16 @@ class MovieDetailPresenterTest {
 
         val mapper = DetailMapper(resources, DateFormatter())
 
-        presenter = MovieDetailPresenter(DetailStates(mapper), DetailRoutes(), navigator,
+        viewModel = MovieDetailViewModel(DetailStates(mapper), DetailRoutes(), navigator,
                 movieDetailUseCase,
                 configUseCase,
                 similarMoviesUseCase)
-        presenter init view
+        viewModel init view
     }
 
     @Test
     fun onActionBack_navigateBack() {
-        presenter reduce actions.back()
+        viewModel reduce actions.back()
 
         verify(navigator) navigate capture(routeCaptor)
         assertTrue(routeCaptor.value === DetailRoutes.DetailRoute.Back)
@@ -92,7 +91,7 @@ class MovieDetailPresenterTest {
     fun onActionLoad_serveFromCache_renderSuccess() {
         given(cacheDs.get(eq(12))).willReturn(getMovie(12))
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
         verify(view, times(2)).render(capture(stateCaptor))
 
@@ -105,7 +104,7 @@ class MovieDetailPresenterTest {
         given(cacheDs.get(eq(12))).willReturn(null)
         given(movieApi.item(eq(12))).willReturn(Single.just(generateMovieDto(12)))
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
         verify(view, times(2)).render(capture(stateCaptor))
 
@@ -117,7 +116,7 @@ class MovieDetailPresenterTest {
     fun onActionLoadError_renderError() {
         given(cacheDs.get(eq(12))).willThrow(RuntimeException())
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
         verify(view, times((2))).render(capture(stateCaptor))
 
@@ -127,7 +126,7 @@ class MovieDetailPresenterTest {
 
     @Test
     fun onActionOpenDetail_navigateToDetail() {
-        presenter reduce actions.openSimilarMovie(getMovieVM())
+        viewModel reduce actions.openSimilarMovie(getMovieVM())
 
         verify(navigator).navigate(capture(routeCaptor))
         assertTrue(routeCaptor.value is DetailRoutes.DetailRoute.Detail)
@@ -140,7 +139,7 @@ class MovieDetailPresenterTest {
                 listOf(generateMovieDto(), generateMovieDto(), generateMovieDto()))
         given(movieApi.similar(eq(12))).willReturn(Single.just(response))
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
         verify(view, times(2)).render(capture(stateCaptor))
 

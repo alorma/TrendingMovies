@@ -27,13 +27,13 @@ class SearchActivity : AppCompatActivity() {
     lateinit var actions: SearchActions
 
     @Inject
-    lateinit var presenter: SearchPresenter
+    lateinit var viewModel: SearchViewModel
 
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
-            presenter reduce actions.page()
+            viewModel reduce actions.page()
             disablePagination()
         }
     }
@@ -44,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
 
         component add SearchModule(this) inject this
 
-        presenter.init().observe(this, Observer<SearchStates.SearchState> {
+        viewModel.init(this, Observer {
             it?.let { render(it) }
         })
 
@@ -60,22 +60,22 @@ class SearchActivity : AppCompatActivity() {
         toolbar.dsl {
             menu = R.menu.search_menu
             back {
-                action = { presenter reduce actions.back() }
+                action = { viewModel reduce actions.back() }
             }
         }
         toolbar.searchDsl {
             id = R.id.action_search
             open = true
             textSubmitted {
-                presenter reduce actions.query(it)
+                viewModel reduce actions.query(it)
                 true
             }
             textChange {
-                presenter reduce actions.query(it)
+                viewModel reduce actions.query(it)
                 true
             }
             onClose {
-                presenter reduce actions.back()
+                viewModel reduce actions.back()
                 true
             }
         }
@@ -92,7 +92,7 @@ class SearchActivity : AppCompatActivity() {
                     view.year.text = movie.year
                     loadMovieImage(view.image, movie)
                 }
-                onClick { presenter reduce actions.detail(it) }
+                onClick { viewModel reduce actions.detail(it) }
             }
             diff { it.id }
         }

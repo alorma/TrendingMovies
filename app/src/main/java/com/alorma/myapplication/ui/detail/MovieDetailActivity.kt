@@ -41,14 +41,14 @@ class MovieDetailActivity : AppCompatActivity() {
     lateinit var actions: DetailActions
 
     @Inject
-    lateinit var presenter: MovieDetailPresenter
+    lateinit var viewModel: MovieDetailViewModel
 
     private lateinit var similarMoviesAdapter: DslAdapter<MovieItemVM>
     private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         similarMoviesRecycler.pagination {
-            presenter reduce actions.loadSimilarPage()
+            viewModel reduce actions.loadSimilarPage()
             disablePagination()
         }
     }
@@ -59,14 +59,14 @@ class MovieDetailActivity : AppCompatActivity() {
 
         component add DetailModule(this) inject this
 
-        presenter.init().observe(this, Observer<DetailStates.DetailState> {
+        viewModel.init(this, Observer {
             it?.let { render(it) }
         })
 
         initData()
 
         toolbar.dsl {
-            back { action = { presenter reduce actions.back() } }
+            back { action = { viewModel reduce actions.back() } }
         }
     }
 
@@ -79,8 +79,8 @@ class MovieDetailActivity : AppCompatActivity() {
                 toolbar.title = it
             }
             it.getInt(EXTRA_ID, -1).takeIf { it != -1 }?.let {
-                presenter reduce actions.load(it)
-            } ?: presenter reduce actions.back()
+                viewModel reduce actions.load(it)
+            } ?: viewModel reduce actions.back()
         }
     }
 
@@ -107,7 +107,7 @@ class MovieDetailActivity : AppCompatActivity() {
                     view.text.text = movieItemVM.title
                 }
                 onClick {
-                    presenter reduce actions.openSimilarMovie(it)
+                    viewModel reduce actions.openSimilarMovie(it)
                 }
             }
             diff { it.id }
@@ -119,7 +119,7 @@ class MovieDetailActivity : AppCompatActivity() {
     fun render(state: DetailStates.DetailState) {
         when (state) {
             is DetailStates.DetailState.Success -> onSuccess(state)
-            is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state)
+            is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state.movies)
         }
     }
 
@@ -127,6 +127,7 @@ class MovieDetailActivity : AppCompatActivity() {
         setTexts(state.detail)
         showImage(state.detail)
         showGenres(state.detail)
+        onSimilarMovies(state.similarMovies)
     }
 
     private fun setTexts(movieDetailVM: MovieDetailVM) {
@@ -154,13 +155,13 @@ class MovieDetailActivity : AppCompatActivity() {
         genresAdapter.update(movieDetailVM.genres)
     }
 
-    private fun onSimilarMovies(state: DetailStates.DetailState.SimilarMovies) {
-        if (state.movies.isEmpty()) {
+    private fun onSimilarMovies(items: List<MovieItemVM>) {
+        if (items.isEmpty()) {
             similarMoviesLabel.visibility = View.INVISIBLE
             return
         }
         similarMoviesLabel.visibility = View.VISIBLE
-        similarMoviesAdapter.update(state.movies)
+        similarMoviesAdapter.update(items)
         enablePagination()
     }
 

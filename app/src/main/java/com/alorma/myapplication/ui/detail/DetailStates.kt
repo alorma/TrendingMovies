@@ -8,14 +8,18 @@ import javax.inject.Inject
 
 class DetailStates @Inject constructor(private val mapper: DetailMapper) {
     sealed class DetailState : State() {
-        data class Success(val detail: MovieDetailVM) : DetailState()
+
+        data class Success(val detail: MovieDetailVM,
+                           val similarMovies: List<MovieItemVM>) : DetailState()
+
         data class SimilarMovies(val movies: List<MovieItemVM>) : DetailState()
         data class Error(val text: String) : DetailState()
         data class ErrorSimilarMovies(val text: String) : DetailState()
     }
 
-    infix fun success(it: Pair<Configuration, Movie>): DetailState =
-            DetailState.Success(mapper.success(it.second, it.first))
+    infix fun success(it: Triple<Configuration, Movie, List<Movie>>): DetailState =
+            DetailState.Success(mapper.success(it.second, it.first),
+                    mapper.mapSimilars(it.third, it.first))
 
     infix fun successSimilarMovies(items: Pair<Configuration, List<Movie>>): DetailState =
             DetailState.SimilarMovies(items.second.map { mapper.mapSimilar(it, items.first) })

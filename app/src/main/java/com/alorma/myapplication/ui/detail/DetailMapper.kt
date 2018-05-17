@@ -26,6 +26,10 @@ class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
                         ?: movie.images.poster}"
             }
 
+    fun mapSimilars(movies: List<Movie>, conf: Configuration): List<MovieItemVM> = movies.map {
+        mapSimilar(it, conf)
+    }
+
     fun mapSimilar(movie: Movie, conf: Configuration): MovieItemVM = MovieItemVM(movie.id, movie.title,
             "${conf.imagesUrl}${conf.imageSize}${movie.images.poster}",
             String.format("%.1f", movie.vote))

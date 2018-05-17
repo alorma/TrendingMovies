@@ -17,10 +17,10 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Captor
 import org.mockito.MockitoAnnotations
 
-class SearchPresenterTest {
+class SearchVieweModelTest {
 
     private lateinit var actions: SearchActions
-    private lateinit var presenter: SearchPresenter
+    private lateinit var viewModel: SearchViewModel
     private lateinit var view: BaseView<SearchStates.SearchState>
     private lateinit var navigator: SearchNavigator
 
@@ -52,8 +52,8 @@ class SearchPresenterTest {
         }
 
         val states = SearchStates(SearchMapper(DateFormatter(), resources))
-        presenter = SearchPresenter(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
-        presenter init view
+        viewModel = SearchViewModel(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
+        viewModel init view
     }
 
     @Test
@@ -61,7 +61,7 @@ class SearchPresenterTest {
         given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
         given(configUseCase.execute()).willReturn(Single.just(mock()))
 
-        presenter reduce actions.query("search test")
+        viewModel reduce actions.query("search test")
 
         verify(view) render capture(stateCaptor)
 
@@ -74,8 +74,8 @@ class SearchPresenterTest {
         given(moviesUseCase.executeNextPage(anyString())).willReturn(Single.just(listOf()))
         given(configUseCase.execute()).willReturn(Single.just(mock()))
 
-        presenter reduce actions.query("search test")
-        presenter reduce actions.page()
+        viewModel reduce actions.query("search test")
+        viewModel reduce actions.page()
 
         verify(view, times(2)) render capture(stateCaptor)
 
@@ -84,21 +84,21 @@ class SearchPresenterTest {
 
     @Test
     fun onActionEmptyQuery_noRender() {
-        presenter reduce actions.query("")
+        viewModel reduce actions.query("")
 
         verifyZeroInteractions(view)
     }
 
     @Test
     fun onActionNullQuery_noRender() {
-        presenter reduce actions.query(null)
+        viewModel reduce actions.query(null)
 
         verifyZeroInteractions(view)
     }
 
     @Test
     fun onActionOpenDetail_navigateToDetail() {
-        presenter reduce actions.detail(getMovieSearchVM(12))
+        viewModel reduce actions.detail(getMovieSearchVM(12))
 
         verify(navigator) navigate capture(routeCaptor)
 
@@ -108,7 +108,7 @@ class SearchPresenterTest {
 
     @Test
     fun onActionBack_navigateToBack() {
-        presenter reduce actions.back()
+        viewModel reduce actions.back()
 
         verify(navigator) navigate capture(routeCaptor)
 

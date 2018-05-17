@@ -14,7 +14,7 @@ abstract class BaseViewModel<T : State, in A : Action> : ViewModel() {
 
     abstract infix fun reduce(action: A)
 
-    fun render(state: T) = liveData.postValue(state)
+    open fun render(state: T) = liveData.postValue(state)
 
     override fun onCleared() {
         disposable.clear()

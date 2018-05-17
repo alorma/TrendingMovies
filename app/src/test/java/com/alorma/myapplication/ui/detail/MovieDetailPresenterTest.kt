@@ -1,8 +1,9 @@
 package com.alorma.myapplication.ui.detail
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.LiveData
 import com.alorma.myapplication.configureRxThreading
 import com.alorma.myapplication.data.net.DateParser
-import com.alorma.myapplication.data.net.PagedResponse
 import com.alorma.myapplication.data.net.MovieApi
 import com.alorma.myapplication.data.net.MovieDto
 import com.alorma.myapplication.domain.model.Images
@@ -11,16 +12,17 @@ import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
-import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
+import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.Captor
@@ -32,6 +34,9 @@ import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
 
 class MovieDetailPresenterTest {
 
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
+
     init {
         configureRxThreading()
     }
@@ -39,15 +44,13 @@ class MovieDetailPresenterTest {
     private lateinit var movieApi: MovieApi
     private lateinit var cacheDs: Cache
     private lateinit var navigator: DetailNavigator
-    private lateinit var presenter: MovieDetailPresenter
+    private lateinit var viewModel: MovieDetailViewModel
     private val actions: DetailActions = DetailActions()
 
     @Captor
-    private lateinit var stateCaptor: ArgumentCaptor<DetailStates.DetailState>
-    @Captor
     private lateinit var routeCaptor: ArgumentCaptor<DetailRoutes.DetailRoute>
 
-    private lateinit var view: BaseView<DetailStates.DetailState>
+    private lateinit var liveData: LiveData<DetailStates.DetailState>
 
     @Before
     fun setup() {
@@ -55,7 +58,6 @@ class MovieDetailPresenterTest {
 
         navigator = mock()
         movieApi = mock()
-        view = mock()
 
         val networkDs = Network(movieApi, NetworkMapper(DateParser()))
         cacheDs = mock()
@@ -73,16 +75,17 @@ class MovieDetailPresenterTest {
 
         val mapper = DetailMapper(resources, DateFormatter())
 
-        presenter = MovieDetailPresenter(DetailStates(mapper), DetailRoutes(), navigator,
+        viewModel = MovieDetailViewModel(DetailStates(mapper), DetailRoutes(), navigator,
                 movieDetailUseCase,
                 configUseCase,
                 similarMoviesUseCase)
-        presenter init view
+
+        liveData = viewModel.init()
     }
 
     @Test
     fun onActionBack_navigateBack() {
-        presenter reduce actions.back()
+        viewModel reduce actions.back()
 
         verify(navigator) navigate capture(routeCaptor)
         assertTrue(routeCaptor.value === DetailRoutes.DetailRoute.Back)
@@ -91,64 +94,49 @@ class MovieDetailPresenterTest {
     @Test
     fun onActionLoad_serveFromCache_renderSuccess() {
         given(cacheDs.get(eq(12))).willReturn(getMovie(12))
+        given(cacheDs.getSimilar(eq(12))).willReturn(getMovies(5))
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
-        verify(view, times(2)).render(capture(stateCaptor))
+        assertTrue(liveData.value is DetailStates.DetailState.Success)
 
-        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
-        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarMovies)
+        with(liveData.value as DetailStates.DetailState.Success) {
+            assertEquals(5, similarMovies.size)
+        }
     }
 
     @Test
     fun onActionLoad_serveFromApi_renderSuccess() {
         given(cacheDs.get(eq(12))).willReturn(null)
         given(movieApi.item(eq(12))).willReturn(Single.just(generateMovieDto(12)))
+        given(cacheDs.getSimilar(eq(12))).willReturn(getMovies(5))
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
-        verify(view, times(2)).render(capture(stateCaptor))
-
-        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
-        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarMovies)
+        assertTrue(liveData.value is DetailStates.DetailState.Success)
     }
 
     @Test
     fun onActionLoadError_renderError() {
         given(cacheDs.get(eq(12))).willThrow(RuntimeException())
+        given(cacheDs.getSimilar(eq(12))).willReturn(getMovies(5))
 
-        presenter reduce actions.load(12)
+        viewModel reduce actions.load(12)
 
-        verify(view, times((2))).render(capture(stateCaptor))
-
-        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Error)
-        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.ErrorSimilarMovies)
+        assertTrue(liveData.value is DetailStates.DetailState.Error)
     }
 
     @Test
     fun onActionOpenDetail_navigateToDetail() {
-        presenter reduce actions.openSimilarMovie(getMovieVM())
+        viewModel reduce actions.openSimilarMovie(getMovieVM())
 
         verify(navigator).navigate(capture(routeCaptor))
         assertTrue(routeCaptor.value is DetailRoutes.DetailRoute.Detail)
     }
 
-    @Test
-    fun onLoad_renderSimilarMovies() {
-        given(cacheDs.get(eq(12))).willReturn(getMovie(12))
-        val response = PagedResponse(0, 0,
-                listOf(generateMovieDto(), generateMovieDto(), generateMovieDto()))
-        given(movieApi.similar(eq(12))).willReturn(Single.just(response))
-
-        presenter reduce actions.load(12)
-
-        verify(view, times(2)).render(capture(stateCaptor))
-
-        assertTrue(stateCaptor.allValues[0] is DetailStates.DetailState.Success)
-        assertTrue(stateCaptor.allValues[1] is DetailStates.DetailState.SimilarMovies)
-    }
-
     private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
+
+    private fun getMovies(number: Int): List<Movie> = (1..number).map { getMovie(it) }
     private fun getMovie(id: Int = 0): Movie = Movie(id, "", "", Images("", ""), Date(), 0f, listOf())
     private fun getMovieVM(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")
 }

@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.detail
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +11,10 @@ import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.*
+import com.alorma.myapplication.ui.common.DslAdapter
+import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.dsl
+import com.alorma.myapplication.ui.common.pagination
 import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
@@ -21,7 +25,7 @@ import kotlinx.android.synthetic.main.detail_genre_chip.view.*
 import kotlinx.android.synthetic.main.row_similar_movie.view.*
 import javax.inject.Inject
 
-class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailState> {
+class MovieDetailActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_ID = "extra_id"
         private const val EXTRA_TITLE = "extra_title"
@@ -37,14 +41,14 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
     lateinit var actions: DetailActions
 
     @Inject
-    lateinit var presenter: MovieDetailPresenter
+    lateinit var viewModel: MovieDetailViewModel
 
     private lateinit var similarMoviesAdapter: DslAdapter<MovieItemVM>
     private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         similarMoviesRecycler.pagination {
-            presenter reduce actions.loadSimilarPage()
+            viewModel reduce actions.loadSimilarPage()
             disablePagination()
         }
     }
@@ -55,12 +59,14 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
 
         component add DetailModule(this) inject this
 
-        presenter init this
+        viewModel.init(this, Observer {
+            it?.let { render(it) }
+        })
 
         initData()
 
         toolbar.dsl {
-            back { action = { presenter reduce actions.back() } }
+            back { action = { viewModel reduce actions.back() } }
         }
     }
 
@@ -73,8 +79,8 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
                 toolbar.title = it
             }
             it.getInt(EXTRA_ID, -1).takeIf { it != -1 }?.let {
-                presenter reduce actions.load(it)
-            } ?: presenter reduce actions.back()
+                viewModel reduce actions.load(it)
+            } ?: viewModel reduce actions.back()
         }
     }
 
@@ -101,7 +107,7 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
                     view.text.text = movieItemVM.title
                 }
                 onClick {
-                    presenter reduce actions.openSimilarMovie(it)
+                    viewModel reduce actions.openSimilarMovie(it)
                 }
             }
             diff { it.id }
@@ -110,10 +116,10 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
                 LinearLayoutManager.HORIZONTAL, false)
     }
 
-    override fun render(state: DetailStates.DetailState) {
+    fun render(state: DetailStates.DetailState) {
         when (state) {
             is DetailStates.DetailState.Success -> onSuccess(state)
-            is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state)
+            is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state.movies)
         }
     }
 
@@ -121,6 +127,7 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
         setTexts(state.detail)
         showImage(state.detail)
         showGenres(state.detail)
+        onSimilarMovies(state.similarMovies)
     }
 
     private fun setTexts(movieDetailVM: MovieDetailVM) {
@@ -148,13 +155,13 @@ class MovieDetailActivity : AppCompatActivity(), BaseView<DetailStates.DetailSta
         genresAdapter.update(movieDetailVM.genres)
     }
 
-    private fun onSimilarMovies(state: DetailStates.DetailState.SimilarMovies) {
-        if (state.movies.isEmpty()) {
+    private fun onSimilarMovies(items: List<MovieItemVM>) {
+        if (items.isEmpty()) {
             similarMoviesLabel.visibility = View.INVISIBLE
             return
         }
         similarMoviesLabel.visibility = View.VISIBLE
-        similarMoviesAdapter.update(state.movies)
+        similarMoviesAdapter.update(items)
         enablePagination()
     }
 

@@ -3,7 +3,7 @@ package com.alorma.myapplication.di
 import com.alorma.myapplication.di.module.ApplicationModule
 import com.alorma.myapplication.di.module.DataModule
 import com.alorma.myapplication.di.module.NetModule
-import com.alorma.myapplication.ui.detail.DetailComponent
+import com.alorma.myapplication.ui.detail.di.DetailComponent
 import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.di.MoviesComponent
 import com.alorma.myapplication.ui.movies.di.MoviesModule

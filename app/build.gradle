@@ -50,10 +50,14 @@ dependencies {
     implementation network.glide.library
     kapt network.glide.compiler
 
+    implementation archComponents.extensions
+    kapt archComponents.processor
+
     testImplementation testing.jUnit
 
     testImplementation testing.mockito.core
     testImplementation testing.mockito.kotlin
+    testImplementation archComponents.test
 
     androidTestImplementation testing.mockito.core
     androidTestImplementation testing.mockito.kotlin

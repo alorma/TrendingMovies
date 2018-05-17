@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.search
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.row_search.view.*
 import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
 
-class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
+class SearchActivity : AppCompatActivity() {
     companion object {
         fun launch(context: Context): Intent = Intent(context, SearchActivity::class.java)
     }
@@ -26,13 +27,13 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
     lateinit var actions: SearchActions
 
     @Inject
-    lateinit var presenter: SearchPresenter
+    lateinit var viewModel: SearchViewModel
 
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
-            presenter reduce actions.page()
+            viewModel reduce actions.page()
             disablePagination()
         }
     }
@@ -43,7 +44,9 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
 
         component add SearchModule(this) inject this
 
-        presenter init this
+        viewModel.init(this, Observer {
+            it?.let { render(it) }
+        })
 
         initView()
     }
@@ -57,22 +60,22 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
         toolbar.dsl {
             menu = R.menu.search_menu
             back {
-                action = { presenter reduce actions.back() }
+                action = { viewModel reduce actions.back() }
             }
         }
         toolbar.searchDsl {
             id = R.id.action_search
             open = true
             textSubmitted {
-                presenter reduce actions.query(it)
+                viewModel reduce actions.query(it)
                 true
             }
             textChange {
-                presenter reduce actions.query(it)
+                viewModel reduce actions.query(it)
                 true
             }
             onClose {
-                presenter reduce actions.back()
+                viewModel reduce actions.back()
                 true
             }
         }
@@ -89,7 +92,7 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
                     view.year.text = movie.year
                     loadMovieImage(view.image, movie)
                 }
-                onClick { presenter reduce actions.detail(it) }
+                onClick { viewModel reduce actions.detail(it) }
             }
             diff { it.id }
         }
@@ -112,7 +115,7 @@ class SearchActivity : AppCompatActivity(), BaseView<SearchStates.SearchState> {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    override fun render(state: SearchStates.SearchState) {
+    fun render(state: SearchStates.SearchState) {
         when (state) {
             is SearchStates.SearchState.SearchResult -> onResult(state)
         }

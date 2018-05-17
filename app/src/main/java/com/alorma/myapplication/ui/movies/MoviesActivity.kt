@@ -1,5 +1,6 @@
 package com.alorma.myapplication.ui.movies
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -8,7 +9,6 @@ import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.common.BaseView
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.pagination
@@ -19,14 +19,11 @@ import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
 import javax.inject.Inject
 
-class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
+class MoviesActivity : AppCompatActivity() {
 
     companion object {
         const val OFFSET_LAZY_LOAD = 4
     }
-
-    @Inject
-    lateinit var presenter: MoviesPresenter
 
     @Inject
     lateinit var actions: MoviesActions
@@ -35,10 +32,13 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
-            presenter reduce actions.loadPage()
+            viewModel reduce actions.loadPage()
             disablePagination()
         }
     }
+
+    @Inject
+    lateinit var viewModel: MoviesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +46,15 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
 
         component add MoviesModule(this) inject this
 
+        viewModel.init(this,
+                Observer {
+                    it?.let { render(it) }
+                }
+        )
+
         initView()
 
-        presenter init this
-        presenter reduce actions.load()
+        viewModel reduce actions.load()
     }
 
     private fun initView() {
@@ -64,7 +69,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
-                    presenter reduce actions.detail(it)
+                    viewModel reduce actions.detail(it)
                 }
             }
 
@@ -72,7 +77,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
         }
 
         fabSearch.setOnClickListener {
-            presenter reduce actions.search()
+            viewModel reduce actions.search()
         }
     }
 
@@ -92,7 +97,7 @@ class MoviesActivity : AppCompatActivity(), BaseView<MoviesStates.MovieState> {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    override fun render(state: MoviesStates.MovieState) {
+    fun render(state: MoviesStates.MovieState) {
         when (state) {
             is MoviesStates.MovieState.Loading -> onLoading(state)
             is MoviesStates.MovieState.Success -> onSuccess(state)

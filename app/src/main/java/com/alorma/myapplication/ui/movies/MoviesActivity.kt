@@ -26,19 +26,19 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     @Inject
-    lateinit var presenter: MoviesPresenter
-
-    @Inject
     lateinit var actions: MoviesActions
 
     private lateinit var adapter: DslAdapter<MovieItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
-            presenter reduce actions.loadPage()
+            viewModel reduce actions.loadPage()
             disablePagination()
         }
     }
+
+    @Inject
+    lateinit var viewModel: MoviesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +46,15 @@ class MoviesActivity : AppCompatActivity() {
 
         component add MoviesModule(this) inject this
 
+        viewModel.init(this,
+                Observer {
+                    it?.let { render(it) }
+                }
+        )
+
         initView()
 
-        presenter.init().observe(this, Observer<MoviesStates.MovieState> {
-            it?.let {
-                render(it)
-            }
-        })
-
-        presenter reduce actions.load()
+        viewModel reduce actions.load()
     }
 
     private fun initView() {
@@ -69,7 +69,7 @@ class MoviesActivity : AppCompatActivity() {
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
-                    presenter reduce actions.detail(it)
+                    viewModel reduce actions.detail(it)
                 }
             }
 
@@ -77,7 +77,7 @@ class MoviesActivity : AppCompatActivity() {
         }
 
         fabSearch.setOnClickListener {
-            presenter reduce actions.search()
+            viewModel reduce actions.search()
         }
     }
 

@@ -11,14 +11,14 @@ class SplashActivity : AppCompatActivity() {
     lateinit var actions: SplashActions
 
     @Inject
-    lateinit var presenter: SplashPresenter
+    lateinit var viewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         component add SplashModule(this) inject this
 
-        presenter.init()
-        presenter reduce actions.load()
+        viewModel.init(this)
+        viewModel reduce actions.load()
     }
 }

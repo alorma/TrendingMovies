@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.detail
 
-import android.util.Log
 import com.alorma.myapplication.commons.observeOnUI
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
@@ -69,10 +68,5 @@ class MovieDetailViewModel @Inject constructor(
                         { render(detailStates successSimilarMovies it) },
                         { render(detailStates errorSimilarMovies it) }
                 )
-    }
-
-    override fun render(state: DetailStates.DetailState) {
-        super.render(state)
-        Log.i("DetailVM", state.toString())
     }
 }

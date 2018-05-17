@@ -14,6 +14,6 @@ class SearchModule(val activity: FragmentActivity) {
     fun provideSearchNavigator(): SearchNavigator = SearchNavigator(activity)
 
     @Provides
-    fun providesSearchViewModel(factory: SearchViewModelFactory) =
+    fun providesSearchViewModel(factory: SearchViewModelFactory): SearchViewModel =
             ViewModelProviders.of(activity, factory).get(SearchViewModel::class.java)
 }

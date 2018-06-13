@@ -65,7 +65,7 @@ class MoviesActivity : AppCompatActivity() {
                 layout = R.layout.row_tv_movie_list
                 bindView { view, movie ->
                     view.text.text = movie.title
-                    view.votes.text = movie.votes
+                    view.votes.text =  movie.votes
                     loadMovieImage(view.image, movie)
                 }
                 onClick {

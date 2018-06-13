@@ -62,6 +62,9 @@ class SearchActivity : AppCompatActivity() {
             back {
                 action = { viewModel reduce actions.back() }
             }
+            item {
+                id = R.id.action_search
+            }
         }
         toolbar.searchDsl {
             id = R.id.action_search

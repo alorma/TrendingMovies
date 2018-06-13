@@ -29,7 +29,7 @@
     <style name="Detail.Text.Vote">
         <item name="android:drawableEnd">@drawable/ic_vote</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:drawableRight">@drawable/ic_vote</item>
+        <item name="android:drawableLeft">@drawable/ic_vote</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">8dp</item>
         <item name="android:paddingEnd">8dp</item>

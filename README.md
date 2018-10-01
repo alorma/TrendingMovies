@@ -57,6 +57,7 @@ Where screens belong
     * Chuck interceptor [https://github.com/jgilfelt/chuck](https://github.com/jgilfelt/chuck)
 * Gson [https://github.com/google/gson](https://github.com/google/gson)
 * Dagger2 [https://github.com/google/dagger](https://github.com/google/dagger)
+* RxJava2 [https://github.com/ReactiveX/RxJava](https://github.com/ReactiveX/RxJava)
 
 **Testing libraries**
 

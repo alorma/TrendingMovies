@@ -79,3 +79,4 @@ Where screens belong
 - [ ] Refactor support libraries to [*androidX*](https://developer.android.com/topic/libraries/support-library/refactor)
 - [ ] Create tablet mode
 - [ ] Split in modules instead of packages 
+- [ ] Add more small tests (repository test, use case, date parser)

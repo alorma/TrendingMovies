@@ -69,6 +69,7 @@ ext {
     testing = [
             jUnit    : "junit:junit:4.12",
             dexOpener: "com.github.tmurakami:dexopener:0.12.1",
+            assertK  : "com.willowtreeapps.assertk:assertk:0.10",
             mockito  : [
                     core   : "org.mockito:mockito-core:2.13.0",
                     kotlin : "com.nhaarman:mockito-kotlin:1.5.0",

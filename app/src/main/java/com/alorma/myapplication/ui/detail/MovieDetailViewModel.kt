@@ -8,6 +8,7 @@ import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
+import com.alorma.myapplication.ui.common.Navigator
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class MovieDetailViewModel @Inject constructor(
         private val detailStates: DetailStates,
         private val detailRoutes: DetailRoutes,
-        detailNavigator: DetailNavigator,
+        detailNavigator: Navigator<DetailRoutes.DetailRoute>,
         private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
         private val obtainMovieUseCase: ObtainMovieUseCase) :

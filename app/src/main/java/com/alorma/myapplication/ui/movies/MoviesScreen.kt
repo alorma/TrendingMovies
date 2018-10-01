@@ -3,7 +3,6 @@ package com.alorma.myapplication.ui.movies
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.Action
-import com.alorma.myapplication.ui.common.Event
 import com.alorma.myapplication.ui.common.Route
 import com.alorma.myapplication.ui.common.State
 import javax.inject.Inject
@@ -50,8 +49,4 @@ class MoviesRoutes @Inject constructor() {
 
     fun detail(id: Int, title: String): MovieRoute = MovieRoute.DetailRoute(id, title)
     fun search(): MovieRoute = MovieRoute.Search
-}
-
-class MoviesEvent @Inject constructor() {
-    sealed class MovieEvent : Event()
 }

@@ -1,29 +1,7 @@
 package com.alorma.myapplication.ui.search
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import com.alorma.myapplication.configureRxThreading
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
-import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.ResourcesProvider
-import com.nhaarman.mockito_kotlin.*
-import io.reactivex.Single
-import junit.framework.Assert.assertTrue
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TestRule
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Captor
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-
 class SearchViewModelTest {
-
+/*
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
@@ -131,4 +109,5 @@ class SearchViewModelTest {
 
     private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
             MovieSearchItemVM(id, "", "", "", "", "")
+*/
 }

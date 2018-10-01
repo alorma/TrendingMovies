@@ -1,8 +1,9 @@
 package com.alorma.myapplication.ui.detail
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.LiveData
-import com.alorma.myapplication.configureRxThreading
+import assertk.all
+import assertk.assert
+import assertk.assertions.hasSize
+import assertk.assertions.isInstanceOf
 import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.MovieApi
 import com.alorma.myapplication.data.net.MovieDto
@@ -12,51 +13,29 @@ import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
-import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.ResourcesProvider
+import com.alorma.myapplication.ui.BaseViewModelTest
+import com.alorma.myapplication.ui.common.*
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers
-import org.mockito.Captor
-import org.mockito.MockitoAnnotations
+import org.mockito.ArgumentMatchers.anyInt
 import java.util.*
 import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
 import com.alorma.myapplication.data.net.MoviesDataSource as Network
 import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
 
-class MovieDetailPresenterTest {
-
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
-
-    init {
-        configureRxThreading()
-    }
+class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState, DetailRoutes.DetailRoute, DetailActions.DetailAction, Event, MovieDetailViewModel>() {
 
     private lateinit var movieApi: MovieApi
     private lateinit var cacheDs: Cache
-    private lateinit var navigator: DetailNavigator
-    private lateinit var viewModel: MovieDetailViewModel
     private val actions: DetailActions = DetailActions()
 
-    @Captor
-    private lateinit var routeCaptor: ArgumentCaptor<DetailRoutes.DetailRoute>
+    override fun createStateCaptor(): KArgumentCaptor<DetailStates.DetailState> = argumentCaptor()
+    override fun createRouteCaptor(): KArgumentCaptor<DetailRoutes.DetailRoute> = argumentCaptor()
+    override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
 
-    private lateinit var liveData: LiveData<DetailStates.DetailState>
-
-    @Before
-    fun setup() {
-        MockitoAnnotations.initMocks(this)
-
-        navigator = mock()
+    override fun createViewModel(navigator: Navigator<DetailRoutes.DetailRoute>): MovieDetailViewModel {
         movieApi = mock()
 
         val networkDs = Network(movieApi, NetworkMapper(DateParser()))
@@ -70,25 +49,22 @@ class MovieDetailPresenterTest {
         }
 
         val resources = mock<ResourcesProvider>().apply {
-            given(getString(ArgumentMatchers.anyInt())).willReturn("")
+            given(getString(anyInt())).willReturn("")
         }
 
         val mapper = DetailMapper(resources, DateFormatter())
 
-        viewModel = MovieDetailViewModel(DetailStates(mapper), DetailRoutes(), navigator,
+        return MovieDetailViewModel(DetailStates(mapper), DetailRoutes(), navigator,
                 movieDetailUseCase,
                 configUseCase,
                 similarMoviesUseCase)
-
-        liveData = viewModel.init()
     }
 
     @Test
     fun onActionBack_navigateBack() {
-        viewModel reduce actions.back()
+        captureRoute { actions.back() }
 
-        verify(navigator) navigate capture(routeCaptor)
-        assertTrue(routeCaptor.value === DetailRoutes.DetailRoute.Back)
+        assert(routeCaptor.firstValue).isInstanceOf(DetailRoutes.DetailRoute.Back::class)
     }
 
     @Test
@@ -96,12 +72,13 @@ class MovieDetailPresenterTest {
         given(cacheDs.get(eq(12))).willReturn(getMovie(12))
         given(cacheDs.getSimilar(eq(12))).willReturn(getMovies(5))
 
-        viewModel reduce actions.load(12)
+        captureState { actions.load(12) }
 
-        assertTrue(liveData.value is DetailStates.DetailState.Success)
-
-        with(liveData.value as DetailStates.DetailState.Success) {
-            assertEquals(5, similarMovies.size)
+        assert(stateCaptor.firstValue).all {
+            assert(actual).isInstanceOf(DetailStates.DetailState.Success::class.java)
+            (actual as? DetailStates.DetailState.Success)?.let {
+                assert(it.similarMovies).hasSize(5)
+            }
         }
     }
 
@@ -111,9 +88,9 @@ class MovieDetailPresenterTest {
         given(movieApi.item(eq(12))).willReturn(Single.just(generateMovieDto(12)))
         given(cacheDs.getSimilar(eq(12))).willReturn(getMovies(5))
 
-        viewModel reduce actions.load(12)
+        captureState { actions.load(12) }
 
-        assertTrue(liveData.value is DetailStates.DetailState.Success)
+        assert(stateCaptor.firstValue).isInstanceOf(DetailStates.DetailState.Success::class.java)
     }
 
     @Test
@@ -121,17 +98,16 @@ class MovieDetailPresenterTest {
         given(cacheDs.get(eq(12))).willThrow(RuntimeException())
         given(cacheDs.getSimilar(eq(12))).willReturn(getMovies(5))
 
-        viewModel reduce actions.load(12)
+        captureState { actions.load(12) }
 
-        assertTrue(liveData.value is DetailStates.DetailState.Error)
+        assert(stateCaptor.firstValue).isInstanceOf(DetailStates.DetailState.Error::class.java)
     }
 
     @Test
     fun onActionOpenDetail_navigateToDetail() {
-        viewModel reduce actions.openSimilarMovie(getMovieVM())
+        captureRoute { actions.openSimilarMovie(getMovieVM()) }
 
-        verify(navigator).navigate(capture(routeCaptor))
-        assertTrue(routeCaptor.value is DetailRoutes.DetailRoute.Detail)
+        assert(routeCaptor.firstValue).isInstanceOf(DetailRoutes.DetailRoute.Detail::class)
     }
 
     private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())

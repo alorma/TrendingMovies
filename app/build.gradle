@@ -58,6 +58,7 @@ dependencies {
     testImplementation testing.mockito.core
     testImplementation testing.mockito.kotlin
     testImplementation archComponents.test
+    testImplementation testing.assertK
 
     androidTestImplementation testing.mockito.core
     androidTestImplementation testing.mockito.kotlin
@@ -74,4 +75,5 @@ dependencies {
     androidTestImplementation testing.dagger.kotlin
 
     androidTestImplementation testing.dexOpener
+    androidTestImplementation testing.assertK
 }

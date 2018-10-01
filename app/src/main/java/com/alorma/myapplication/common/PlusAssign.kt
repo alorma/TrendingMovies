@@ -1,4 +1,4 @@
-package com.alorma.rac1.commons
+package com.alorma.myapplication.common
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

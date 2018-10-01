@@ -1,6 +1,6 @@
 package com.alorma.myapplication.domain.repository
 
-import com.alorma.myapplication.commons.subscribeOnIO
+import com.alorma.myapplication.common.subscribeOnIO
 import com.alorma.myapplication.domain.model.Movie
 import io.reactivex.Single
 import com.alorma.myapplication.data.cache.MoviesDataSource as Cache

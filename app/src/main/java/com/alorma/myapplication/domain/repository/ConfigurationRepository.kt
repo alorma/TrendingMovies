@@ -1,9 +1,8 @@
 package com.alorma.myapplication.domain.repository
 
-import com.alorma.myapplication.commons.subscribeOnIO
+import com.alorma.myapplication.common.subscribeOnIO
 import com.alorma.myapplication.domain.model.Configuration
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import com.alorma.myapplication.data.cache.ConfigDataSource as Cache
 import com.alorma.myapplication.data.net.config.ConfigDataSource as Network
 

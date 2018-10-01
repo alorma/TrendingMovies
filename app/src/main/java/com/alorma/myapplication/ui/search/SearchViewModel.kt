@@ -1,6 +1,6 @@
 package com.alorma.myapplication.ui.search
 
-import com.alorma.myapplication.commons.observeOnUI
+import com.alorma.myapplication.common.observeOnUI
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase

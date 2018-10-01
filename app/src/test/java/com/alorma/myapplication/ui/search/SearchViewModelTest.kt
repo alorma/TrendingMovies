@@ -1,51 +1,40 @@
 package com.alorma.myapplication.ui.search
 
-class SearchViewModelTest {
-/*
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
+import assertk.assert
+import assertk.assertions.isEqualTo
+import com.alorma.myapplication.common.getResourcesProvider
+import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
+import com.alorma.myapplication.ui.BaseViewModelTest
+import com.alorma.myapplication.ui.common.*
+import com.nhaarman.mockito_kotlin.KArgumentCaptor
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.given
+import com.nhaarman.mockito_kotlin.mock
+import io.reactivex.Single
+import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 
-    private lateinit var actions: SearchActions
-    private lateinit var viewModel: SearchViewModel
-    private lateinit var liveData: LiveData<SearchStates.SearchState>
-    private lateinit var navigator: SearchNavigator
-
-    @Mock
-    lateinit var observer: Observer<SearchStates.SearchState>
-
-    @Captor
-    private lateinit var stateCaptor: ArgumentCaptor<SearchStates.SearchState>
-
-    @Captor
-    private lateinit var routeCaptor: ArgumentCaptor<SearchRoutes.SearchRoute>
+class SearchViewModelTest :
+        BaseViewModelTest<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>() {
 
     private lateinit var moviesUseCase: SearchMoviesUseCase
     private lateinit var configUseCase: ObtainConfigurationUseCase
+    private lateinit var actions: SearchActions
 
-
-    init {
-        configureRxThreading()
-    }
-
-    @Before
-    fun setup() {
-        MockitoAnnotations.initMocks(this)
+    override fun createStateCaptor(): KArgumentCaptor<SearchStates.SearchState> = argumentCaptor()
+    override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
+    override fun createRouteCaptor(): KArgumentCaptor<SearchRoutes.SearchRoute> = argumentCaptor()
+    override fun createViewModel(navigator: Navigator<SearchRoutes.SearchRoute>): BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event> {
         actions = SearchActions()
-
-        navigator = mock()
 
         moviesUseCase = mock()
         configUseCase = mock()
 
-        val resources: ResourcesProvider = mock<ResourcesProvider>().apply {
-            given(getString(anyInt())).willReturn("")
-        }
+        val resources = getResourcesProvider()
 
         val states = SearchStates(SearchMapper(DateFormatter(), resources))
-        viewModel = SearchViewModel(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
-
-        liveData = viewModel.liveData
-        liveData.observeForever(observer)
+        return SearchViewModel(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
     }
 
     @Test
@@ -53,11 +42,9 @@ class SearchViewModelTest {
         given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
         given(configUseCase.execute()).willReturn(Single.just(mock()))
 
-        viewModel reduce actions.query("search test")
+        captureState { actions.query("search test") }
 
-        verify(observer).onChanged(capture(stateCaptor))
-
-        assertTrue(stateCaptor.value === SearchStates.SearchState.Empty)
+        assert(stateCaptor.firstValue).isEqualTo(SearchStates.SearchState.Empty)
     }
 
     @Test
@@ -66,14 +53,13 @@ class SearchViewModelTest {
         given(moviesUseCase.executeNextPage(anyString())).willReturn(Single.just(listOf()))
         given(configUseCase.execute()).willReturn(Single.just(mock()))
 
-        viewModel reduce actions.query("search test")
-        viewModel reduce actions.page()
+        captureState { actions.query("search test") }
+        captureState(2) { actions.page() }
 
-        verify(observer, times(2)).onChanged(capture(stateCaptor))
-
-        assertTrue(stateCaptor.allValues[1] === SearchStates.SearchState.EmptyPage)
+        assert(stateCaptor.thirdValue).isEqualTo(SearchStates.SearchState.EmptyPage)
     }
 
+    /*
     @Test
     fun onActionEmptyQuery_noRender() {
         viewModel reduce actions.query("")

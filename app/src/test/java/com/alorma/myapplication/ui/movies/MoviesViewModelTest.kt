@@ -150,11 +150,11 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         assert(firstState).isInstanceOf(MoviesStates.MovieState.Success::class.java)
         assert((firstState as MoviesStates.MovieState.Success).items).hasSize(3)
 
-        captureState(6) { actions.loadPage() }
+        captureState(4) { actions.loadPage() }
 
-        val secondState = stateCaptor.allValues[5]
+        val secondState = stateCaptor.allValues[3]
         assert(secondState).isInstanceOf(MoviesStates.MovieState.Success::class.java)
-        assert((secondState as MoviesStates.MovieState.Success).items).hasSize(3)
+        assert((secondState as MoviesStates.MovieState.Success).items).hasSize(4)
     }
 
     @Test

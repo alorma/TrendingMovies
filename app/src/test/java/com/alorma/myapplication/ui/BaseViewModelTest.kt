@@ -20,12 +20,12 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
     var rule: TestRule = InstantTaskExecutorRule()
 
     private val navigator: Navigator<R> = mock()
-    private val stateObserver: Observer<S> = mock()
-    private val eventObserver: Observer<EventHandler<E>> = mock()
+    private lateinit var stateObserver: Observer<S>
+    private lateinit var eventObserver: Observer<EventHandler<E>>
 
-    protected val stateCaptor: KArgumentCaptor<S> by lazy { createStateCaptor() }
-    protected val routeCaptor: KArgumentCaptor<R> by lazy { createRouteCaptor() }
-    protected val eventCaptor: KArgumentCaptor<EventHandler<E>> by lazy { createEventCaptor() }
+    protected lateinit var stateCaptor: KArgumentCaptor<S>
+    protected lateinit var routeCaptor: KArgumentCaptor<R>
+    protected lateinit var eventCaptor: KArgumentCaptor<EventHandler<E>>
 
     protected lateinit var vm: BaseViewModel<S, R, A, E>
 
@@ -35,6 +35,12 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     @Before
     fun setup() {
+        stateCaptor = createStateCaptor()
+        routeCaptor = createRouteCaptor()
+        eventCaptor = createEventCaptor()
+        stateObserver = mock()
+        eventObserver = mock()
+
         vm = createViewModel(navigator).apply {
             state.observeForever(stateObserver)
             event.observeForever(eventObserver)
@@ -60,8 +66,15 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
     }
 
     protected fun captureState(times: Int = 1, block: () -> A) {
+        clearStates()
         runAction(block())
         captureState(times)
+    }
+
+    protected fun clearStates() {
+        stateCaptor = createStateCaptor()
+        stateObserver = mock()
+        vm.state.observeForever(stateObserver)
     }
 
     protected fun captureEvent(times: Int = 1) {
@@ -70,6 +83,12 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
         } else {
             verify(eventObserver)
         }.onChanged(eventCaptor.capture())
+    }
+
+    protected fun clearEvents() {
+        eventCaptor = createEventCaptor()
+        eventObserver = mock()
+        vm.event.observeForever(eventObserver)
     }
 
     protected fun captureEvent(times: Int = 1, block: () -> A) {
@@ -84,6 +103,10 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
     protected inline fun captureRoute(block: () -> A) {
         runAction(block())
         captureRoute()
+    }
+
+    protected fun clearRoutes() {
+        routeCaptor = createRouteCaptor()
     }
 
     protected fun <Z> captureOne(observer: Observer<Z>,

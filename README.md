@@ -80,3 +80,4 @@ Where screens belong
 - [ ] Create tablet mode
 - [ ] Split in modules instead of packages 
 - [ ] Add more small tests (repository test, use case, date parser)
+- [ ] Add animations && transition between screens

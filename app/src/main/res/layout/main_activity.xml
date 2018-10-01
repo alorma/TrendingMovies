@@ -20,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_marginEnd="100dp"
+            app:tabGravity="fill"
             app:tabIndicatorColor="@color/black"
-            app:tabSelectedTextColor="@color/black"
-            app:tabGravity="fill">
+            app:tabSelectedTextColor="@color/black">
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
@@ -38,28 +38,28 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:id="@+id/fabSearch"
-        app:rippleColor="?colorPrimary"
+        android:layout_marginTop="@dimen/large_dimen"
+        android:layout_marginEnd="@dimen/large_dimen"
         android:src="@drawable/ic_search"
         android:tint="?colorAccent"
         app:backgroundTint="?colorPrimary"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@+id/recycler"
         app:layout_constraintEnd_toEndOf="@+id/appBar"
-        app:layout_constraintTop_toTopOf="@+id/recycler" />
+        app:layout_constraintTop_toTopOf="@+id/recycler"
+        app:rippleColor="?colorPrimary" />
 
     <TextView
         android:id="@+id/centerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/default_dimen"
+        android:layout_marginTop="@dimen/default_dimen"
+        android:layout_marginEnd="@dimen/default_dimen"
+        android:layout_marginBottom="@dimen/default_dimen"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +67,15 @@
         app:layout_constraintTop_toBottomOf="@+id/appBar"
         tools:text="Error"
         tools:visibility="visible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="@string/error_retry"
+        app:layout_constraintTop_toBottomOf="@+id/centerText"
+        app:layout_constraintStart_toStartOf="@+id/centerText"
+        app:layout_constraintEnd_toEndOf="@+id/centerText"
+        android:layout_marginTop="@dimen/large_dimen"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"

@@ -5,8 +5,8 @@
     style="@style/Detail.Genres.Text"
     android:layout_width="wrap_content"
     android:layout_height="40dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginEnd="@dimen/default_dimen"
+    android:layout_marginRight="@dimen/default_dimen"
     android:background="@drawable/genre_chip_background"
     android:gravity="center"
     tools:text="Comedy" />

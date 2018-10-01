@@ -111,7 +111,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
         captureState(3) { actions.load() }
 
-        assert(stateCaptor.allValues[2]).isInstanceOf(MoviesStates.MovieState.Success::class.java)
+        assert(stateCaptor.thirdValue).isInstanceOf(MoviesStates.MovieState.Success::class.java)
     }
 
     @Test
@@ -121,7 +121,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
         captureState(3) { actions.loadPage() }
 
-        assert(stateCaptor.allValues[2]).isInstanceOf(MoviesStates.MovieState.Success::class.java)
+        assert(stateCaptor.thirdValue).isInstanceOf(MoviesStates.MovieState.Success::class.java)
     }
 
     @Test
@@ -131,7 +131,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
         captureState(3) { actions.load() }
 
-        val state = stateCaptor.allValues[2]
+        val state = stateCaptor.thirdValue
         assert(state).isInstanceOf(MoviesStates.MovieState.Success::class.java)
         assert((state as MoviesStates.MovieState.Success).items).hasSize(3)
     }
@@ -146,7 +146,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
         captureState(3) { actions.load() }
 
-        val firstState = stateCaptor.allValues[2]
+        val firstState = stateCaptor.thirdValue
         assert(firstState).isInstanceOf(MoviesStates.MovieState.Success::class.java)
         assert((firstState as MoviesStates.MovieState.Success).items).hasSize(3)
 
@@ -163,7 +163,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
         captureState(3) { actions.load() }
 
-        assert(stateCaptor.allValues[2]).isInstanceOf(MoviesStates.MovieState.Error::class.java)
+        assert(stateCaptor.thirdValue).isInstanceOf(MoviesStates.MovieState.Error::class.java)
     }
 
     @Test

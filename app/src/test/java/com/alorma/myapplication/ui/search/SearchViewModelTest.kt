@@ -2,15 +2,13 @@ package com.alorma.myapplication.ui.search
 
 import assertk.assert
 import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
 import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.*
-import com.nhaarman.mockito_kotlin.KArgumentCaptor
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.given
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
@@ -53,47 +51,40 @@ class SearchViewModelTest :
         given(moviesUseCase.executeNextPage(anyString())).willReturn(Single.just(listOf()))
         given(configUseCase.execute()).willReturn(Single.just(mock()))
 
-        captureState { actions.query("search test") }
+        runAction(actions.query("search test"))
         captureState(2) { actions.page() }
 
-        assert(stateCaptor.thirdValue).isEqualTo(SearchStates.SearchState.EmptyPage)
+        assert(stateCaptor.secondValue).isEqualTo(SearchStates.SearchState.EmptyPage)
     }
 
-    /*
     @Test
     fun onActionEmptyQuery_noRender() {
-        viewModel reduce actions.query("")
+        runAction(actions.query(""))
 
-        verifyZeroInteractions(observer)
+        verifyZeroInteractions(stateObserver)
     }
 
     @Test
     fun onActionNullQuery_noRender() {
-        viewModel reduce actions.query(null)
+        runAction(actions.query(null))
 
-        verifyZeroInteractions(observer)
+        verifyZeroInteractions(stateObserver)
     }
 
     @Test
     fun onActionOpenDetail_navigateToDetail() {
-        viewModel reduce actions.detail(getMovieSearchVM(12))
+        captureRoute { actions.detail(getMovieSearchVM(12)) }
 
-        verify(navigator) navigate capture(routeCaptor)
-
-        assertTrue(routeCaptor.value is SearchRoutes.SearchRoute.OpenDetail)
+        assert(routeCaptor.firstValue).isInstanceOf(SearchRoutes.SearchRoute.OpenDetail::class.java)
     }
-
 
     @Test
     fun onActionBack_navigateToBack() {
-        viewModel reduce actions.back()
+        captureRoute { actions.back() }
 
-        verify(navigator) navigate capture(routeCaptor)
-
-        assertTrue(routeCaptor.value === SearchRoutes.SearchRoute.Back)
+        assert(routeCaptor.firstValue).isEqualTo(SearchRoutes.SearchRoute.Back)
     }
 
     private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
             MovieSearchItemVM(id, "", "", "", "", "")
-*/
 }

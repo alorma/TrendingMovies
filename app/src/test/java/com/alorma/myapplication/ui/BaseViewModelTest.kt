@@ -20,8 +20,8 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
     var rule: TestRule = InstantTaskExecutorRule()
 
     private val navigator: Navigator<R> = mock()
-    private lateinit var stateObserver: Observer<S>
-    private lateinit var eventObserver: Observer<EventHandler<E>>
+    protected lateinit var stateObserver: Observer<S>
+    protected lateinit var eventObserver: Observer<EventHandler<E>>
 
     protected lateinit var stateCaptor: KArgumentCaptor<S>
     protected lateinit var routeCaptor: KArgumentCaptor<R>
@@ -73,6 +73,7 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     protected fun clearStates() {
         stateCaptor = createStateCaptor()
+        vm.state.removeObserver(stateObserver)
         stateObserver = mock()
         vm.state.observeForever(stateObserver)
     }
@@ -85,15 +86,17 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
         }.onChanged(eventCaptor.capture())
     }
 
-    protected fun clearEvents() {
-        eventCaptor = createEventCaptor()
-        eventObserver = mock()
-        vm.event.observeForever(eventObserver)
-    }
-
     protected fun captureEvent(times: Int = 1, block: () -> A) {
+        clearEvents()
         runAction(block())
         captureEvent(times)
+    }
+
+    protected fun clearEvents() {
+        eventCaptor = createEventCaptor()
+        vm.event.removeObserver(eventObserver)
+        eventObserver = mock()
+        vm.event.observeForever(eventObserver)
     }
 
     protected fun captureRoute() {

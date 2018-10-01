@@ -9,9 +9,12 @@ class SearchStates @Inject constructor(private val mapper: SearchMapper) {
     sealed class SearchState : State() {
         object Empty : SearchState()
         object EmptyPage : SearchState()
+        data class Loading(val visible: Boolean) : SearchState()
         data class SearchResult(val items: List<MovieSearchItemVM>, val page: Boolean) : SearchState()
         data class Error(val text: String) : SearchState()
     }
+
+    infix fun loading(loading: Boolean): SearchState = SearchState.Loading(loading)
 
     fun success(it: Pair<Configuration, List<Movie>>, page: Boolean = false): SearchState =
             when {
@@ -24,5 +27,5 @@ class SearchStates @Inject constructor(private val mapper: SearchMapper) {
                 }
             }
 
-    infix fun error(it: Throwable): SearchState = SearchState.Error(mapper.mapError(it))
+    infix fun error(it: Throwable): SearchState = SearchState.Error(mapper mapError it)
 }

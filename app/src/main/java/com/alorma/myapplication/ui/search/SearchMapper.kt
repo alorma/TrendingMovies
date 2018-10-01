@@ -1,6 +1,7 @@
 package com.alorma.myapplication.ui.search
 
 import com.alorma.myapplication.R
+import com.alorma.myapplication.domain.exception.DataOriginException
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.DateFormatter
@@ -26,6 +27,9 @@ class SearchMapper @Inject constructor(private val dateFormatter: DateFormatter,
     private fun mapDate(date: Date?): String = date?.let { dateFormatter formatYear it }
             ?: resources.getString(R.string.no_release_date)
 
-    infix fun mapError(it: Throwable): String = resources.getString(R.string.generic_error)
+    infix fun mapError(it: Throwable): String =
+            resources.getString((it as? DataOriginException)?.let {
+                R.string.data_origin_error
+            } ?: R.string.generic_error)
 
 }

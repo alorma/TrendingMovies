@@ -6,6 +6,7 @@ import javax.inject.Inject
 class SearchActions @Inject constructor() {
     sealed class SearchAction : Action() {
         data class NewQuery(val query: String) : SearchAction()
+        object Retry : SearchAction()
         data class OpenDetail(val movie: MovieSearchItemVM) : SearchAction()
         object LoadPage : SearchAction()
         object Back : SearchAction()
@@ -18,7 +19,9 @@ class SearchActions @Inject constructor() {
         SearchAction.NewQuery(it)
     } ?: SearchAction.CleanSearch
 
-    fun page() : SearchAction = SearchAction.LoadPage
+    fun retry(): SearchAction = SearchAction.Retry
+
+    fun page(): SearchAction = SearchAction.LoadPage
 
     fun detail(it: MovieSearchItemVM): SearchAction = SearchAction.OpenDetail(it)
 }

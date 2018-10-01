@@ -6,4 +6,5 @@
     <string name="no_release_date">No release date available</string>
     <string name="search">Search</string>
     <string name="error_retry">RETRY</string>
+    <string name="search_central_hint">Write something in the above text box to start searching!</string>
 </resources>

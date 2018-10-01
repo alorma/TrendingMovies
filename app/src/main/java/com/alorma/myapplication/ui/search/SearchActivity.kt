@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
@@ -53,6 +54,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initView() {
         initToolbar()
         initRecycler()
+        centerText.setText(R.string.search_central_hint)
     }
 
     private fun initToolbar() {
@@ -116,13 +118,47 @@ class SearchActivity : AppCompatActivity() {
 
     private fun render(state: SearchStates.SearchState) {
         when (state) {
+            is SearchStates.SearchState.Loading -> onLoading()
             is SearchStates.SearchState.SearchResult -> onResult(state)
+            is SearchStates.SearchState.Error -> onError(state)
         }
     }
 
+    private fun onLoading() {
+        centerText.visibility = View.INVISIBLE
+        loaderProgress.visibility = View.VISIBLE
+        disableRetry()
+    }
+
     private fun onResult(state: SearchStates.SearchState.SearchResult) {
+        loaderProgress.visibility = View.INVISIBLE
+        centerText.visibility = View.INVISIBLE
         adapter.update(state.items)
         enablePagination()
+        disableRetry()
+    }
+
+    private fun disableRetry() {
+        with(retryButton) {
+            visibility = View.INVISIBLE
+            isEnabled = false
+            setOnClickListener { }
+        }
+    }
+
+    private fun onError(it: SearchStates.SearchState.Error) {
+        with(centerText) {
+            visibility = android.view.View.VISIBLE
+            text = it.text
+        }
+        with(retryButton) {
+            visibility = android.view.View.VISIBLE
+            isEnabled = true
+            setOnClickListener {
+                viewModel reduce actions.retry()
+            }
+        }
+        loaderProgress.visibility = View.INVISIBLE
     }
 
     private fun enablePagination() = recycler.addOnScrollListener(recyclerViewListener)

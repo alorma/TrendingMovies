@@ -34,6 +34,7 @@ class SearchViewModel @Inject constructor(
             }
             SearchActions.SearchAction.Back -> navigate(searchRoutes.back())
             is SearchActions.SearchAction.OpenDetail -> openDetail(action)
+            SearchActions.SearchAction.Retry -> search()
         }
     }
 
@@ -45,6 +46,8 @@ class SearchViewModel @Inject constructor(
                 BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
                     conf to list
                 })
+                .doOnSubscribe { render(states loading true) }
+                .doOnSuccess { render(states loading false) }
                 .observeOnUI()
                 .subscribe(
                         { render(states.success(it)) },

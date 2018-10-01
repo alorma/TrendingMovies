@@ -4,11 +4,4 @@
     <string name="detail_description">Show image</string>
     <string name="no_release_date">No release date available</string>
     <string name="search">Search</string>
-    <string name="movie_vote_annotate">This
-        <annotation size="34">movie</annotation>
-        has a
-        <annotation rtColor="#FF0000" rtSize="24">%1$s</annotation>
-        <annotation color="#CC00C0">rating</annotation>
-    </string>
-    <string name="movie_vote">This movie has a %1$s rating</string>
 </resources>

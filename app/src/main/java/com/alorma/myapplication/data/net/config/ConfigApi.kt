@@ -7,7 +7,7 @@ interface ConfigApi {
     @GET("configuration")
     fun getConfig(): Single<ConfigurationResponseDto>
 
-    @GET("genre/tv/list")
+    @GET("genre/movie/list")
     fun getGenre(): Single<GenreDtoResponse>
 
 }

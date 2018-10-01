@@ -104,11 +104,13 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun onLoading() {
         centerText.visibility = View.INVISIBLE
+        loaderProgress.visibility = View.VISIBLE
         disableRetry()
     }
 
     private fun onSuccess(state: MoviesStates.MovieState.Success) {
         centerText.visibility = View.INVISIBLE
+        loaderProgress.visibility = View.INVISIBLE
         disableRetry()
         enablePagination()
         adapter.update(state.items)
@@ -134,6 +136,7 @@ class MoviesActivity : AppCompatActivity() {
                 viewModel reduce actions.load()
             }
         }
+        loaderProgress.visibility = View.INVISIBLE
     }
 
     private fun enablePagination() = recycler.addOnScrollListener(recyclerViewListener)

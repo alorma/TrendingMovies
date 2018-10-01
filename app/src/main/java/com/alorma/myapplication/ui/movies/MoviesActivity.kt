@@ -103,19 +103,36 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun onLoading() {
-        centerText.visibility = View.GONE
+        centerText.visibility = View.INVISIBLE
+        disableRetry()
     }
 
     private fun onSuccess(state: MoviesStates.MovieState.Success) {
-        centerText.visibility = View.GONE
+        centerText.visibility = View.INVISIBLE
+        disableRetry()
         enablePagination()
         adapter.update(state.items)
+    }
+
+    private fun disableRetry() {
+        with(retryButton) {
+            visibility = View.INVISIBLE
+            isEnabled = false
+            setOnClickListener { }
+        }
     }
 
     private fun onError(state: MoviesStates.MovieState.Error) {
         with(centerText) {
             visibility = View.VISIBLE
             text = state.text
+        }
+        with(retryButton) {
+            visibility = View.VISIBLE
+            isEnabled = true
+            setOnClickListener {
+                viewModel reduce actions.load()
+            }
         }
     }
 

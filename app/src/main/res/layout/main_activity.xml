@@ -69,13 +69,14 @@
         tools:visibility="visible" />
 
     <Button
+        android:id="@+id/retryButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_dimen"
         android:text="@string/error_retry"
-        app:layout_constraintTop_toBottomOf="@+id/centerText"
-        app:layout_constraintStart_toStartOf="@+id/centerText"
         app:layout_constraintEnd_toEndOf="@+id/centerText"
-        android:layout_marginTop="@dimen/large_dimen"/>
+        app:layout_constraintStart_toStartOf="@+id/centerText"
+        app:layout_constraintTop_toBottomOf="@+id/centerText" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"

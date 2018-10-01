@@ -13,17 +13,18 @@ class MoviesViewModel(private val states: MoviesStates,
                       private val routes: MoviesRoutes,
                       private val obtainMoviesUseCase: ObtainMoviesUseCase,
                       private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-                      private val moviesNavigator: MoviesNavigator) :
+                      moviesNavigator: MoviesNavigator) :
         BaseViewModel<MoviesStates.MovieState,
+                MoviesRoutes.MovieRoute,
                 MoviesActions.MovieAction,
-                MoviesEvent.MovieEvent>() {
+                MoviesEvent.MovieEvent>(moviesNavigator) {
 
     override fun reduce(action: MoviesActions.MovieAction) {
         when (action) {
             MoviesActions.MovieAction.Load -> load(action)
             MoviesActions.MovieAction.LoadPage -> load(action)
             is MoviesActions.MovieAction.OpenDetail -> onOpenDetail(action)
-            MoviesActions.MovieAction.Search -> moviesNavigator navigate routes.search()
+            MoviesActions.MovieAction.Search -> navigate(routes.search())
         }
     }
 
@@ -51,5 +52,5 @@ class MoviesViewModel(private val states: MoviesStates,
             }
 
     private fun onOpenDetail(action: MoviesActions.MovieAction.OpenDetail) =
-            moviesNavigator.navigate(routes.detail(action.id, action.title))
+            navigate(routes.detail(action.id, action.title))
 }

@@ -14,10 +14,10 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
         private val states: SearchStates,
         private val searchRoutes: SearchRoutes,
-        private val navigator: SearchNavigator,
+        navigator: SearchNavigator,
         private val obtainMoviesUseCase: SearchMoviesUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BaseViewModel<SearchStates.SearchState, SearchActions.SearchAction, Event>() {
+        BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>(navigator) {
 
     private lateinit var query: String
 
@@ -31,7 +31,7 @@ class SearchViewModel @Inject constructor(
             SearchActions.SearchAction.CleanSearch -> {
                 this.query = ""
             }
-            SearchActions.SearchAction.Back -> navigator navigate searchRoutes.back()
+            SearchActions.SearchAction.Back -> navigate(searchRoutes.back())
             is SearchActions.SearchAction.OpenDetail -> openDetail(action)
         }
     }
@@ -68,6 +68,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {
-        navigator navigate searchRoutes.detail(action.movie)
+        navigate(searchRoutes.detail(action.movie))
     }
 }

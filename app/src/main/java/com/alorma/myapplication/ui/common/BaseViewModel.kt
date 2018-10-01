@@ -4,7 +4,9 @@ import android.arch.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class BaseViewModel<S : State, A : Action, E : Event> : ViewModel() {
+abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
+        private val navigator: Navigator<R>
+) : ViewModel() {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
@@ -15,7 +17,6 @@ abstract class BaseViewModel<S : State, A : Action, E : Event> : ViewModel() {
 
     private val stateLiveData: MutableLiveData<S> = MutableLiveData()
     private val eventLiveData: MutableLiveData<EventHandler<E>> = MutableLiveData()
-    private lateinit var routeLiveData: MutableLiveData<R>
 
     abstract infix fun reduce(action: A)
 
@@ -24,7 +25,7 @@ abstract class BaseViewModel<S : State, A : Action, E : Event> : ViewModel() {
     }
 
     protected fun navigate(r: R) {
-        routeLiveData.postValue(r)
+        navigator navigate r
     }
 
     @JvmOverloads
@@ -46,7 +47,7 @@ abstract class BaseViewModel<S : State, A : Action, E : Event> : ViewModel() {
         compositeDisposable.addAll(d)
     }
 
-    fun observe(lifecycleOwner: LifecycleOwner, dsl: ViewModelObserver<S, A, E>.() -> Unit) {
+    fun observe(lifecycleOwner: LifecycleOwner, dsl: ViewModelObserver<S, R, A, E>.() -> Unit) {
         ViewModelObserver(lifecycleOwner, this).apply(dsl).build()
     }
 
@@ -63,8 +64,8 @@ abstract class BaseViewModel<S : State, A : Action, E : Event> : ViewModel() {
 annotation class ViewModelDsl
 
 @ViewModelDsl
-class ViewModelObserver<S : State, A : Action, E : Event>(private val lifecycleOwner: LifecycleOwner,
-                                                          private val vm: BaseViewModel<S, A, E>) {
+class ViewModelObserver<S : State, R : Route, A : Action, E : Event>(private val lifecycleOwner: LifecycleOwner,
+                                                                     private val vm: BaseViewModel<S, R, A, E>) {
 
     private lateinit var stateBlock: (S) -> Unit
     private lateinit var eventBlock: (E) -> Unit

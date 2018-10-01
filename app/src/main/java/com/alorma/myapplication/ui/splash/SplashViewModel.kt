@@ -4,15 +4,15 @@ import com.alorma.myapplication.commons.observeOnUI
 import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.Route
 import com.alorma.myapplication.ui.common.State
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
         private val splashRoute: SplashRoutes,
-        private val splashNavigator: SplashNavigator,
+        splashNavigator: SplashNavigator,
         private val loadConfigurationUseCase: LoadConfigurationUseCase) :
-        BaseViewModel<State, SplashActions.SplashAction, Event>() {
+        BaseViewModel<State, SplashRoutes.SplashRoute, SplashActions.SplashAction, Event>
+        (splashNavigator) {
 
     override infix fun reduce(action: SplashActions.SplashAction) {
         when (action) {
@@ -24,8 +24,8 @@ class SplashViewModel @Inject constructor(
         val disposable = loadConfigurationUseCase.execute()
                 .observeOnUI()
                 .subscribe(
-                        { splashNavigator navigate splashRoute.main() },
-                        { splashNavigator navigate splashRoute.error() }
+                        { navigate(splashRoute.main()) },
+                        { navigate(splashRoute.error()) }
                 )
         addDisposable(disposable)
     }

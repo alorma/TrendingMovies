@@ -16,11 +16,12 @@ import javax.inject.Inject
 class MovieDetailViewModel @Inject constructor(
         private val detailStates: DetailStates,
         private val detailRoutes: DetailRoutes,
-        private val detailNavigator: DetailNavigator,
+        detailNavigator: DetailNavigator,
         private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
         private val obtainMovieUseCase: ObtainMovieUseCase) :
-        BaseViewModel<DetailStates.DetailState, DetailActions.DetailAction, Event>() {
+        BaseViewModel<DetailStates.DetailState, DetailRoutes.DetailRoute,
+                DetailActions.DetailAction, Event>(detailNavigator) {
 
     private var id: Int = -1
 
@@ -31,9 +32,9 @@ class MovieDetailViewModel @Inject constructor(
                 load()
             }
             DetailActions.DetailAction.LoadSimilarPage -> loadSimilarMovies(id)
-            DetailActions.DetailAction.Back -> detailNavigator navigate detailRoutes.back()
+            DetailActions.DetailAction.Back -> navigate(detailRoutes.back())
             is DetailActions.DetailAction.OpenMovie ->
-                detailNavigator navigate detailRoutes.detail(action.id, action.text)
+                navigate(detailRoutes.detail(action.id, action.text))
         }
     }
 

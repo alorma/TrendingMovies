@@ -6,7 +6,6 @@ import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.rac1.commons.plusAssign
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
@@ -15,9 +14,11 @@ class MoviesViewModel(private val states: MoviesStates,
                       private val obtainMoviesUseCase: ObtainMoviesUseCase,
                       private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
                       private val moviesNavigator: MoviesNavigator) :
-        BaseViewModel<MoviesStates.MovieState, MoviesActions.MovieAction>() {
+        BaseViewModel<MoviesStates.MovieState,
+                MoviesActions.MovieAction,
+                MoviesEvent.MovieEvent>() {
 
-    override infix fun reduce(action: MoviesActions.MovieAction) {
+    override fun reduce(action: MoviesActions.MovieAction) {
         when (action) {
             MoviesActions.MovieAction.Load -> load(action)
             MoviesActions.MovieAction.LoadPage -> load(action)
@@ -27,7 +28,7 @@ class MoviesViewModel(private val states: MoviesStates,
     }
 
     private fun load(action: MoviesActions.MovieAction) {
-        disposable += Single.zip(obtainConfigurationUseCase.execute(), obtainLoadUseCase(action),
+        val disposable = Single.zip(obtainConfigurationUseCase.execute(), obtainLoadUseCase(action),
                 BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
                     conf to list
                 })
@@ -39,6 +40,7 @@ class MoviesViewModel(private val states: MoviesStates,
                         { render(states success it) },
                         { render(states error it) }
                 )
+        addDisposable(disposable)
     }
 
     private fun obtainLoadUseCase(action: MoviesActions.MovieAction): Single<List<Movie>> =

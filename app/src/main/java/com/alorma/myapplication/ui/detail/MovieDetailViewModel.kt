@@ -7,6 +7,7 @@ import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
+import com.alorma.myapplication.ui.common.Event
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
@@ -19,7 +20,7 @@ class MovieDetailViewModel @Inject constructor(
         private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
         private val obtainMovieUseCase: ObtainMovieUseCase) :
-        BaseViewModel<DetailStates.DetailState, DetailActions.DetailAction>() {
+        BaseViewModel<DetailStates.DetailState, DetailActions.DetailAction, Event>() {
 
     private var id: Int = -1
 
@@ -37,7 +38,7 @@ class MovieDetailViewModel @Inject constructor(
     }
 
     private fun load() {
-        Single.zip(obtainConfigurationUseCase.execute(),
+        val disposable = Single.zip(obtainConfigurationUseCase.execute(),
                 obtainMovieDetailUseCase.execute(id),
                 obtainMovieUseCase.execute(id),
                 Function3<Configuration, Movie, List<Movie>,
@@ -53,10 +54,11 @@ class MovieDetailViewModel @Inject constructor(
                             render(detailStates error it)
                         }
                 )
+        addDisposable(disposable)
     }
 
     private fun loadSimilarMovies(id: Int) {
-        Single.zip(
+        val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
                 obtainMovieUseCase.executeNextPage(id),
                 BiFunction<Configuration, List<Movie>,
@@ -68,5 +70,6 @@ class MovieDetailViewModel @Inject constructor(
                         { render(detailStates successSimilarMovies it) },
                         { render(detailStates errorSimilarMovies it) }
                 )
+        addDisposable(disposable)
     }
 }

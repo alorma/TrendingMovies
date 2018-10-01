@@ -6,7 +6,7 @@ import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.rac1.commons.plusAssign
+import com.alorma.myapplication.ui.common.Event
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class SearchViewModel @Inject constructor(
         private val navigator: SearchNavigator,
         private val obtainMoviesUseCase: SearchMoviesUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BaseViewModel<SearchStates.SearchState, SearchActions.SearchAction>() {
+        BaseViewModel<SearchStates.SearchState, SearchActions.SearchAction, Event>() {
 
     private lateinit var query: String
 
@@ -37,8 +37,8 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun search() {
-        disposable.clear()
-        disposable += Single.zip(
+        clear()
+        val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
                 obtainMoviesUseCase.execute(query),
                 BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
@@ -49,10 +49,11 @@ class SearchViewModel @Inject constructor(
                         { render(states.success(it)) },
                         { render(states error it) }
                 )
+        addDisposable(disposable)
     }
 
     private fun searchPage() {
-        disposable += Single.zip(
+        val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
                 obtainMoviesUseCase.executeNextPage(query),
                 BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
@@ -63,6 +64,7 @@ class SearchViewModel @Inject constructor(
                         { render(states.success(it, true)) },
                         { render(states error it) }
                 )
+        addDisposable(disposable)
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {

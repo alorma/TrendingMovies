@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.detail
 
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -59,9 +58,9 @@ class MovieDetailActivity : AppCompatActivity() {
 
         component add DetailModule(this) inject this
 
-        viewModel.init(this, Observer {
-            it?.let { render(it) }
-        })
+        viewModel.observe(this) {
+            onState { render(it) }
+        }
 
         initData()
 
@@ -75,11 +74,11 @@ class MovieDetailActivity : AppCompatActivity() {
         initSimilarMovies()
 
         intent.extras?.let {
-            it.getString(EXTRA_TITLE)?.let {
-                toolbar.title = it
+            it.getString(EXTRA_TITLE)?.let { title ->
+                toolbar.title = title
             }
-            it.getInt(EXTRA_ID, -1).takeIf { it != -1 }?.let {
-                viewModel reduce actions.load(it)
+            it.getInt(EXTRA_ID, -1).takeIf { id -> id != -1 }?.let { id ->
+                viewModel reduce actions.load(id)
             } ?: viewModel reduce actions.back()
         }
     }
@@ -116,7 +115,7 @@ class MovieDetailActivity : AppCompatActivity() {
                 LinearLayoutManager.HORIZONTAL, false)
     }
 
-    fun render(state: DetailStates.DetailState) {
+    private fun render(state: DetailStates.DetailState) {
         when (state) {
             is DetailStates.DetailState.Success -> onSuccess(state)
             is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state.movies)

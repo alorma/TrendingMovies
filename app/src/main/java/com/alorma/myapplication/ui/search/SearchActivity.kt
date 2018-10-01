@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.search
 
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -44,9 +43,9 @@ class SearchActivity : AppCompatActivity() {
 
         component add SearchModule(this) inject this
 
-        viewModel.init(this, Observer {
-            it?.let { render(it) }
-        })
+        viewModel.observe(this) {
+            onState { render(it) }
+        }
 
         initView()
     }
@@ -61,9 +60,6 @@ class SearchActivity : AppCompatActivity() {
             menu = R.menu.search_menu
             back {
                 action = { viewModel reduce actions.back() }
-            }
-            item {
-                id = R.id.action_search
             }
         }
         toolbar.searchDsl {
@@ -118,7 +114,7 @@ class SearchActivity : AppCompatActivity() {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    fun render(state: SearchStates.SearchState) {
+    private fun render(state: SearchStates.SearchState) {
         when (state) {
             is SearchStates.SearchState.SearchResult -> onResult(state)
         }

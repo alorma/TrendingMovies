@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.movies
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -46,11 +45,9 @@ class MoviesActivity : AppCompatActivity() {
 
         component add MoviesModule(this) inject this
 
-        viewModel.init(this,
-                Observer {
-                    it?.let { render(it) }
-                }
-        )
+        viewModel.observe(this) {
+            onState { render(it) }
+        }
 
         initView()
 
@@ -65,7 +62,7 @@ class MoviesActivity : AppCompatActivity() {
                 layout = R.layout.row_tv_movie_list
                 bindView { view, movie ->
                     view.text.text = movie.title
-                    view.votes.text =  movie.votes
+                    view.votes.text = movie.votes
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
@@ -97,15 +94,15 @@ class MoviesActivity : AppCompatActivity() {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    fun render(state: MoviesStates.MovieState) {
+    private fun render(state: MoviesStates.MovieState) {
         when (state) {
-            is MoviesStates.MovieState.Loading -> onLoading(state)
+            is MoviesStates.MovieState.Loading -> onLoading()
             is MoviesStates.MovieState.Success -> onSuccess(state)
             is MoviesStates.MovieState.Error -> onError(state)
         }
     }
 
-    private fun onLoading(state: MoviesStates.MovieState.Loading) {
+    private fun onLoading() {
         centerText.visibility = View.GONE
     }
 

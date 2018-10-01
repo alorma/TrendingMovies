@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
 
         component add SplashModule(this) inject this
 
-        viewModel.init(this)
+        viewModel.observe(this) {}
         viewModel reduce actions.load()
     }
 }

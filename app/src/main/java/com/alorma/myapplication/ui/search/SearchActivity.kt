@@ -126,7 +126,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun onLoading() {
         centerText.visibility = View.INVISIBLE
-        loaderProgress.visibility = View.VISIBLE
+        if (recycler.adapter.itemCount == 0) {
+            loaderProgress.visibility = View.VISIBLE
+        }
         disableRetry()
     }
 

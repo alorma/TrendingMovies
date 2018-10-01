@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TestRule
 
-abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event, VM : BaseViewModel<S, R, A, E>> {
+abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -27,7 +27,7 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event, VM
     protected val routeCaptor: KArgumentCaptor<R> by lazy { createRouteCaptor() }
     protected val eventCaptor: KArgumentCaptor<EventHandler<E>> by lazy { createEventCaptor() }
 
-    protected lateinit var vm: VM
+    protected lateinit var vm: BaseViewModel<S, R, A, E>
 
     init {
         configureRxThreading()
@@ -42,11 +42,11 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event, VM
         }
     }
 
-    protected open fun VM.addObservers() {
+    protected open fun BaseViewModel<S, R, A, E>.addObservers() {
 
     }
 
-    abstract fun createViewModel(navigator: Navigator<R>): VM
+    abstract fun createViewModel(navigator: Navigator<R>): BaseViewModel<S, R, A, E>
     abstract fun createStateCaptor(): KArgumentCaptor<S>
     abstract fun createEventCaptor(): KArgumentCaptor<EventHandler<E>>
     abstract fun createRouteCaptor(): KArgumentCaptor<R>

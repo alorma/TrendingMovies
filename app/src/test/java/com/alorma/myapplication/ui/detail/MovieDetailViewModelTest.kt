@@ -4,6 +4,7 @@ import assertk.all
 import assertk.assert
 import assertk.assertions.hasSize
 import assertk.assertions.isInstanceOf
+import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.MovieApi
 import com.alorma.myapplication.data.net.MovieDto
@@ -25,7 +26,8 @@ import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
 import com.alorma.myapplication.data.net.MoviesDataSource as Network
 import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
 
-class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState, DetailRoutes.DetailRoute, DetailActions.DetailAction, Event, MovieDetailViewModel>() {
+class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
+        DetailRoutes.DetailRoute, DetailActions.DetailAction, Event>() {
 
     private lateinit var movieApi: MovieApi
     private lateinit var cacheDs: Cache
@@ -48,10 +50,7 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState, Det
             given(execute()).willReturn(Single.just(mock()))
         }
 
-        val resources = mock<ResourcesProvider>().apply {
-            given(getString(anyInt())).willReturn("")
-        }
-
+        val resources = getResourcesProvider()
         val mapper = DetailMapper(resources, DateFormatter())
 
         return MovieDetailViewModel(DetailStates(mapper), DetailRoutes(), navigator,

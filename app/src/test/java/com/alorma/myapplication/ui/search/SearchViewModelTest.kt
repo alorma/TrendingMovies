@@ -40,9 +40,9 @@ class SearchViewModelTest :
         given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
         given(configUseCase.execute()).willReturn(Single.just(mock()))
 
-        captureState { actions.query("search test") }
+        captureState(3) { actions.query("search test") }
 
-        assert(stateCaptor.firstValue).isEqualTo(SearchStates.SearchState.Empty)
+        assert(stateCaptor.thirdValue).isEqualTo(SearchStates.SearchState.Empty)
     }
 
     @Test

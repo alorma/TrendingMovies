@@ -5,6 +5,6 @@ import com.alorma.myapplication.data.cache.LocalMoviesDataSource
 import org.koin.dsl.module.module
 
 val localDataModule = module {
-    factory { LocalMoviesDataSource() }
-    factory { LocalConfigDataSource() }
+    single { LocalMoviesDataSource() }
+    single { LocalConfigDataSource() }
 }

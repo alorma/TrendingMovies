@@ -1,6 +1,6 @@
 package com.alorma.myapplication.config
 
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import com.alorma.myapplication.TrendingMoviesApp
 import com.alorma.myapplication.di.ApplicationComponent
 import com.alorma.myapplication.di.module.ApplicationModule
@@ -15,4 +15,4 @@ fun getDaggerRule(): DaggerMockRule<ApplicationComponent> =
             }
         }
 
-val app: TrendingMoviesApp get() = InstrumentationRegistry.getTargetContext().applicationContext as TrendingMoviesApp
+val app: TrendingMoviesApp get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as TrendingMoviesApp

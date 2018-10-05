@@ -25,6 +25,8 @@ import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.loadKoinModules
 import org.mockito.ArgumentMatchers.anyInt
 import java.util.*
 
@@ -46,8 +48,14 @@ class MovieDetailActivityTest {
     val moviesRepository: MoviesRepository = mock()
     val configRepository: ConfigurationRepository = mock()
 
+    val mockModule = module {
+        factory { moviesRepository }
+        factory { configRepository }
+    }
+
     @Before
     fun setup() {
+        loadKoinModules(mockModule)
         given(configRepository.getConfig()).willReturn(Single.just(generateConfig()))
         given(moviesRepository.similar(eq(ID))).willReturn(Single.just(emptyList()))
     }

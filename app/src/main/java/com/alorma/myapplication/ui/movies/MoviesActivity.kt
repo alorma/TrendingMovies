@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.createPagination
-import com.bumptech.glide.Glide
+import com.alorma.myapplication.ui.detail.MovieDetailActivity
+import com.alorma.myapplication.ui.search.SearchActivity
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
@@ -18,6 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoviesActivity : AppCompatActivity() {
 
+    val glide: RequestManager by inject()
     val actions: MoviesActions by inject()
     val moviesViewModel: MoviesViewModel by viewModel()
 
@@ -30,13 +34,13 @@ class MoviesActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
         moviesViewModel.observe(this) {
             onState { render(it) }
+            onRoute { navigate(it) }
         }
 
         initView()
@@ -46,7 +50,7 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun initView() {
         val columns = resources.getInteger(R.integer.columns_movies)
-        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this@MoviesActivity, columns)
+        recycler.layoutManager = GridLayoutManager(this@MoviesActivity, columns)
         adapter = adapterDsl(recycler) {
             item {
                 layout = R.layout.row_tv_movie_list
@@ -77,7 +81,7 @@ class MoviesActivity : AppCompatActivity() {
 
             image.contentDescription = movieItem.title
 
-            val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
+            val requestManager = glide.setDefaultRequestOptions(requestOptions)
             requestManager
                     .load(it)
                     .into(image)
@@ -90,6 +94,21 @@ class MoviesActivity : AppCompatActivity() {
             is MoviesStates.MovieState.Success -> onSuccess(state)
             is MoviesStates.MovieState.Error -> onError(state)
         }
+    }
+
+    private fun navigate(it: MoviesRoutes.MovieRoute) {
+        when (it) {
+            is MoviesRoutes.MovieRoute.DetailRoute -> openDetail(it)
+            MoviesRoutes.MovieRoute.Search -> openSearch()
+        }
+    }
+
+    private fun openDetail(it: MoviesRoutes.MovieRoute.DetailRoute) {
+        startActivity(MovieDetailActivity.launch(this, it.id, it.title))
+    }
+
+    private fun openSearch() {
+        startActivity(SearchActivity.launch(this))
     }
 
     private fun onLoading() {

@@ -53,6 +53,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         movieDetailViewModel.observe(this) {
             onState { render(it) }
+            onRoute { navigate(it) }
         }
 
         initData()
@@ -113,6 +114,17 @@ class MovieDetailActivity : AppCompatActivity() {
             is DetailStates.DetailState.Success -> onSuccess(state)
             is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state.movies)
         }
+    }
+
+    private fun navigate(it: DetailRoutes.DetailRoute) {
+        when (it) {
+            is DetailRoutes.DetailRoute.Detail -> openDetail(it)
+            DetailRoutes.DetailRoute.Back -> finish()
+        }
+    }
+
+    private fun openDetail(it: DetailRoutes.DetailRoute.Detail) {
+        startActivity(MovieDetailActivity.launch(this, it.id, it.title))
     }
 
     private fun onSuccess(state: DetailStates.DetailState.Success) {

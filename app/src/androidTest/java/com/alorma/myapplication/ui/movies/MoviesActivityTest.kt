@@ -27,14 +27,22 @@ import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.loadKoinModules
 import java.util.*
 
 class MoviesActivityTest {
+
     @get:Rule
     val rule = BaristaRule.create(MoviesActivity::class.java)
 
     val moviesRepository: MoviesRepository = mock()
     val configRepository: ConfigurationRepository = mock()
+
+    val mockModule = module {
+        factory { moviesRepository }
+        factory { configRepository }
+    }
 
     init {
         configureRxThreading()
@@ -42,6 +50,7 @@ class MoviesActivityTest {
 
     @Before
     fun setup() {
+        loadKoinModules(mockModule)
         given(configRepository.getConfig()).willReturn(Single.just(mock()))
     }
 

@@ -7,7 +7,6 @@ import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.Navigator
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -15,10 +14,9 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
         private val states: SearchStates,
         private val searchRoutes: SearchRoutes,
-        navigator: Navigator<SearchRoutes.SearchRoute>,
         private val obtainMoviesUseCase: SearchMoviesUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>(navigator) {
+        BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>() {
 
     private lateinit var query: String
 

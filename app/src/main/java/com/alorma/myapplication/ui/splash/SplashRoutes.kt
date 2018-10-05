@@ -1,9 +1,8 @@
 package com.alorma.myapplication.ui.splash
 
 import com.alorma.myapplication.ui.common.Route
-import javax.inject.Inject
 
-class SplashRoutes @Inject constructor() {
+class SplashRoutes {
     sealed class SplashRoute : Route() {
         object Main : SplashRoute()
         object Error : SplashRoute()

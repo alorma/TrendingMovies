@@ -1,13 +1,13 @@
 package com.alorma.myapplication.domain.repository
 
 import com.alorma.myapplication.common.subscribeOnIO
+import com.alorma.myapplication.data.cache.LocalMoviesDataSource
+import com.alorma.myapplication.data.net.NetworkMoviesDataSource
 import com.alorma.myapplication.domain.model.Movie
 import io.reactivex.Single
-import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
-import com.alorma.myapplication.data.net.MoviesDataSource as Network
 
-class MoviesRepository(private val network: Network,
-                       private val cache: Cache) {
+class MoviesRepository(private val network: NetworkMoviesDataSource,
+                       private val cache: LocalMoviesDataSource) {
 
     private var page: Int = 1
     private var searchPage: Int = 1

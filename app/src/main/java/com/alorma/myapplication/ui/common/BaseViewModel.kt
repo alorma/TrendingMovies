@@ -4,18 +4,19 @@ import androidx.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
-        private val navigator: Navigator<R>
-) : ViewModel() {
+abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : ViewModel() {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     val state: LiveData<S>
         get() = stateLiveData
+    val route: LiveData<R>
+        get() = routeLiveData
     val event: LiveData<EventHandler<E>>
         get() = eventLiveData
 
     private val stateLiveData: MutableLiveData<S> = MutableLiveData()
+    private val routeLiveData: MutableLiveData<R> = MutableLiveData()
     private val eventLiveData: MutableLiveData<EventHandler<E>> = MutableLiveData()
 
     abstract infix fun reduce(action: A)
@@ -25,7 +26,7 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
     }
 
     protected fun navigate(r: R) {
-        navigator navigate r
+        routeLiveData.postValue(r)
     }
 
     @JvmOverloads
@@ -68,6 +69,7 @@ class ViewModelObserver<S : State, R : Route, A : Action, E : Event>(private val
                                                                      private val vm: BaseViewModel<S, R, A, E>) {
 
     private lateinit var stateBlock: (S) -> Unit
+    private lateinit var routeBlock: (R) -> Unit
     private lateinit var eventBlock: (E) -> Unit
 
     fun build() {
@@ -77,6 +79,10 @@ class ViewModelObserver<S : State, R : Route, A : Action, E : Event>(private val
 
     fun onState(block: (S) -> Unit) {
         this.stateBlock = block
+    }
+
+    fun onRoute(block: (R) -> Unit) {
+        this.routeBlock = block
     }
 
     fun onEvent(block: (E) -> Unit) {

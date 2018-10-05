@@ -1,9 +1,9 @@
 package com.alorma.myapplication.ui.splash
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.splash.di.SplashModule
+import com.alorma.myapplication.ui.movies.MoviesActivity
 import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
@@ -16,9 +16,18 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        component add SplashModule(this) inject this
-
-        viewModel.observe(this) {}
+        viewModel.observe(this) {
+            onRoute {
+                when (it) {
+                    is SplashRoutes.SplashRoute.Main -> openMain()
+                    is SplashRoutes.SplashRoute.Error -> openMain()
+                }
+            }
+        }
         viewModel reduce actions.load()
+    }
+
+    private fun openMain() {
+        Intent(this, MoviesActivity::class.java).also { finish() }
     }
 }

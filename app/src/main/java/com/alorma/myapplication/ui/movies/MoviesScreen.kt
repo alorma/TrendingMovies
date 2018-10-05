@@ -5,10 +5,9 @@ import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.Action
 import com.alorma.myapplication.ui.common.Route
 import com.alorma.myapplication.ui.common.State
-import javax.inject.Inject
 
 
-class MoviesStates @Inject constructor(private val mapper: MoviesMapper) {
+class MoviesStates(private val mapper: MoviesMapper) {
     sealed class MovieState : State() {
         data class Loading(val visible: Boolean) : MovieState()
         data class Success(val items: List<MovieItemVM>) : MovieState()
@@ -27,7 +26,7 @@ class MoviesStates @Inject constructor(private val mapper: MoviesMapper) {
 }
 
 
-class MoviesActions @Inject constructor() {
+class MoviesActions {
     sealed class MovieAction : Action() {
         object Load : MovieAction()
         object LoadPage : MovieAction()
@@ -41,7 +40,7 @@ class MoviesActions @Inject constructor() {
     fun search(): MovieAction = MovieAction.Search
 }
 
-class MoviesRoutes @Inject constructor() {
+class MoviesRoutes {
     sealed class MovieRoute : Route() {
         data class DetailRoute(val id: Int, val title: String) : MovieRoute()
         object Search : MovieRoute()

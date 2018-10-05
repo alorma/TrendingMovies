@@ -7,8 +7,8 @@ import io.reactivex.functions.BiFunction
 import java.io.IOException
 import javax.inject.Inject
 
-class ConfigDataSource @Inject constructor(private val configApi: ConfigApi,
-                                           private val mapper: ConfigurationMapper) {
+class NetworkConfigDataSource @Inject constructor(private val configApi: ConfigApi,
+                                                  private val mapper: ConfigurationMapper) {
 
 
     fun get(): Single<Configuration> = Single.zip(

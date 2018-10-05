@@ -5,9 +5,8 @@ import com.alorma.myapplication.domain.exception.DataOriginException
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.ResourcesProvider
-import javax.inject.Inject
 
-class MoviesMapper @Inject constructor(private val resources: ResourcesProvider) {
+class MoviesMapper(private val resources: ResourcesProvider) {
 
     fun mapSuccess(movie: Movie, conf: Configuration): MovieItemVM = MovieItemVM(movie.id, movie.title,
             getPosterImage(conf, movie),

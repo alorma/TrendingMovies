@@ -4,7 +4,7 @@ import com.alorma.myapplication.domain.model.Movie
 import io.reactivex.Single
 import javax.inject.Inject
 
-class MoviesDataSource @Inject constructor(
+class NetworkMoviesDataSource @Inject constructor(
         private val movieApi: MovieApi, private val moviesMapper: MoviesMapper) {
 
     fun listAll(page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {

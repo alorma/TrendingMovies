@@ -8,12 +8,10 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
-import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.common.dsl
-import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -54,8 +52,6 @@ class MovieDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detail_activity)
-
-        component add DetailModule(this) inject this
 
         viewModel.observe(this) {
             onState { render(it) }

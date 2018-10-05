@@ -2,7 +2,7 @@ package com.alorma.myapplication.data.cache
 
 import com.alorma.myapplication.domain.model.Movie
 
-class MoviesDataSource {
+class LocalMoviesDataSource {
 
     private val allItems: MutableList<Movie> = mutableListOf()
 

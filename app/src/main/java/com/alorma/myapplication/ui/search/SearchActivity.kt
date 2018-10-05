@@ -3,11 +3,10 @@ package com.alorma.myapplication.ui.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.*
@@ -15,6 +14,7 @@ import com.alorma.myapplication.ui.search.di.SearchModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.row_search.view.*
+import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity() {
@@ -30,8 +30,8 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
-    private val recyclerViewListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
-        recycler.pagination {
+    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
+        recycler.createPagination {
             viewModel reduce actions.page()
             disablePagination()
         }
@@ -125,7 +125,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun onLoading() {
         centerText.visibility = View.INVISIBLE
-        if (recycler.adapter.itemCount == 0) {
+        if (recycler.adapter?.itemCount == 0) {
             loaderProgress.visibility = View.VISIBLE
         }
         disableRetry()

@@ -3,19 +3,22 @@ package com.alorma.myapplication.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.createPagination
+import com.alorma.myapplication.ui.common.dsl
 import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.detail_activity.*
+import kotlinx.android.synthetic.main.detail_content.*
 import kotlinx.android.synthetic.main.detail_genre_chip.view.*
 import kotlinx.android.synthetic.main.row_similar_movie.view.*
 import javax.inject.Inject
@@ -41,8 +44,8 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var similarMoviesAdapter: DslAdapter<MovieItemVM>
     private lateinit var genresAdapter: DslAdapter<String>
 
-    private val recyclerViewListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
-        similarMoviesRecycler.pagination {
+    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
+        similarMoviesRecycler.createPagination {
             viewModel reduce actions.loadSimilarPage()
             disablePagination()
         }

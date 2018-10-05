@@ -1,34 +1,31 @@
 package com.alorma.myapplication.ui.movies
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.movies.di.MoviesModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity() {
-
-    companion object {
-        const val OFFSET_LAZY_LOAD = 4
-    }
 
     @Inject
     lateinit var actions: MoviesActions
 
     private lateinit var adapter: DslAdapter<MovieItemVM>
 
-    private val recyclerViewListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
-        recycler.pagination {
+    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
+        recycler.createPagination {
             viewModel reduce actions.loadPage()
             disablePagination()
         }
@@ -102,7 +99,7 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun onLoading() {
         centerText.visibility = View.INVISIBLE
-        if (recycler.adapter.itemCount == 0) {
+        if (recycler.adapter?.itemCount == 0) {
             loaderProgress.visibility = View.VISIBLE
         }
         disableRetry()

@@ -2,9 +2,8 @@ package com.alorma.myapplication.data.net
 
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class DateParser @Inject constructor() {
+class DateParser{
     companion object {
         const val DATE_FORMAT = "yyyy-MM-dd"
     }

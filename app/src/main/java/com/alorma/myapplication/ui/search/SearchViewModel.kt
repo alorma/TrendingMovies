@@ -9,9 +9,8 @@ import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(
+class SearchViewModel(
         private val states: SearchStates,
         private val searchRoutes: SearchRoutes,
         private val obtainMoviesUseCase: SearchMoviesUseCase,

@@ -3,9 +3,8 @@ package com.alorma.myapplication.data.net
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
 import java.util.*
-import javax.inject.Inject
 
-class MoviesMapper @Inject constructor(private val dateParser: DateParser) {
+class MoviesMapper(private val dateParser: DateParser) {
     fun map(items: List<MovieDto>): List<Movie> = items.map {
         mapItem(it)
     }

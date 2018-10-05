@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.detail_activity.*
 import kotlinx.android.synthetic.main.detail_content.*
 import kotlinx.android.synthetic.main.detail_genre_chip.view.*
 import kotlinx.android.synthetic.main.row_similar_movie.view.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieDetailActivity : AppCompatActivity() {
     companion object {
@@ -33,18 +34,15 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
     }
 
-    @Inject
-    lateinit var actions: DetailActions
-
-    @Inject
-    lateinit var viewModel: MovieDetailViewModel
+    val actions: DetailActions by inject()
+    val movieDetailViewModel: MovieDetailViewModel by viewModel()
 
     private lateinit var similarMoviesAdapter: DslAdapter<MovieItemVM>
     private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         similarMoviesRecycler.createPagination {
-            viewModel reduce actions.loadSimilarPage()
+            movieDetailViewModel reduce actions.loadSimilarPage()
             disablePagination()
         }
     }
@@ -53,14 +51,14 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detail_activity)
 
-        viewModel.observe(this) {
+        movieDetailViewModel.observe(this) {
             onState { render(it) }
         }
 
         initData()
 
         toolbar.dsl {
-            back { action = { viewModel reduce actions.back() } }
+            back { action = { movieDetailViewModel reduce actions.back() } }
         }
     }
 
@@ -73,8 +71,8 @@ class MovieDetailActivity : AppCompatActivity() {
                 toolbar.title = title
             }
             it.getInt(EXTRA_ID, -1).takeIf { id -> id != -1 }?.let { id ->
-                viewModel reduce actions.load(id)
-            } ?: viewModel reduce actions.back()
+                movieDetailViewModel reduce actions.load(id)
+            } ?: movieDetailViewModel reduce actions.back()
         }
     }
 
@@ -101,7 +99,7 @@ class MovieDetailActivity : AppCompatActivity() {
                     view.text.text = movieItemVM.title
                 }
                 onClick {
-                    viewModel reduce actions.openSimilarMovie(it)
+                    movieDetailViewModel reduce actions.openSimilarMovie(it)
                 }
             }
             diff { it.id }

@@ -13,36 +13,35 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoviesActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var actions: MoviesActions
+    val actions: MoviesActions by inject()
+    val moviesViewModel: MoviesViewModel by viewModel()
 
     private lateinit var adapter: DslAdapter<MovieItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.createPagination {
-            viewModel reduce actions.loadPage()
+            moviesViewModel reduce actions.loadPage()
             disablePagination()
         }
     }
 
-    @Inject
-    lateinit var viewModel: MoviesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        viewModel.observe(this) {
+        moviesViewModel.observe(this) {
             onState { render(it) }
         }
 
         initView()
 
-        viewModel reduce actions.load()
+        moviesViewModel reduce actions.load()
     }
 
     private fun initView() {
@@ -57,7 +56,7 @@ class MoviesActivity : AppCompatActivity() {
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
-                    viewModel reduce actions.detail(it)
+                    moviesViewModel reduce actions.detail(it)
                 }
             }
 
@@ -65,7 +64,7 @@ class MoviesActivity : AppCompatActivity() {
         }
 
         fabSearch.setOnClickListener {
-            viewModel reduce actions.search()
+            moviesViewModel reduce actions.search()
         }
     }
 
@@ -126,7 +125,7 @@ class MoviesActivity : AppCompatActivity() {
             visibility = View.VISIBLE
             isEnabled = true
             setOnClickListener {
-                viewModel reduce actions.load()
+                moviesViewModel reduce actions.load()
             }
         }
         loaderProgress.visibility = View.INVISIBLE

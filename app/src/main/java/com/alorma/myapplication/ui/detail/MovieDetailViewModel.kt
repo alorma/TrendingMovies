@@ -11,9 +11,8 @@ import com.alorma.myapplication.ui.common.Event
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
-import javax.inject.Inject
 
-class MovieDetailViewModel @Inject constructor(
+class MovieDetailViewModel(
         private val detailStates: DetailStates,
         private val detailRoutes: DetailRoutes,
         private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,

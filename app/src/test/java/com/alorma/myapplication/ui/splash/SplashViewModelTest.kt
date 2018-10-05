@@ -4,7 +4,10 @@ import assertk.assert
 import assertk.assertions.isEqualTo
 import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.myapplication.ui.common.*
+import com.alorma.myapplication.ui.common.BaseViewModel
+import com.alorma.myapplication.ui.common.Event
+import com.alorma.myapplication.ui.common.EventHandler
+import com.alorma.myapplication.ui.common.State
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.given
@@ -21,10 +24,10 @@ class SplashViewModelTest : BaseViewModelTest<State, SplashRoutes.SplashRoute, S
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
     override fun createRouteCaptor(): KArgumentCaptor<SplashRoutes.SplashRoute> = argumentCaptor()
 
-    override fun createViewModel(navigator: Navigator<SplashRoutes.SplashRoute>): BaseViewModel<State, SplashRoutes.SplashRoute, SplashActions.SplashAction, Event> {
+    override fun createViewModel(): BaseViewModel<State, SplashRoutes.SplashRoute, SplashActions.SplashAction, Event> {
         actions = SplashActions()
         loadConfigurationUseCase = mock()
-        return SplashViewModel(SplashRoutes(), navigator, loadConfigurationUseCase)
+        return SplashViewModel(loadConfigurationUseCase, SplashRoutes())
     }
 
     @Test

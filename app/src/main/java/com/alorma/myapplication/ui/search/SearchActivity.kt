@@ -13,24 +13,23 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.row_search.view.*
 import kotlinx.android.synthetic.main.search_activity.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
         fun launch(context: Context): Intent = Intent(context, SearchActivity::class.java)
     }
 
-    @Inject
-    lateinit var actions: SearchActions
 
-    @Inject
-    lateinit var viewModel: SearchViewModel
+    val actions: SearchActions by inject()
+    val searchViewModel: SearchViewModel by viewModel()
 
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
         recycler.createPagination {
-            viewModel reduce actions.page()
+            searchViewModel reduce actions.page()
             disablePagination()
         }
     }
@@ -39,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_activity)
 
-        viewModel.observe(this) {
+        searchViewModel.observe(this) {
             onState { render(it) }
         }
 
@@ -56,22 +55,22 @@ class SearchActivity : AppCompatActivity() {
         toolbar.dsl {
             menu = R.menu.search_menu
             back {
-                action = { viewModel reduce actions.back() }
+                action = { searchViewModel reduce actions.back() }
             }
         }
         toolbar.searchDsl {
             id = R.id.action_search
             open = true
             textSubmitted {
-                viewModel reduce actions.query(it)
+                searchViewModel reduce actions.query(it)
                 true
             }
             textChange {
-                viewModel reduce actions.query(it)
+                searchViewModel reduce actions.query(it)
                 true
             }
             onClose {
-                viewModel reduce actions.back()
+                searchViewModel reduce actions.back()
                 true
             }
         }
@@ -88,7 +87,7 @@ class SearchActivity : AppCompatActivity() {
                     view.year.text = movie.year
                     loadMovieImage(view.image, movie)
                 }
-                onClick { viewModel reduce actions.detail(it) }
+                onClick { searchViewModel reduce actions.detail(it) }
             }
             diff { it.id }
         }
@@ -152,7 +151,7 @@ class SearchActivity : AppCompatActivity() {
             visibility = android.view.View.VISIBLE
             isEnabled = true
             setOnClickListener {
-                viewModel reduce actions.retry()
+                searchViewModel reduce actions.retry()
             }
         }
         loaderProgress.visibility = View.INVISIBLE

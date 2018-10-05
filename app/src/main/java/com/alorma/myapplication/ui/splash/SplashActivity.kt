@@ -4,19 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.alorma.myapplication.ui.movies.MoviesActivity
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashActivity : AppCompatActivity() {
-    @Inject
-    lateinit var actions: SplashActions
+    val actions: SplashActions by inject()
 
-    @Inject
-    lateinit var viewModel: SplashViewModel
+    val splashViewModel: SplashViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.observe(this) {
+        splashViewModel.observe(this) {
             onRoute {
                 when (it) {
                     is SplashRoutes.SplashRoute.Main -> openMain()
@@ -24,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
                 }
             }
         }
-        viewModel reduce actions.load()
+        splashViewModel reduce actions.load()
     }
 
     private fun openMain() {

@@ -2,9 +2,8 @@ package com.alorma.myapplication.ui.common
 
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class DateFormatter @Inject constructor() {
+class DateFormatter {
     companion object {
         const val DATE_FORMAT = "dd/MM/yyyy"
         const val YEAR_FORMAT = "yyyy"

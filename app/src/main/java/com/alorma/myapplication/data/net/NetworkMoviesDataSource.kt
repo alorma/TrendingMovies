@@ -2,10 +2,9 @@ package com.alorma.myapplication.data.net
 
 import com.alorma.myapplication.domain.model.Movie
 import io.reactivex.Single
-import javax.inject.Inject
 
-class NetworkMoviesDataSource @Inject constructor(
-        private val movieApi: MovieApi, private val moviesMapper: MoviesMapper) {
+class NetworkMoviesDataSource(private val movieApi: MovieApi,
+                              private val moviesMapper: MoviesMapper) {
 
     fun listAll(page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
         val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.listPage(it) }

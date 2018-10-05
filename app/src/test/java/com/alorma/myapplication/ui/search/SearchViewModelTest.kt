@@ -7,7 +7,10 @@ import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.myapplication.ui.common.*
+import com.alorma.myapplication.ui.common.BaseViewModel
+import com.alorma.myapplication.ui.common.DateFormatter
+import com.alorma.myapplication.ui.common.Event
+import com.alorma.myapplication.ui.common.EventHandler
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Test
@@ -23,7 +26,7 @@ class SearchViewModelTest :
     override fun createStateCaptor(): KArgumentCaptor<SearchStates.SearchState> = argumentCaptor()
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
     override fun createRouteCaptor(): KArgumentCaptor<SearchRoutes.SearchRoute> = argumentCaptor()
-    override fun createViewModel(navigator: Navigator<SearchRoutes.SearchRoute>): BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event> {
+    override fun createViewModel(): BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event> {
         actions = SearchActions()
 
         moviesUseCase = mock()
@@ -32,7 +35,7 @@ class SearchViewModelTest :
         val resources = getResourcesProvider()
 
         val states = SearchStates(SearchMapper(DateFormatter(), resources))
-        return SearchViewModel(states, SearchRoutes(), navigator, moviesUseCase, configUseCase)
+        return SearchViewModel(states, SearchRoutes(), moviesUseCase, configUseCase)
     }
 
     @Test

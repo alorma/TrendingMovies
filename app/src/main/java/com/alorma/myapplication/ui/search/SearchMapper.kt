@@ -7,10 +7,9 @@ import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import java.util.*
-import javax.inject.Inject
 
-class SearchMapper @Inject constructor(private val dateFormatter: DateFormatter,
-                                       private val resources: ResourcesProvider) {
+class SearchMapper(private val dateFormatter: DateFormatter,
+                   private val resources: ResourcesProvider) {
 
     fun map(movie: Movie, conf: Configuration): MovieSearchItemVM = MovieSearchItemVM(movie.id, movie.title,
             movie.overview,

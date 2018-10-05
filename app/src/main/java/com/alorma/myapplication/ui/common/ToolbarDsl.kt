@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.common
 
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import com.alorma.myapplication.R
 

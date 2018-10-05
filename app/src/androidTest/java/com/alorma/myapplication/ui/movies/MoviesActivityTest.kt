@@ -2,10 +2,10 @@ package com.alorma.myapplication.ui.movies
 
 import android.app.Instrumentation
 import android.content.Intent
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.Intents.intended
-import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.ProjectTestRule
 import com.alorma.myapplication.config.configureRxThreading

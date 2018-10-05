@@ -1,14 +1,14 @@
 package com.alorma.myapplication.ui.search.di
 
-import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.FragmentActivity
 import com.alorma.myapplication.ui.search.SearchNavigator
 import com.alorma.myapplication.ui.search.SearchViewModel
 import dagger.Module
 import dagger.Provides
 
 @Module
-class SearchModule(val activity: FragmentActivity) {
+class SearchModule(val activity: androidx.fragment.app.FragmentActivity) {
 
     @Provides
     fun provideSearchNavigator(): SearchNavigator = SearchNavigator(activity)

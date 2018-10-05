@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.splash.di
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.splash.SplashNavigator
 import com.alorma.myapplication.ui.splash.SplashRoutes

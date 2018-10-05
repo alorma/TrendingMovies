@@ -1,9 +1,9 @@
 package com.alorma.myapplication.ui.common
 
 
-import android.support.annotation.IdRes
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
+import androidx.annotation.IdRes
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 
 

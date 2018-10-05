@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import assertk.assert
 import assertk.assertions.isNotNull
 import com.alorma.myapplication.configureRxThreading

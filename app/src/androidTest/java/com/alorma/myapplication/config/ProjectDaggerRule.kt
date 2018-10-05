@@ -1,6 +1,6 @@
 package com.alorma.myapplication.config
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.InstrumentationRegistry
 import com.alorma.myapplication.TrendingMoviesApp
 import com.alorma.myapplication.di.ApplicationComponent
 import com.alorma.myapplication.di.module.ApplicationModule

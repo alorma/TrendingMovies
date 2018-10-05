@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.common
 
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,7 @@ class AdapterDslBuilder<M> {
 
 class DslAdapter<M>(@LayoutRes private val holderBuilder: HolderBuilder<M>,
                     private val comparator: Comparator<M>)
-    : RecyclerView.Adapter<DslAdapter.ViewHolder<M>>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<DslAdapter.ViewHolder<M>>() {
 
     private val items: MutableList<M> = mutableListOf()
 
@@ -78,7 +78,7 @@ class DslAdapter<M>(@LayoutRes private val holderBuilder: HolderBuilder<M>,
 
     class ViewHolder<in M>(itemView: View,
                            private val holderBuilder: HolderBuilder<M>)
-        : RecyclerView.ViewHolder(itemView) {
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         fun bind(vm: M) {
             with(holderBuilder) {
@@ -93,7 +93,7 @@ class DslAdapter<M>(@LayoutRes private val holderBuilder: HolderBuilder<M>,
 
 
 @AdapterDsl
-fun <M> adapterDsl(recyclerView: RecyclerView,
+fun <M> adapterDsl(recyclerView: androidx.recyclerview.widget.RecyclerView,
                    setup: AdapterDslBuilder<M>.() -> Unit): DslAdapter<M> =
         with(AdapterDslBuilder<M>()) {
             setup()

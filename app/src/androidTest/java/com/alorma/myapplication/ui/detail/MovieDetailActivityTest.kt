@@ -1,10 +1,10 @@
 package com.alorma.myapplication.ui.detail
 
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.VerificationModes.times
-import android.support.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.VerificationModes.times
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.ProjectTestRule
 import com.alorma.myapplication.config.configureRxThreading

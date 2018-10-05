@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.splash
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.splash.di.SplashModule
 import javax.inject.Inject

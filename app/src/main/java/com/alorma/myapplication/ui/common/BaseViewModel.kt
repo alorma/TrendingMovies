@@ -1,6 +1,6 @@
 package com.alorma.myapplication.ui.common
 
-import android.arch.lifecycle.*
+import androidx.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 

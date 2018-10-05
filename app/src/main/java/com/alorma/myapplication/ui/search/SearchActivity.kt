@@ -3,9 +3,9 @@ package com.alorma.myapplication.ui.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
@@ -15,7 +15,6 @@ import com.alorma.myapplication.ui.search.di.SearchModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.row_search.view.*
-import kotlinx.android.synthetic.main.search_activity.*
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity() {
@@ -31,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
-    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
+    private val recyclerViewListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
             viewModel reduce actions.page()
             disablePagination()
@@ -97,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
             }
             diff { it.id }
         }
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
     }
 
     private fun loadMovieImage(image: ImageView, movieItem: MovieSearchItemVM) {

@@ -1,20 +1,18 @@
 package com.alorma.myapplication.ui.movies
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
-import com.alorma.myapplication.ui.common.pagination
 import com.alorma.myapplication.ui.movies.di.MoviesModule
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
 import javax.inject.Inject
 
@@ -29,7 +27,7 @@ class MoviesActivity : AppCompatActivity() {
 
     private lateinit var adapter: DslAdapter<MovieItemVM>
 
-    private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
+    private val recyclerViewListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
         recycler.pagination {
             viewModel reduce actions.loadPage()
             disablePagination()
@@ -56,7 +54,7 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun initView() {
         val columns = resources.getInteger(R.integer.columns_movies)
-        recycler.layoutManager = GridLayoutManager(this@MoviesActivity, columns)
+        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this@MoviesActivity, columns)
         adapter = adapterDsl(recycler) {
             item {
                 layout = R.layout.row_tv_movie_list

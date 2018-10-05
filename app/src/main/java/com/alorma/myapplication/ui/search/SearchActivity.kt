@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.ui.common.*
+import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.row_search.view.*
@@ -40,6 +41,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchViewModel.observe(this) {
             onState { render(it) }
+            onRoute { navigate(it) }
         }
 
         initView()
@@ -116,6 +118,17 @@ class SearchActivity : AppCompatActivity() {
             is SearchStates.SearchState.SearchResult -> onResult(state)
             is SearchStates.SearchState.Error -> onError(state)
         }
+    }
+
+    private fun navigate(it: SearchRoutes.SearchRoute) {
+        when (it) {
+            is SearchRoutes.SearchRoute.OpenDetail -> openDetail(it)
+            SearchRoutes.SearchRoute.Back -> finish()
+        }
+    }
+
+    private fun openDetail(it: SearchRoutes.SearchRoute.OpenDetail) {
+        startActivity(MovieDetailActivity.launch(this, it.id, it.title))
     }
 
     private fun onLoading() {

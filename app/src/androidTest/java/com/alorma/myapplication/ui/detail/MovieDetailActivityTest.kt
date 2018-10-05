@@ -1,12 +1,12 @@
 package com.alorma.myapplication.ui.detail
 
 import android.content.Intent
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.VerificationModes.times
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.ProjectTestRule
+import com.alorma.myapplication.config.app
 import com.alorma.myapplication.config.configureRxThreading
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Images
@@ -76,7 +76,7 @@ class MovieDetailActivityTest {
 
         launchWithId()
 
-        assertDisplayed("5.4")
+        assertDisplayed(String.format("%.1f", VOTE))
     }
 
     @Test
@@ -134,7 +134,7 @@ class MovieDetailActivityTest {
     }
 
     private fun launchWithId(id: Int = ID) {
-        rule.run(MovieDetailActivity.launch(InstrumentationRegistry.getTargetContext(), id, "Title $id"))
+        rule.run(MovieDetailActivity.launch(app, id, "Title $id"))
     }
 
     private fun generateSimilarItems(number: Int): List<Movie> = (1..number).map { generateSimilarItem(it) }

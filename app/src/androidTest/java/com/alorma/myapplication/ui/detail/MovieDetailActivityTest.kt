@@ -5,7 +5,6 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.VerificationModes.times
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.alorma.myapplication.R
-import com.alorma.myapplication.config.ProjectTestRule
 import com.alorma.myapplication.config.app
 import com.alorma.myapplication.config.configureRxThreading
 import com.alorma.myapplication.domain.model.Configuration
@@ -20,6 +19,7 @@ import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.asser
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
+import com.schibsted.spain.barista.rule.BaristaRule
 import io.reactivex.Single
 import org.hamcrest.Matcher
 import org.junit.Before
@@ -41,7 +41,7 @@ class MovieDetailActivityTest {
     }
 
     @get:Rule
-    val rule = ProjectTestRule(MovieDetailActivity::class.java, this)
+    val rule = BaristaRule.create(MovieDetailActivity::class.java)
 
     val moviesRepository: MoviesRepository = mock()
     val configRepository: ConfigurationRepository = mock()
@@ -134,7 +134,7 @@ class MovieDetailActivityTest {
     }
 
     private fun launchWithId(id: Int = ID) {
-        rule.run(MovieDetailActivity.launch(app, id, "Title $id"))
+        rule.launchActivity(MovieDetailActivity.launch(app, id, "Title $id"))
     }
 
     private fun generateSimilarItems(number: Int): List<Movie> = (1..number).map { generateSimilarItem(it) }

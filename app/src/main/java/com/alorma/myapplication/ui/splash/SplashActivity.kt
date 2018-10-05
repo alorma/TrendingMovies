@@ -27,6 +27,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun openMain() {
-        Intent(this, MoviesActivity::class.java).also { finish() }
+        startActivity(Intent(this, MoviesActivity::class.java)).also { finish() }
     }
 }

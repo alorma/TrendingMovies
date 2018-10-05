@@ -74,6 +74,7 @@ class ViewModelObserver<S : State, R : Route, A : Action, E : Event>(private val
 
     fun build() {
         vm.state.observe(lifecycleOwner, Observer { it?.let(stateBlock) })
+        vm.route.observe(lifecycleOwner, Observer { it?.let(routeBlock) })
         vm.event.observe(lifecycleOwner, Observer { it?.peekContent()?.let(eventBlock) })
     }
 

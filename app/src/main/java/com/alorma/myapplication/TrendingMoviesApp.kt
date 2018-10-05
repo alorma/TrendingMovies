@@ -14,7 +14,9 @@ class TrendingMoviesApp : Application() {
                 coreModule,
                 domainModule,
                 localDataModule,
-                networkModule
+                networkModule,
+                networkDataModule,
+                uiModule
         ))
     }
 }

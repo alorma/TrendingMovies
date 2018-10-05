@@ -3,18 +3,15 @@ package com.alorma.myapplication.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
-import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
+import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.common.dsl
-import com.alorma.myapplication.ui.common.pagination
-import com.alorma.myapplication.ui.detail.di.DetailModule
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -22,7 +19,8 @@ import kotlinx.android.synthetic.main.detail_activity.*
 import kotlinx.android.synthetic.main.detail_content.*
 import kotlinx.android.synthetic.main.detail_genre_chip.view.*
 import kotlinx.android.synthetic.main.row_similar_movie.view.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieDetailActivity : AppCompatActivity() {
     companion object {
@@ -36,18 +34,15 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
     }
 
-    @Inject
-    lateinit var actions: DetailActions
-
-    @Inject
-    lateinit var viewModel: MovieDetailViewModel
+    val actions: DetailActions by inject()
+    val movieDetailViewModel: MovieDetailViewModel by viewModel()
 
     private lateinit var similarMoviesAdapter: DslAdapter<MovieItemVM>
     private lateinit var genresAdapter: DslAdapter<String>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        similarMoviesRecycler.pagination {
-            viewModel reduce actions.loadSimilarPage()
+        similarMoviesRecycler.createPagination {
+            movieDetailViewModel reduce actions.loadSimilarPage()
             disablePagination()
         }
     }
@@ -56,16 +51,15 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detail_activity)
 
-        component add DetailModule(this) inject this
-
-        viewModel.observe(this) {
+        movieDetailViewModel.observe(this) {
             onState { render(it) }
+            onRoute { navigate(it) }
         }
 
         initData()
 
         toolbar.dsl {
-            back { action = { viewModel reduce actions.back() } }
+            back { action = { movieDetailViewModel reduce actions.back() } }
         }
     }
 
@@ -78,8 +72,8 @@ class MovieDetailActivity : AppCompatActivity() {
                 toolbar.title = title
             }
             it.getInt(EXTRA_ID, -1).takeIf { id -> id != -1 }?.let { id ->
-                viewModel reduce actions.load(id)
-            } ?: viewModel reduce actions.back()
+                movieDetailViewModel reduce actions.load(id)
+            } ?: movieDetailViewModel reduce actions.back()
         }
     }
 
@@ -93,8 +87,8 @@ class MovieDetailActivity : AppCompatActivity() {
             }
             diff { it.hashCode() }
         }
-        similarMoviesRecycler.layoutManager = LinearLayoutManager(this@MovieDetailActivity,
-                LinearLayoutManager.HORIZONTAL, false)
+        similarMoviesRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MovieDetailActivity,
+                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun initGenres() {
@@ -106,13 +100,13 @@ class MovieDetailActivity : AppCompatActivity() {
                     view.text.text = movieItemVM.title
                 }
                 onClick {
-                    viewModel reduce actions.openSimilarMovie(it)
+                    movieDetailViewModel reduce actions.openSimilarMovie(it)
                 }
             }
             diff { it.id }
         }
-        genresRecycler.layoutManager = LinearLayoutManager(this@MovieDetailActivity,
-                LinearLayoutManager.HORIZONTAL, false)
+        genresRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MovieDetailActivity,
+                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun render(state: DetailStates.DetailState) {
@@ -120,6 +114,17 @@ class MovieDetailActivity : AppCompatActivity() {
             is DetailStates.DetailState.Success -> onSuccess(state)
             is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state.movies)
         }
+    }
+
+    private fun navigate(it: DetailRoutes.DetailRoute) {
+        when (it) {
+            is DetailRoutes.DetailRoute.Detail -> openDetail(it)
+            DetailRoutes.DetailRoute.Back -> finish()
+        }
+    }
+
+    private fun openDetail(it: DetailRoutes.DetailRoute.Detail) {
+        startActivity(MovieDetailActivity.launch(this, it.id, it.title))
     }
 
     private fun onSuccess(state: DetailStates.DetailState.Success) {

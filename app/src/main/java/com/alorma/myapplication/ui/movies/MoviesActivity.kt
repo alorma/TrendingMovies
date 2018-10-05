@@ -1,57 +1,51 @@
 package com.alorma.myapplication.ui.movies
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
-import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
-import com.alorma.myapplication.ui.common.pagination
-import com.alorma.myapplication.ui.movies.di.MoviesModule
-import com.bumptech.glide.Glide
+import com.alorma.myapplication.ui.common.createPagination
+import com.alorma.myapplication.ui.detail.MovieDetailActivity
+import com.alorma.myapplication.ui.search.SearchActivity
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoviesActivity : AppCompatActivity() {
 
-    companion object {
-        const val OFFSET_LAZY_LOAD = 4
-    }
-
-    @Inject
-    lateinit var actions: MoviesActions
+    val glide: RequestManager by inject()
+    val actions: MoviesActions by inject()
+    val moviesViewModel: MoviesViewModel by viewModel()
 
     private lateinit var adapter: DslAdapter<MovieItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        recycler.pagination {
-            viewModel reduce actions.loadPage()
+        recycler.createPagination {
+            moviesViewModel reduce actions.loadPage()
             disablePagination()
         }
     }
-
-    @Inject
-    lateinit var viewModel: MoviesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        component add MoviesModule(this) inject this
-
-        viewModel.observe(this) {
+        moviesViewModel.observe(this) {
             onState { render(it) }
+            onRoute { navigate(it) }
         }
 
         initView()
 
-        viewModel reduce actions.load()
+        moviesViewModel reduce actions.load()
     }
 
     private fun initView() {
@@ -66,7 +60,7 @@ class MoviesActivity : AppCompatActivity() {
                     loadMovieImage(view.image, movie)
                 }
                 onClick {
-                    viewModel reduce actions.detail(it)
+                    moviesViewModel reduce actions.detail(it)
                 }
             }
 
@@ -74,7 +68,7 @@ class MoviesActivity : AppCompatActivity() {
         }
 
         fabSearch.setOnClickListener {
-            viewModel reduce actions.search()
+            moviesViewModel reduce actions.search()
         }
     }
 
@@ -87,7 +81,7 @@ class MoviesActivity : AppCompatActivity() {
 
             image.contentDescription = movieItem.title
 
-            val requestManager = Glide.with(image).setDefaultRequestOptions(requestOptions)
+            val requestManager = glide.setDefaultRequestOptions(requestOptions)
             requestManager
                     .load(it)
                     .into(image)
@@ -102,9 +96,24 @@ class MoviesActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigate(it: MoviesRoutes.MovieRoute) {
+        when (it) {
+            is MoviesRoutes.MovieRoute.DetailRoute -> openDetail(it)
+            MoviesRoutes.MovieRoute.Search -> openSearch()
+        }
+    }
+
+    private fun openDetail(it: MoviesRoutes.MovieRoute.DetailRoute) {
+        startActivity(MovieDetailActivity.launch(this, it.id, it.title))
+    }
+
+    private fun openSearch() {
+        startActivity(SearchActivity.launch(this))
+    }
+
     private fun onLoading() {
         centerText.visibility = View.INVISIBLE
-        if (recycler.adapter.itemCount == 0) {
+        if (recycler.adapter?.itemCount == 0) {
             loaderProgress.visibility = View.VISIBLE
         }
         disableRetry()
@@ -135,7 +144,7 @@ class MoviesActivity : AppCompatActivity() {
             visibility = View.VISIBLE
             isEnabled = true
             setOnClickListener {
-                viewModel reduce actions.load()
+                moviesViewModel reduce actions.load()
             }
         }
         loaderProgress.visibility = View.INVISIBLE

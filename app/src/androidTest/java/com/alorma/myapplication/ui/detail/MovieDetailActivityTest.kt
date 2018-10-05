@@ -1,12 +1,11 @@
 package com.alorma.myapplication.ui.detail
 
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.VerificationModes.times
-import android.support.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.VerificationModes.times
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.alorma.myapplication.R
-import com.alorma.myapplication.config.ProjectTestRule
+import com.alorma.myapplication.config.app
 import com.alorma.myapplication.config.configureRxThreading
 import com.alorma.myapplication.domain.model.Configuration
 import com.alorma.myapplication.domain.model.Images
@@ -20,11 +19,14 @@ import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.asser
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
+import com.schibsted.spain.barista.rule.BaristaRule
 import io.reactivex.Single
 import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.loadKoinModules
 import org.mockito.ArgumentMatchers.anyInt
 import java.util.*
 
@@ -41,13 +43,19 @@ class MovieDetailActivityTest {
     }
 
     @get:Rule
-    val rule = ProjectTestRule(MovieDetailActivity::class.java, this)
+    val rule = BaristaRule.create(MovieDetailActivity::class.java)
 
     val moviesRepository: MoviesRepository = mock()
     val configRepository: ConfigurationRepository = mock()
 
+    val mockModule = module {
+        factory { moviesRepository }
+        factory { configRepository }
+    }
+
     @Before
     fun setup() {
+        loadKoinModules(mockModule)
         given(configRepository.getConfig()).willReturn(Single.just(generateConfig()))
         given(moviesRepository.similar(eq(ID))).willReturn(Single.just(emptyList()))
     }
@@ -76,7 +84,7 @@ class MovieDetailActivityTest {
 
         launchWithId()
 
-        assertDisplayed("5.4")
+        assertDisplayed(String.format("%.1f", VOTE))
     }
 
     @Test
@@ -134,7 +142,7 @@ class MovieDetailActivityTest {
     }
 
     private fun launchWithId(id: Int = ID) {
-        rule.run(MovieDetailActivity.launch(InstrumentationRegistry.getTargetContext(), id, "Title $id"))
+        rule.launchActivity(MovieDetailActivity.launch(app, id, "Title $id"))
     }
 
     private fun generateSimilarItems(number: Int): List<Movie> = (1..number).map { generateSimilarItem(it) }

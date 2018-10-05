@@ -7,10 +7,9 @@ import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import java.util.*
-import javax.inject.Inject
 
-class DetailMapper @Inject constructor(private val resources: ResourcesProvider,
-                                       private val dateFormatter: DateFormatter) {
+class DetailMapper(private val resources: ResourcesProvider,
+                   private val dateFormatter: DateFormatter) {
 
     fun success(movie: Movie, conf: Configuration): MovieDetailVM =
             MovieDetailVM(movie.id, movie.title, movie.overview,

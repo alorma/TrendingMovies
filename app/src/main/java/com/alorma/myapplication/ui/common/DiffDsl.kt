@@ -1,8 +1,8 @@
 package com.alorma.myapplication.ui.common
 
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 
 @DslMarker
 annotation class DiffUtilsDsl
@@ -11,7 +11,7 @@ annotation class DiffUtilsDsl
 class DiffUtilsBuilder<R> {
 
     private lateinit var adapterDiff: AdapterDiff<R>
-    lateinit var adapter: RecyclerView.Adapter<*>
+    lateinit var adapter: androidx.recyclerview.widget.RecyclerView.Adapter<*>
     lateinit var comparable: Comparator<R>
     var oldList: MutableList<R> = mutableListOf()
     var newList: List<R> = listOf()
@@ -42,7 +42,7 @@ class AdapterDiff<R>(private val oldList: List<R>,
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldList[oldItemPosition] == newList[newItemPosition]
 }
 
-fun <R> RecyclerView.Adapter<*>.diffDSL(setup: DiffUtilsBuilder<R>.() -> Unit) {
+fun <R> androidx.recyclerview.widget.RecyclerView.Adapter<*>.diffDSL(setup: DiffUtilsBuilder<R>.() -> Unit) {
     with(DiffUtilsBuilder<R>()) {
         adapter = this@diffDSL
         setup()

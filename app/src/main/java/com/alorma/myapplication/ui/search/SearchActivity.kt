@@ -3,37 +3,34 @@ package com.alorma.myapplication.ui.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
-import com.alorma.myapplication.TrendingMoviesApp.Companion.component
 import com.alorma.myapplication.ui.common.*
-import com.alorma.myapplication.ui.search.di.SearchModule
+import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.row_search.view.*
 import kotlinx.android.synthetic.main.search_activity.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
         fun launch(context: Context): Intent = Intent(context, SearchActivity::class.java)
     }
 
-    @Inject
-    lateinit var actions: SearchActions
 
-    @Inject
-    lateinit var viewModel: SearchViewModel
+    val actions: SearchActions by inject()
+    val searchViewModel: SearchViewModel by viewModel()
 
     private lateinit var adapter: DslAdapter<MovieSearchItemVM>
 
     private val recyclerViewListener: RecyclerView.OnScrollListener by lazy {
-        recycler.pagination {
-            viewModel reduce actions.page()
+        recycler.createPagination {
+            searchViewModel reduce actions.page()
             disablePagination()
         }
     }
@@ -42,10 +39,9 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_activity)
 
-        component add SearchModule(this) inject this
-
-        viewModel.observe(this) {
+        searchViewModel.observe(this) {
             onState { render(it) }
+            onRoute { navigate(it) }
         }
 
         initView()
@@ -61,22 +57,22 @@ class SearchActivity : AppCompatActivity() {
         toolbar.dsl {
             menu = R.menu.search_menu
             back {
-                action = { viewModel reduce actions.back() }
+                action = { searchViewModel reduce actions.back() }
             }
         }
         toolbar.searchDsl {
             id = R.id.action_search
             open = true
             textSubmitted {
-                viewModel reduce actions.query(it)
+                searchViewModel reduce actions.query(it)
                 true
             }
             textChange {
-                viewModel reduce actions.query(it)
+                searchViewModel reduce actions.query(it)
                 true
             }
             onClose {
-                viewModel reduce actions.back()
+                searchViewModel reduce actions.back()
                 true
             }
         }
@@ -93,11 +89,11 @@ class SearchActivity : AppCompatActivity() {
                     view.year.text = movie.year
                     loadMovieImage(view.image, movie)
                 }
-                onClick { viewModel reduce actions.detail(it) }
+                onClick { searchViewModel reduce actions.detail(it) }
             }
             diff { it.id }
         }
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
     }
 
     private fun loadMovieImage(image: ImageView, movieItem: MovieSearchItemVM) {
@@ -124,9 +120,20 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigate(it: SearchRoutes.SearchRoute) {
+        when (it) {
+            is SearchRoutes.SearchRoute.OpenDetail -> openDetail(it)
+            SearchRoutes.SearchRoute.Back -> finish()
+        }
+    }
+
+    private fun openDetail(it: SearchRoutes.SearchRoute.OpenDetail) {
+        startActivity(MovieDetailActivity.launch(this, it.id, it.title))
+    }
+
     private fun onLoading() {
         centerText.visibility = View.INVISIBLE
-        if (recycler.adapter.itemCount == 0) {
+        if (recycler.adapter?.itemCount == 0) {
             loaderProgress.visibility = View.VISIBLE
         }
         disableRetry()
@@ -157,7 +164,7 @@ class SearchActivity : AppCompatActivity() {
             visibility = android.view.View.VISIBLE
             isEnabled = true
             setOnClickListener {
-                viewModel reduce actions.retry()
+                searchViewModel reduce actions.retry()
             }
         }
         loaderProgress.visibility = View.INVISIBLE

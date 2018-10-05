@@ -3,17 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply from: "../config/dependencies.gradle"
-
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion 28
     defaultConfig {
-        applicationId appPackage
-        minSdkVersion minSdk
-        targetSdkVersion targetSdk
-        versionCode appCode
-        versionName appName
-        testInstrumentationRunner testRunner
+        applicationId "com.alorma.myapplication"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0.0"
+        testInstrumentationRunner "com.github.tmurakami.dexopener.DexOpenerAndroidJUnitRunner"
     }
 
     buildTypes {
@@ -25,55 +23,55 @@ android {
 }
 
 dependencies {
-    implementation kotlin
-    implementation support.appcompat
-    implementation support.design
-    implementation support.cardview
-    implementation support.constraint
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    kapt dagger.compiler
-    implementation dagger.library
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
-    implementation rx.java
-    implementation rx.android
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
-    implementation network.retrofit.library
-    implementation network.retrofit.gson
-    implementation network.retrofit.rxAdapter
+    implementation "io.reactivex.rxjava2:rxjava:2.2.2"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
 
-    implementation network.okhttp.library
-    implementation network.okhttp.logging
+    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
 
-    debugImplementation network.okhttp.chuck.debug
-    releaseImplementation network.okhttp.chuck.release
+    implementation "com.squareup.okhttp3:okhttp:3.11.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.11.0"
 
-    implementation network.glide.library
-    kapt network.glide.compiler
+    debugImplementation "com.readystatesoftware.chuck:library:1.1.0"
+    releaseImplementation "com.readystatesoftware.chuck:library-no-op:1.1.0"
 
-    implementation archComponents.extensions
-    kapt archComponents.processor
+    implementation "com.github.bumptech.glide:glide:4.8.0"
+    kapt "com.github.bumptech.glide:compiler:4.8.0"
 
-    testImplementation testing.jUnit
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
-    testImplementation testing.mockito.core
-    testImplementation testing.mockito.kotlin
-    testImplementation archComponents.test
-    testImplementation testing.assertK
+    implementation 'org.koin:koin-android:1.0.0'
+    implementation 'org.koin:koin-androidx-viewmodel:1.0.0'
 
-    androidTestImplementation testing.mockito.core
-    androidTestImplementation testing.mockito.kotlin
-    androidTestImplementation testing.mockito.android
+    testImplementation "junit:junit:4.12"
 
-    androidTestImplementation testing.espresso.core
-    androidTestImplementation testing.espresso.runner
-    androidTestImplementation testing.espresso.rules
-    androidTestImplementation testing.espresso.intents
+    testImplementation "org.mockito:mockito-core:2.19.0"
+    testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
+    testImplementation 'androidx.arch.core:core-testing:2.0.0'
+    testImplementation "com.willowtreeapps.assertk:assertk:0.10"
 
-    androidTestImplementation testing.espresso.barista
+    androidTestImplementation "org.mockito:mockito-core:2.19.0"
+    androidTestImplementation "com.nhaarman:mockito-kotlin:1.5.0"
+    androidTestImplementation "org.mockito:mockito-android:2.19.0"
 
-    androidTestImplementation testing.dagger.mock
-    androidTestImplementation testing.dagger.kotlin
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.1.0-beta01"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:3.1.0-beta01"
 
-    androidTestImplementation testing.dexOpener
-    androidTestImplementation testing.assertK
+    androidTestImplementation 'androidx.test:runner:1.1.0-beta01'
+    androidTestImplementation 'androidx.test:rules:1.1.0-beta01'
+
+    androidTestImplementation "com.schibsted.spain:barista:2.6.0"
+
+    androidTestImplementation "com.github.tmurakami:dexopener:1.0.4"
+    androidTestImplementation "com.willowtreeapps.assertk:assertk:0.10"
 }

@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import assertk.assert
 import assertk.assertions.isNotNull
 import com.alorma.myapplication.configureRxThreading
@@ -19,8 +19,8 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-    private val navigator: Navigator<R> = mock()
     protected lateinit var stateObserver: Observer<S>
+    protected lateinit var routeObserver: Observer<R>
     protected lateinit var eventObserver: Observer<EventHandler<E>>
 
     protected lateinit var stateCaptor: KArgumentCaptor<S>
@@ -38,10 +38,12 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
         stateCaptor = createStateCaptor()
         routeCaptor = createRouteCaptor()
         eventCaptor = createEventCaptor()
+
         stateObserver = mock()
+        routeObserver = mock()
         eventObserver = mock()
 
-        vm = createViewModel(navigator).apply {
+        vm = createViewModel().apply {
             state.observeForever(stateObserver)
             event.observeForever(eventObserver)
             addObservers()
@@ -52,7 +54,7 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     }
 
-    abstract fun createViewModel(navigator: Navigator<R>): BaseViewModel<S, R, A, E>
+    abstract fun createViewModel(): BaseViewModel<S, R, A, E>
     abstract fun createStateCaptor(): KArgumentCaptor<S>
     abstract fun createEventCaptor(): KArgumentCaptor<EventHandler<E>>
     abstract fun createRouteCaptor(): KArgumentCaptor<R>
@@ -99,17 +101,25 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
         vm.event.observeForever(eventObserver)
     }
 
-    protected fun captureRoute() {
-        verify(navigator).navigate(routeCaptor.capture())
+    protected fun captureRoute(times: Int = 1) {
+        if (times > 1) {
+            verify(routeObserver, times(times))
+        } else {
+            verify(routeObserver)
+        }.onChanged(routeCaptor.capture())
     }
 
     protected inline fun captureRoute(block: () -> A) {
+        clearRoutes()
         runAction(block())
         captureRoute()
     }
 
     protected fun clearRoutes() {
         routeCaptor = createRouteCaptor()
+        vm.route.removeObserver(routeObserver)
+        routeObserver = mock()
+        vm.route.observeForever(routeObserver)
     }
 
     protected fun <Z> captureOne(observer: Observer<Z>,

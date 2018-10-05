@@ -56,7 +56,7 @@ Where screens belong
     * OkHttpInterceptor [https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor)
     * Chuck interceptor [https://github.com/jgilfelt/chuck](https://github.com/jgilfelt/chuck)
 * Gson [https://github.com/google/gson](https://github.com/google/gson)
-* Dagger2 [https://github.com/google/dagger](https://github.com/google/dagger)
+* Koin [https://insert-koin.io](https://insert-koin.io)
 * RxJava2 [https://github.com/ReactiveX/RxJava](https://github.com/ReactiveX/RxJava)
 
 **Testing libraries**
@@ -76,7 +76,7 @@ Where screens belong
  
 ### TODO
 
-- [ ] Change *dagger* to [*koin*](https://github.com/InsertKoinIO/koin)
+- [x] Change *dagger* to [*koin*](https://insert-koin.io)
 - [ ] Refactor support libraries to [*androidX*](https://developer.android.com/topic/libraries/support-library/refactor)
 - [ ] Create tablet mode
 - [ ] Split in modules instead of packages 

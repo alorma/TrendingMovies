@@ -1,9 +1,8 @@
 package com.alorma.myapplication.data.net.config
 
 import com.alorma.myapplication.domain.model.Configuration
-import javax.inject.Inject
 
-class ConfigurationMapper @Inject constructor() {
+class ConfigurationMapper{
 
     companion object {
         const val POSTER_MIN_SIZE = "w500"

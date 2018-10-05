@@ -1,24 +1,32 @@
 package com.alorma.myapplication.ui.splash
 
+import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import com.alorma.myapplication.TrendingMoviesApp.Companion.component
-import com.alorma.myapplication.ui.splash.di.SplashModule
-import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import com.alorma.myapplication.ui.movies.MoviesActivity
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashActivity : AppCompatActivity() {
-    @Inject
-    lateinit var actions: SplashActions
+    val actions: SplashActions by inject()
 
-    @Inject
-    lateinit var viewModel: SplashViewModel
+    val splashViewModel: SplashViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        component add SplashModule(this) inject this
+        splashViewModel.observe(this) {
+            onRoute {
+                when (it) {
+                    is SplashRoutes.SplashRoute.Main -> openMain()
+                    is SplashRoutes.SplashRoute.Error -> openMain()
+                }
+            }
+        }
+        splashViewModel reduce actions.load()
+    }
 
-        viewModel.observe(this) {}
-        viewModel reduce actions.load()
+    private fun openMain() {
+        startActivity(Intent(this, MoviesActivity::class.java)).also { finish() }
     }
 }

@@ -1,10 +1,8 @@
 package com.alorma.myapplication.ui.common
 
 import android.content.Context
-import android.support.annotation.StringRes
-import javax.inject.Inject
+import androidx.annotation.StringRes
 
-class ResourcesProvider @Inject constructor(private val context: Context) {
+class ResourcesProvider(private val context: Context) {
     fun getString(@StringRes stringId: Int, vararg arg: Any): String = context.resources.getString(stringId, *arg)
-    fun getText(@StringRes stringId: Int): CharSequence = context.resources.getText(stringId)
 }

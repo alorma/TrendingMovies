@@ -7,19 +7,14 @@ import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.Navigator
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
 class MoviesViewModel(private val states: MoviesStates,
                       private val routes: MoviesRoutes,
                       private val obtainMoviesUseCase: ObtainMoviesUseCase,
-                      private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-                      moviesNavigator: Navigator<MoviesRoutes.MovieRoute>) :
-        BaseViewModel<MoviesStates.MovieState,
-                MoviesRoutes.MovieRoute,
-                MoviesActions.MovieAction,
-                Event>(moviesNavigator) {
+                      private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
+        BaseViewModel<MoviesStates.MovieState, MoviesRoutes.MovieRoute, MoviesActions.MovieAction, Event>() {
 
     override fun reduce(action: MoviesActions.MovieAction) {
         when (action) {

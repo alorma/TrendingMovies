@@ -2,19 +2,18 @@ package com.alorma.myapplication.ui.movies
 
 import android.app.Instrumentation
 import android.content.Intent
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.Intents.intended
-import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
-import com.alorma.myapplication.config.ProjectTestRule
 import com.alorma.myapplication.config.configureRxThreading
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.MoviesRepository
-import com.alorma.myapplication.ui.search.SearchActivity
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
+import com.alorma.myapplication.ui.search.SearchActivity
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
@@ -22,19 +21,28 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
+import com.schibsted.spain.barista.rule.BaristaRule
 import io.reactivex.Single
 import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.loadKoinModules
 import java.util.*
 
 class MoviesActivityTest {
+
     @get:Rule
-    val rule = ProjectTestRule(MoviesActivity::class.java, this)
+    val rule = BaristaRule.create(MoviesActivity::class.java)
 
     val moviesRepository: MoviesRepository = mock()
     val configRepository: ConfigurationRepository = mock()
+
+    val mockModule = module {
+        factory { moviesRepository }
+        factory { configRepository }
+    }
 
     init {
         configureRxThreading()
@@ -42,6 +50,7 @@ class MoviesActivityTest {
 
     @Before
     fun setup() {
+        loadKoinModules(mockModule)
         given(configRepository.getConfig()).willReturn(Single.just(mock()))
     }
 
@@ -49,7 +58,7 @@ class MoviesActivityTest {
     fun onLoadError_showErrorOnScreen() {
         given(moviesRepository.listAll()).willReturn(Single.error(Exception()))
 
-        rule.run()
+        rule.launchActivity()
 
         assertDisplayed(R.string.generic_error)
     }
@@ -59,7 +68,7 @@ class MoviesActivityTest {
         val items = generateItems(50)
         given(moviesRepository.listAll()).willReturn(Single.just(items))
 
-        rule.run()
+        rule.launchActivity()
 
         assertRecyclerViewItemCount(R.id.recycler, 50)
         assertDisplayed("Title 1")
@@ -74,7 +83,7 @@ class MoviesActivityTest {
         val items = generateItems(50)
         given(moviesRepository.listAll()).willReturn(Single.just(items))
 
-        rule.run()
+        rule.launchActivity()
 
         clickListItem(R.id.recycler, 1)
 
@@ -90,7 +99,7 @@ class MoviesActivityTest {
         val items = generateItems(50)
         given(moviesRepository.listAll()).willReturn(Single.just(items))
 
-        rule.run()
+        rule.launchActivity()
 
         clickOn(R.id.fabSearch)
 
@@ -105,7 +114,7 @@ class MoviesActivityTest {
         val itemsPage = generateItems(75)
         given(moviesRepository.listNextPage()).willReturn(Single.just(itemsPage))
 
-        rule.run()
+        rule.launchActivity()
 
         assertRecyclerViewItemCount(R.id.recycler, 50)
 

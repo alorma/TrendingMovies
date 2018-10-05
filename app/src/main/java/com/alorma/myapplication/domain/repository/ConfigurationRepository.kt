@@ -1,12 +1,13 @@
 package com.alorma.myapplication.domain.repository
 
 import com.alorma.myapplication.common.subscribeOnIO
+import com.alorma.myapplication.data.cache.LocalConfigDataSource
+import com.alorma.myapplication.data.net.config.NetworkConfigDataSource
 import com.alorma.myapplication.domain.model.Configuration
 import io.reactivex.Single
-import com.alorma.myapplication.data.cache.ConfigDataSource as Cache
-import com.alorma.myapplication.data.net.config.ConfigDataSource as Network
 
-class ConfigurationRepository(private val network: Network, private val cache: Cache) {
+class ConfigurationRepository(private val network: NetworkConfigDataSource,
+                              private val cache: LocalConfigDataSource) {
 
     fun getConfig(): Single<Configuration> =
             Single.defer {

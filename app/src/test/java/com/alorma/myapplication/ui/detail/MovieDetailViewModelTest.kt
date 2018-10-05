@@ -5,9 +5,11 @@ import assertk.assert
 import assertk.assertions.hasSize
 import assertk.assertions.isInstanceOf
 import com.alorma.myapplication.common.getResourcesProvider
+import com.alorma.myapplication.data.cache.LocalMoviesDataSource
 import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.MovieApi
 import com.alorma.myapplication.data.net.MovieDto
+import com.alorma.myapplication.data.net.NetworkMoviesDataSource
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.repository.MoviesRepository
@@ -18,31 +20,28 @@ import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.Event
 import com.alorma.myapplication.ui.common.EventHandler
-import com.alorma.myapplication.ui.common.Navigator
 import com.alorma.myapplication.ui.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Test
 import java.util.*
-import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
-import com.alorma.myapplication.data.net.MoviesDataSource as Network
 import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
 
 class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
         DetailRoutes.DetailRoute, DetailActions.DetailAction, Event>() {
 
     private lateinit var movieApi: MovieApi
-    private lateinit var cacheDs: Cache
+    private lateinit var cacheDs: LocalMoviesDataSource
     private val actions: DetailActions = DetailActions()
 
     override fun createStateCaptor(): KArgumentCaptor<DetailStates.DetailState> = argumentCaptor()
     override fun createRouteCaptor(): KArgumentCaptor<DetailRoutes.DetailRoute> = argumentCaptor()
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
 
-    override fun createViewModel(navigator: Navigator<DetailRoutes.DetailRoute>): MovieDetailViewModel {
+    override fun createViewModel(): MovieDetailViewModel {
         movieApi = mock()
 
-        val networkDs = Network(movieApi, NetworkMapper(DateParser()))
+        val networkDs = NetworkMoviesDataSource(movieApi, NetworkMapper(DateParser()))
         cacheDs = mock()
 
         val moviesRepository = MoviesRepository(networkDs, cacheDs)
@@ -55,7 +54,7 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
         val resources = getResourcesProvider()
         val mapper = DetailMapper(resources, DateFormatter())
 
-        return MovieDetailViewModel(DetailStates(mapper), DetailRoutes(), navigator,
+        return MovieDetailViewModel(DetailStates(mapper), DetailRoutes(),
                 movieDetailUseCase,
                 configUseCase,
                 similarMoviesUseCase)

@@ -1,4 +1,4 @@
-package com.alorma.myapplication.di.module
+package com.alorma.myapplication.infrastructure.di
 
 import retrofit2.Retrofit
 

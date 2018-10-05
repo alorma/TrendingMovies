@@ -2,7 +2,7 @@ package com.alorma.myapplication.data.cache
 
 import com.alorma.myapplication.domain.model.Configuration
 
-class ConfigDataSource {
+class LocalConfigDataSource {
     private var config: Configuration? = null
 
     fun save(it: Configuration) {

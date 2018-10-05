@@ -1,27 +1,22 @@
 package com.alorma.myapplication
 
 import android.app.Application
-import com.alorma.myapplication.di.ApplicationComponent
-import com.alorma.myapplication.di.DaggerApplicationComponent
-import com.alorma.myapplication.di.module.ApplicationModule
-import com.alorma.myapplication.di.module.NetModule
+import com.alorma.myapplication.infrastructure.di.*
+import org.koin.android.ext.android.startKoin
 
 class TrendingMoviesApp : Application() {
-
-    companion object {
-        lateinit var component: ApplicationComponent
-    }
 
     override fun onCreate() {
         super.onCreate()
 
-        component = DaggerApplicationComponent.builder()
-                .applicationModule(ApplicationModule(this))
-                .netModule(NetModule(this))
-                .build()
-    }
-
-    fun updateComponent(updateComponent: ApplicationComponent) {
-        component = updateComponent
+        startKoin(this, listOf(
+                appModule,
+                coreModule,
+                domainModule,
+                localDataModule,
+                networkModule,
+                networkDataModule,
+                uiModule
+        ))
     }
 }

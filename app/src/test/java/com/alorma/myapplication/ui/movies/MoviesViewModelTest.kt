@@ -3,10 +3,8 @@ package com.alorma.myapplication.ui.movies
 import assertk.assert
 import assertk.assertions.*
 import com.alorma.myapplication.common.getResourcesProvider
-import com.alorma.myapplication.data.net.DateParser
-import com.alorma.myapplication.data.net.MovieApi
-import com.alorma.myapplication.data.net.MovieDto
-import com.alorma.myapplication.data.net.PagedResponse
+import com.alorma.myapplication.data.cache.LocalMoviesDataSource
+import com.alorma.myapplication.data.net.*
 import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
@@ -14,7 +12,6 @@ import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
 import com.alorma.myapplication.ui.common.EventHandler
-import com.alorma.myapplication.ui.common.Navigator
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.given
@@ -22,8 +19,6 @@ import com.nhaarman.mockito_kotlin.mock
 import io.reactivex.Single
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
-import com.alorma.myapplication.data.cache.MoviesDataSource as Cache
-import com.alorma.myapplication.data.net.MoviesDataSource as Network
 import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
 
 class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
@@ -41,7 +36,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
     override fun createRouteCaptor(): KArgumentCaptor<MoviesRoutes.MovieRoute> = argumentCaptor()
 
-    override fun createViewModel(navigator: Navigator<MoviesRoutes.MovieRoute>):
+    override fun createViewModel():
             BaseViewModel<MoviesStates.MovieState, MoviesRoutes.MovieRoute, MoviesActions.MovieAction, Event> {
         movieApi = mock()
 
@@ -52,8 +47,8 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         actions = MoviesActions()
         routes = MoviesRoutes()
 
-        val networkDs = Network(movieApi, NetworkMapper(DateParser()))
-        val cacheDs = Cache()
+        val networkDs = NetworkMoviesDataSource(movieApi, NetworkMapper(DateParser()))
+        val cacheDs = LocalMoviesDataSource()
 
         val moviesRepository = MoviesRepository(networkDs, cacheDs)
         val useCase = ObtainMoviesUseCase(moviesRepository)
@@ -61,7 +56,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
             given(execute()).willReturn(Single.just(mock()))
         }
 
-        return MoviesViewModel(states, routes, useCase, configUseCase, navigator)
+        return MoviesViewModel(states, routes, useCase, configUseCase)
     }
 
     @Test

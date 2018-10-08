@@ -4,8 +4,8 @@ import assertk.assert
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.alorma.myapplication.common.getResourcesProvider
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.DateFormatter

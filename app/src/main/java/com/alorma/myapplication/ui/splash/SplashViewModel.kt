@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.splash
 
+import com.alorma.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.common.observeOnUI
-import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
 import com.alorma.myapplication.ui.common.State

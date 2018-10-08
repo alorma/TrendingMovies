@@ -3,8 +3,8 @@ package com.alorma.myapplication.data.repository
 import com.alorma.myapplication.common.subscribeOnIO
 import com.alorma.myapplication.data.cache.LocalMoviesDataSource
 import com.alorma.myapplication.data.net.NetworkMoviesDataSource
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.domain.model.Movie
+import com.alorma.domain.repository.MoviesRepository
 import io.reactivex.Single
 
 class MoviesRepositoryImpl(private val network: NetworkMoviesDataSource,

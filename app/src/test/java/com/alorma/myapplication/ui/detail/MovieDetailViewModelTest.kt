@@ -11,11 +11,11 @@ import com.alorma.myapplication.data.net.MovieApi
 import com.alorma.myapplication.data.net.MovieDto
 import com.alorma.myapplication.data.net.NetworkMoviesDataSource
 import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
-import com.alorma.myapplication.domain.model.Images
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
-import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
+import com.alorma.domain.model.Images
+import com.alorma.domain.model.Movie
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.domain.usecase.ObtainMovieDetailUseCase
+import com.alorma.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.Event

@@ -7,11 +7,11 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.app
 import com.alorma.myapplication.config.configureRxThreading
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Images
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.repository.ConfigurationRepository
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.domain.model.Configuration
+import com.alorma.domain.model.Images
+import com.alorma.domain.model.Movie
+import com.alorma.domain.repository.ConfigurationRepository
+import com.alorma.domain.repository.MoviesRepository
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock

@@ -1,7 +1,7 @@
 package com.alorma.myapplication.data.net
 
-import com.alorma.myapplication.domain.model.Images
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.model.Images
+import com.alorma.domain.model.Movie
 import java.util.*
 
 class MoviesMapper(private val dateParser: DateParser) {

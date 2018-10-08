@@ -1,6 +1,6 @@
-package com.alorma.myapplication.domain.repository
+package com.alorma.domain.repository
 
-import com.alorma.myapplication.domain.model.Configuration
+import com.alorma.domain.model.Configuration
 import io.reactivex.Single
 
 interface ConfigurationRepository {

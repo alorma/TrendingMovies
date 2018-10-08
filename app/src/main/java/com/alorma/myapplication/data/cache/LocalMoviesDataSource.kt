@@ -1,6 +1,6 @@
 package com.alorma.myapplication.data.cache
 
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.model.Movie
 
 class LocalMoviesDataSource {
 

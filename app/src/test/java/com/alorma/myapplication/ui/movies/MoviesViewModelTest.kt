@@ -6,8 +6,8 @@ import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.data.cache.LocalMoviesDataSource
 import com.alorma.myapplication.data.net.*
 import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event

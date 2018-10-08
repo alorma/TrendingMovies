@@ -1,7 +1,7 @@
 package com.alorma.myapplication.data.net.config
 
-import com.alorma.myapplication.domain.exception.DataOriginException
-import com.alorma.myapplication.domain.model.Configuration
+import com.alorma.domain.exception.DataOriginException
+import com.alorma.domain.model.Configuration
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import java.io.IOException

@@ -1,11 +1,11 @@
 package com.alorma.myapplication.ui.detail
 
 import com.alorma.myapplication.common.observeOnUI
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
-import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
+import com.alorma.domain.model.Configuration
+import com.alorma.domain.model.Movie
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.domain.usecase.ObtainMovieDetailUseCase
+import com.alorma.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
 import io.reactivex.Single

@@ -1,6 +1,6 @@
 package com.alorma.myapplication.data.cache
 
-import com.alorma.myapplication.domain.model.Configuration
+import com.alorma.domain.model.Configuration
 
 class LocalConfigDataSource {
     private var config: Configuration? = null

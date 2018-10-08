@@ -1,9 +1,9 @@
 package com.alorma.myapplication.ui.movies
 
 import com.alorma.myapplication.R
-import com.alorma.myapplication.domain.exception.DataOriginException
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.exception.DataOriginException
+import com.alorma.domain.model.Configuration
+import com.alorma.domain.model.Movie
 import com.alorma.myapplication.ui.common.ResourcesProvider
 
 class MoviesMapper(private val resources: ResourcesProvider) {

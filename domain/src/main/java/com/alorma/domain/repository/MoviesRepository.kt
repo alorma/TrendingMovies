@@ -1,6 +1,6 @@
-package com.alorma.myapplication.domain.repository
+package com.alorma.domain.repository
 
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.model.Movie
 import io.reactivex.Single
 
 interface MoviesRepository {

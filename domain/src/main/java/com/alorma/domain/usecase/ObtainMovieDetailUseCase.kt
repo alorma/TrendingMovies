@@ -1,7 +1,7 @@
-package com.alorma.myapplication.domain.usecase
+package com.alorma.domain.usecase
 
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.domain.model.Movie
+import com.alorma.domain.repository.MoviesRepository
 import io.reactivex.Single
 
 class ObtainMovieDetailUseCase(private val moviesRepository: MoviesRepository) {

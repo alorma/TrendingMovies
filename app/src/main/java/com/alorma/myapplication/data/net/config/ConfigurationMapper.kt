@@ -1,6 +1,6 @@
 package com.alorma.myapplication.data.net.config
 
-import com.alorma.myapplication.domain.model.Configuration
+import com.alorma.domain.model.Configuration
 
 class ConfigurationMapper{
 

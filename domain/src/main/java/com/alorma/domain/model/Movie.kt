@@ -1,4 +1,4 @@
-package com.alorma.myapplication.domain.model
+package com.alorma.domain.model
 
 import java.util.*
 

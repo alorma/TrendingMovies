@@ -2,7 +2,7 @@ package com.alorma.myapplication.ui.splash
 
 import assertk.assert
 import assertk.assertions.isEqualTo
-import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
+import com.alorma.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event

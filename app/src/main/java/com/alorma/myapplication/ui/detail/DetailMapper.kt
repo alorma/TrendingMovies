@@ -1,8 +1,8 @@
 package com.alorma.myapplication.ui.detail
 
 import com.alorma.myapplication.R
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.model.Configuration
+import com.alorma.domain.model.Movie
 import com.alorma.myapplication.ui.common.DateFormatter
 import com.alorma.myapplication.ui.common.ResourcesProvider
 import com.alorma.myapplication.ui.movies.MovieItemVM

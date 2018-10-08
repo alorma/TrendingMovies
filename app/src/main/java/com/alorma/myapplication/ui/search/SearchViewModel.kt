@@ -1,10 +1,10 @@
 package com.alorma.myapplication.ui.search
 
 import com.alorma.myapplication.common.observeOnUI
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.SearchMoviesUseCase
+import com.alorma.domain.model.Configuration
+import com.alorma.domain.model.Movie
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.domain.usecase.SearchMoviesUseCase
 import com.alorma.myapplication.ui.common.BaseViewModel
 import com.alorma.myapplication.ui.common.Event
 import io.reactivex.Single

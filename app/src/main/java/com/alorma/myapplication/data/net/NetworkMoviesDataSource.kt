@@ -1,6 +1,6 @@
 package com.alorma.myapplication.data.net
 
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.model.Movie
 import io.reactivex.Single
 
 class NetworkMoviesDataSource(private val movieApi: MovieApi,

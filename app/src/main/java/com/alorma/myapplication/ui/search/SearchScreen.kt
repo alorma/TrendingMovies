@@ -1,7 +1,7 @@
 package com.alorma.myapplication.ui.search
 
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Movie
+import com.alorma.domain.model.Configuration
+import com.alorma.domain.model.Movie
 import com.alorma.myapplication.ui.common.Action
 import com.alorma.myapplication.ui.common.Route
 import com.alorma.myapplication.ui.common.State

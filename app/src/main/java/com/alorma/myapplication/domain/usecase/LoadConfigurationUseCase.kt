@@ -1,6 +1,6 @@
 package com.alorma.myapplication.domain.usecase
 
-import com.alorma.myapplication.data.repository.ConfigurationRepository
+import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import io.reactivex.Completable
 
 class LoadConfigurationUseCase(private val configurationRepository: ConfigurationRepository) {

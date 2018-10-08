@@ -10,8 +10,8 @@ import com.alorma.myapplication.R
 import com.alorma.myapplication.config.configureRxThreading
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.repository.ConfigurationRepository
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.myapplication.data.repository.ConfigurationRepository
+import com.alorma.myapplication.data.repository.MoviesRepository
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.alorma.myapplication.ui.search.SearchActivity
 import com.nhaarman.mockito_kotlin.given

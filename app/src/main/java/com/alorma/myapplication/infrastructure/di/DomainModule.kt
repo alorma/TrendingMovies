@@ -1,7 +1,7 @@
 package com.alorma.myapplication.infrastructure.di
 
-import com.alorma.myapplication.domain.repository.ConfigurationRepository
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.myapplication.data.repository.ConfigurationRepository
+import com.alorma.myapplication.data.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.*
 import org.koin.dsl.module.module
 

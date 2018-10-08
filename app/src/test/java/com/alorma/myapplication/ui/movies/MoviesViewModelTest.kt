@@ -5,7 +5,7 @@ import assertk.assertions.*
 import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.data.cache.LocalMoviesDataSource
 import com.alorma.myapplication.data.net.*
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.myapplication.data.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest

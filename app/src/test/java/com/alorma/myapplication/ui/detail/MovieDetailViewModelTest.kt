@@ -12,7 +12,7 @@ import com.alorma.myapplication.data.net.MovieDto
 import com.alorma.myapplication.data.net.NetworkMoviesDataSource
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.repository.MoviesRepository
+import com.alorma.myapplication.data.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase

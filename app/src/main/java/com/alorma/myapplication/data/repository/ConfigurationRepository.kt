@@ -1,4 +1,4 @@
-package com.alorma.myapplication.domain.repository
+package com.alorma.myapplication.data.repository
 
 import com.alorma.myapplication.common.subscribeOnIO
 import com.alorma.myapplication.data.cache.LocalConfigDataSource

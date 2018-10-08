@@ -1,5 +1,7 @@
 package com.alorma.myapplication.infrastructure.di
 
+import com.alorma.myapplication.data.repository.ConfigurationRepositoryImpl
+import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
 import com.alorma.myapplication.domain.repository.ConfigurationRepository
 import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.*
@@ -13,6 +15,6 @@ val domainModule = module {
     factory { ObtainMovieUseCase(get()) }
     factory { ObtainMovieDetailUseCase(get()) }
 
-    factory { ConfigurationRepository(get(), get()) }
-    factory { MoviesRepository(get(), get()) }
+    factory<ConfigurationRepository> { ConfigurationRepositoryImpl(get(), get()) }
+    factory<MoviesRepository> { MoviesRepositoryImpl(get(), get()) }
 }

@@ -5,7 +5,7 @@ import assertk.assertions.*
 import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.data.cache.LocalMoviesDataSource
 import com.alorma.myapplication.data.net.*
-import com.alorma.myapplication.data.repository.MoviesRepository
+import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
@@ -50,7 +50,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         val networkDs = NetworkMoviesDataSource(movieApi, NetworkMapper(DateParser()))
         val cacheDs = LocalMoviesDataSource()
 
-        val moviesRepository = MoviesRepository(networkDs, cacheDs)
+        val moviesRepository = MoviesRepositoryImpl(networkDs, cacheDs)
         val useCase = ObtainMoviesUseCase(moviesRepository)
         val configUseCase = mock<ObtainConfigurationUseCase>().apply {
             given(execute()).willReturn(Single.just(mock()))

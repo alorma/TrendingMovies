@@ -8,7 +8,7 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.configureRxThreading
-import com.alorma.myapplication.data.repository.MoviesRepository
+import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
 import com.alorma.myapplication.domain.repository.ConfigurationRepository

@@ -10,9 +10,9 @@ import com.alorma.myapplication.data.net.DateParser
 import com.alorma.myapplication.data.net.MovieApi
 import com.alorma.myapplication.data.net.MovieDto
 import com.alorma.myapplication.data.net.NetworkMoviesDataSource
+import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
 import com.alorma.myapplication.domain.model.Images
 import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.data.repository.MoviesRepository
 import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.myapplication.domain.usecase.ObtainMovieUseCase
@@ -44,7 +44,7 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
         val networkDs = NetworkMoviesDataSource(movieApi, NetworkMapper(DateParser()))
         cacheDs = mock()
 
-        val moviesRepository = MoviesRepository(networkDs, cacheDs)
+        val moviesRepository = MoviesRepositoryImpl(networkDs, cacheDs)
         val movieDetailUseCase = ObtainMovieDetailUseCase(moviesRepository)
         val similarMoviesUseCase = ObtainMovieUseCase(moviesRepository)
         val configUseCase = mock<ObtainConfigurationUseCase>().apply {

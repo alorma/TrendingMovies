@@ -1,11 +1,11 @@
-package com.alorma.myapplication.ui.detail
+package com.alorma.presentation.detail
 
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
-import com.alorma.myapplication.ui.common.Action
-import com.alorma.myapplication.ui.common.Route
-import com.alorma.myapplication.ui.common.State
-import com.alorma.myapplication.ui.movies.MovieItemVM
+import com.alorma.presentation.common.Action
+import com.alorma.presentation.common.Route
+import com.alorma.presentation.common.State
+import com.alorma.presentation.movies.MovieItemVM
 
 
 class DetailStates(private val mapper: DetailMapper) {

@@ -1,11 +1,11 @@
 package com.alorma.myapplication.infrastructure.di
 
-import com.alorma.myapplication.ui.detail.*
-import com.alorma.myapplication.ui.movies.*
-import com.alorma.myapplication.ui.search.*
-import com.alorma.myapplication.ui.splash.SplashActions
-import com.alorma.myapplication.ui.splash.SplashRoutes
-import com.alorma.myapplication.ui.splash.SplashViewModel
+import com.alorma.presentation.splash.SplashActions
+import com.alorma.presentation.splash.SplashRoutes
+import com.alorma.presentation.splash.SplashViewModel
+import com.alorma.presentation.detail.*
+import com.alorma.presentation.movies.*
+import com.alorma.presentation.search.*
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 

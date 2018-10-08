@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.common
 
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 

@@ -1,10 +1,10 @@
-package com.alorma.myapplication.ui.splash
+package com.alorma.presentation.splash
 
 import com.alorma.domain.usecase.LoadConfigurationUseCase
-import com.alorma.myapplication.common.observeOnUI
-import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.State
+import com.alorma.presentation.common.BaseViewModel
+import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.State
+import com.alorma.presentation.common.observeOnUI
 
 class SplashViewModel(
         private val loadConfigurationUseCase: LoadConfigurationUseCase,

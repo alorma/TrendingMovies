@@ -1,14 +1,14 @@
-package com.alorma.myapplication.ui.detail
+package com.alorma.presentation.detail
 
-import com.alorma.myapplication.R
+import com.alorma.domain.common.ResourceProvider
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
-import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.ResourcesProvider
-import com.alorma.myapplication.ui.movies.MovieItemVM
+import com.alorma.presentation.R
+import com.alorma.presentation.common.DateFormatter
+import com.alorma.presentation.movies.MovieItemVM
 import java.util.*
 
-class DetailMapper(private val resources: ResourcesProvider,
+class DetailMapper(private val resources: ResourceProvider,
                    private val dateFormatter: DateFormatter) {
 
     fun success(movie: Movie, conf: Configuration): MovieDetailVM =

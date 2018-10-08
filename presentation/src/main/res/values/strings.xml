@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="generic_error">An error occurred</string>
+    <string name="data_origin_error">Error loading data</string>
+    <string name="no_release_date">No release date available</string>
+</resources>

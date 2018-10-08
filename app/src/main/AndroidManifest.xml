@@ -17,7 +17,8 @@
         <activity android:name=".ui.movies.MoviesActivity" />
         <activity android:name=".ui.detail.MovieDetailActivity" />
 
-        <activity android:name=".ui.splash.SplashActivity"
+        <activity
+            android:name=".ui.splash.SplashActivity"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

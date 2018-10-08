@@ -1,6 +1,5 @@
 package com.alorma.myapplication.ui.common
 
-
 import androidx.appcompat.widget.Toolbar
 import android.view.View
 import com.alorma.myapplication.R

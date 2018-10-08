@@ -1,10 +1,10 @@
-package com.alorma.myapplication.ui.search
+package com.alorma.presentation.search
 
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
-import com.alorma.myapplication.ui.common.Action
-import com.alorma.myapplication.ui.common.Route
-import com.alorma.myapplication.ui.common.State
+import com.alorma.presentation.common.Action
+import com.alorma.presentation.common.Route
+import com.alorma.presentation.common.State
 
 
 class SearchStates(private val mapper: SearchMapper) {
@@ -25,7 +25,7 @@ class SearchStates(private val mapper: SearchMapper) {
                 else -> {
                     val configuration = it.first
                     val items = it.second.map { mapper.map(it, configuration) }
-                    SearchStates.SearchState.SearchResult(items, page)
+                    SearchState.SearchResult(items, page)
                 }
             }
 

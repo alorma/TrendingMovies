@@ -9,9 +9,10 @@ import com.alorma.data.repository.MoviesRepositoryImpl
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.EventHandler
+import com.alorma.presentation.common.BaseViewModel
+import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.movies.*
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.given

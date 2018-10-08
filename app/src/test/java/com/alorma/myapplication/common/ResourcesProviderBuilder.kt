@@ -1,6 +1,6 @@
 package com.alorma.myapplication.common
 
-import com.alorma.myapplication.ui.common.ResourcesProvider
+import com.alorma.presentation.common.ResourcesProvider
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import org.mockito.ArgumentMatchers

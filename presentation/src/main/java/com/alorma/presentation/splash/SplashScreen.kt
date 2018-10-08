@@ -1,7 +1,7 @@
-package com.alorma.myapplication.ui.splash
+package com.alorma.presentation.splash
 
-import com.alorma.myapplication.ui.common.Action
-import com.alorma.myapplication.ui.common.Route
+import com.alorma.presentation.common.Action
+import com.alorma.presentation.common.Route
 
 class SplashActions {
     sealed class SplashAction : Action() {

@@ -17,10 +17,11 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainMovieUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.EventHandler
-import com.alorma.myapplication.ui.movies.MovieItemVM
+import com.alorma.presentation.common.DateFormatter
+import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.detail.*
+import com.alorma.presentation.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Test

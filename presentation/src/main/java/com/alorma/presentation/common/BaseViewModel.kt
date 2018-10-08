@@ -1,4 +1,4 @@
-package com.alorma.myapplication.ui.common
+package com.alorma.presentation.common
 
 import androidx.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable

@@ -1,4 +1,4 @@
-package com.alorma.myapplication.ui.common
+package com.alorma.presentation.common
 
 open class Action
 open class Route
@@ -26,4 +26,3 @@ class NonPersistentEventHandler<E: Event>(t: E) : EventHandler<E>(t) {
 class PersistentEventHandler<E: Event>(t: E) : EventHandler<E>(t) {
     override fun peekContent(): E? = eventContent
 }
-

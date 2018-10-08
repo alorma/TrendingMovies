@@ -1,12 +1,12 @@
-package com.alorma.myapplication.ui.movies
+package com.alorma.presentation.movies
 
-import com.alorma.myapplication.common.observeOnUI
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMoviesUseCase
-import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.myapplication.ui.common.Event
+import com.alorma.presentation.common.BaseViewModel
+import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.observeOnUI
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 

@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.alorma.myapplication.ui.movies.MoviesActivity
+import com.alorma.presentation.splash.SplashActions
+import com.alorma.presentation.splash.SplashRoutes
+import com.alorma.presentation.splash.SplashViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

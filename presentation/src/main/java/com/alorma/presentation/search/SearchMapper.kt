@@ -1,15 +1,15 @@
-package com.alorma.myapplication.ui.search
+package com.alorma.presentation.search
 
-import com.alorma.myapplication.R
+import com.alorma.domain.common.ResourceProvider
 import com.alorma.domain.exception.DataOriginException
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
-import com.alorma.myapplication.ui.common.DateFormatter
-import com.alorma.myapplication.ui.common.ResourcesProvider
+import com.alorma.presentation.R
+import com.alorma.presentation.common.DateFormatter
 import java.util.*
 
 class SearchMapper(private val dateFormatter: DateFormatter,
-                   private val resources: ResourcesProvider) {
+                   private val resources: ResourceProvider) {
 
     fun map(movie: Movie, conf: Configuration): MovieSearchItemVM = MovieSearchItemVM(movie.id, movie.title,
             movie.overview,

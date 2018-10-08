@@ -1,12 +1,12 @@
-package com.alorma.myapplication.ui.movies
+package com.alorma.presentation.movies
 
-import com.alorma.myapplication.R
+import com.alorma.domain.common.ResourceProvider
 import com.alorma.domain.exception.DataOriginException
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
-import com.alorma.myapplication.ui.common.ResourcesProvider
+import com.alorma.presentation.R
 
-class MoviesMapper(private val resources: ResourcesProvider) {
+class MoviesMapper(private val resources: ResourceProvider) {
 
     fun mapSuccess(movie: Movie, conf: Configuration): MovieItemVM = MovieItemVM(movie.id, movie.title,
             getPosterImage(conf, movie),

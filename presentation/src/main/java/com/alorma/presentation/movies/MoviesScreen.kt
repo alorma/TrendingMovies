@@ -1,10 +1,10 @@
-package com.alorma.myapplication.ui.movies
+package com.alorma.presentation.movies
 
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
-import com.alorma.myapplication.ui.common.Action
-import com.alorma.myapplication.ui.common.Route
-import com.alorma.myapplication.ui.common.State
+import com.alorma.presentation.common.Action
+import com.alorma.presentation.common.Route
+import com.alorma.presentation.common.State
 
 
 class MoviesStates(private val mapper: MoviesMapper) {

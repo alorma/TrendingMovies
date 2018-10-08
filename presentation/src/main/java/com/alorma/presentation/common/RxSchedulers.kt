@@ -1,4 +1,4 @@
-package com.alorma.myapplication.common
+package com.alorma.presentation.common
 
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers

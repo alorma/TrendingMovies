@@ -77,9 +77,9 @@ Where screens belong
 ### TODO
 
 - [x] Change *dagger* to [*koin*](https://insert-koin.io)
-- [ ] Refactor support libraries to [*androidX*](https://developer.android.com/topic/libraries/support-library/refactor)
+- [X] Refactor support libraries to [*androidX*](https://developer.android.com/topic/libraries/support-library/refactor)
 - [ ] Create tablet mode
-- [ ] Split in modules instead of packages 
+- [X] Split in modules instead of packages
 - [ ] Add more small tests (repository test, use case, date parser)
     > On this project I decided to go through "flow" test, instead of specific class test, so it can test all related classes (API to ViewModel) all in once
      

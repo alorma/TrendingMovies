@@ -1,7 +1,7 @@
 package com.alorma.myapplication.infrastructure.di
 
-import com.alorma.myapplication.data.repository.ConfigurationRepositoryImpl
-import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
+import com.alorma.data.repository.ConfigurationRepositoryImpl
+import com.alorma.data.repository.MoviesRepositoryImpl
 import com.alorma.domain.repository.ConfigurationRepository
 import com.alorma.domain.repository.MoviesRepository
 import com.alorma.domain.usecase.*

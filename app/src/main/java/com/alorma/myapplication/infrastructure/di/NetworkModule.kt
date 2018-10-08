@@ -1,7 +1,7 @@
 package com.alorma.myapplication.infrastructure.di
 
-import com.alorma.myapplication.data.net.MovieApi
-import com.alorma.myapplication.data.net.config.ConfigApi
+import com.alorma.data.net.MovieApi
+import com.alorma.data.net.config.ConfigApi
 import com.alorma.myapplication.infrastructure.network.NetworkConfig
 import com.alorma.myapplication.infrastructure.network.TokenInterceptor
 import com.readystatesoftware.chuck.ChuckInterceptor

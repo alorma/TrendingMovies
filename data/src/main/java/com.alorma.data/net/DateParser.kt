@@ -1,4 +1,4 @@
-package com.alorma.myapplication.data.net
+package com.alorma.data.net
 
 import java.text.SimpleDateFormat
 import java.util.*

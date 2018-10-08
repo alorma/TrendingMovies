@@ -1,4 +1,4 @@
-package com.alorma.myapplication.data.net
+package com.alorma.data.net
 
 import com.alorma.domain.model.Images
 import com.alorma.domain.model.Movie

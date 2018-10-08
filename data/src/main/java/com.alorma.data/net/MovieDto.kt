@@ -1,4 +1,4 @@
-package com.alorma.myapplication.data.net
+package com.alorma.data.net
 
 import com.google.gson.annotations.SerializedName
 

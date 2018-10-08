@@ -1,8 +1,8 @@
-package com.alorma.myapplication.data.repository
+package com.alorma.data.repository
 
-import com.alorma.myapplication.common.subscribeOnIO
-import com.alorma.myapplication.data.cache.LocalConfigDataSource
-import com.alorma.myapplication.data.net.config.NetworkConfigDataSource
+import com.alorma.data.cache.LocalConfigDataSource
+import com.alorma.data.common.subscribeOnIO
+import com.alorma.data.net.config.NetworkConfigDataSource
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.repository.ConfigurationRepository
 import io.reactivex.Single

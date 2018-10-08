@@ -1,8 +1,8 @@
-package com.alorma.myapplication.data.repository
+package com.alorma.data.repository
 
-import com.alorma.myapplication.common.subscribeOnIO
-import com.alorma.myapplication.data.cache.LocalMoviesDataSource
-import com.alorma.myapplication.data.net.NetworkMoviesDataSource
+import com.alorma.data.cache.LocalMoviesDataSource
+import com.alorma.data.common.subscribeOnIO
+import com.alorma.data.net.NetworkMoviesDataSource
 import com.alorma.domain.model.Movie
 import com.alorma.domain.repository.MoviesRepository
 import io.reactivex.Single

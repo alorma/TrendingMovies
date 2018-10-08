@@ -1,4 +1,4 @@
-package com.alorma.myapplication.data.cache
+package com.alorma.data.cache
 
 import com.alorma.domain.model.Configuration
 

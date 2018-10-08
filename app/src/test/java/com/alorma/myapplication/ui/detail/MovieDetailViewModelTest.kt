@@ -5,12 +5,12 @@ import assertk.assert
 import assertk.assertions.hasSize
 import assertk.assertions.isInstanceOf
 import com.alorma.myapplication.common.getResourcesProvider
-import com.alorma.myapplication.data.cache.LocalMoviesDataSource
-import com.alorma.myapplication.data.net.DateParser
-import com.alorma.myapplication.data.net.MovieApi
-import com.alorma.myapplication.data.net.MovieDto
-import com.alorma.myapplication.data.net.NetworkMoviesDataSource
-import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
+import com.alorma.data.cache.LocalMoviesDataSource
+import com.alorma.data.net.DateParser
+import com.alorma.data.net.MovieApi
+import com.alorma.data.net.MovieDto
+import com.alorma.data.net.NetworkMoviesDataSource
+import com.alorma.data.repository.MoviesRepositoryImpl
 import com.alorma.domain.model.Images
 import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
@@ -25,7 +25,7 @@ import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Test
 import java.util.*
-import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
+import com.alorma.data.net.MoviesMapper as NetworkMapper
 
 class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
         DetailRoutes.DetailRoute, DetailActions.DetailAction, Event>() {

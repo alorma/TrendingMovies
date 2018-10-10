@@ -1,11 +1,6 @@
 package com.alorma.myapplication.ui.movies
 
-import android.app.Instrumentation
-import android.content.Intent
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.domain.repository.ConfigurationRepository
 import com.alorma.domain.repository.MoviesRepository
 import com.alorma.myapplication.R
@@ -19,7 +14,6 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
 import com.schibsted.spain.barista.rule.BaristaRule
-import org.hamcrest.Matcher
 import org.junit.Rule
 import org.junit.Test
 import org.koin.dsl.context.ModuleDefinition
@@ -64,7 +58,7 @@ class MoviesActivityTest : BaseKoinTest() {
     @Test
     fun onClickItem_openDetail() {
         Intents.init()
-        intending(getMatcherOpenDetailActivity()).respondWith(getGenericResult())
+        intending<MovieDetailActivity>()
 
         moviesRepository.asListValidData(50)
 
@@ -72,22 +66,22 @@ class MoviesActivityTest : BaseKoinTest() {
 
         clickListItem(R.id.recycler, 1)
 
-        intended(getMatcherOpenDetailActivity())
+        intended<MovieDetailActivity>()
         Intents.release()
     }
 
     @Test
     fun onClickSearch_openSearch() {
         Intents.init()
-        intending(getMatcherOpenSearchActivity()).respondWith(getGenericResult())
+        intending<SearchActivity>()
 
-        moviesRepository.asListValidData(0)
+        moviesRepository.asEmptyList()
 
         rule.launchActivity()
 
         clickOn(R.id.fabSearch)
 
-        intended(getMatcherOpenSearchActivity())
+        intended<SearchActivity>()
         Intents.release()
     }
 
@@ -104,10 +98,4 @@ class MoviesActivityTest : BaseKoinTest() {
 
         assertRecyclerViewItemCount(R.id.recycler, 75)
     }
-
-    private fun getMatcherOpenDetailActivity(): Matcher<Intent> = hasComponent(MovieDetailActivity::class.java.name)
-
-    private fun getMatcherOpenSearchActivity(): Matcher<Intent> = hasComponent(SearchActivity::class.java.name)
-
-    private fun getGenericResult(): Instrumentation.ActivityResult = Instrumentation.ActivityResult(2, Intent())
 }

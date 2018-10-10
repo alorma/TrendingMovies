@@ -35,6 +35,17 @@ fun MoviesRepository.asListValidData(number: Int) {
     given(listAll()).willReturn(Single.just(items))
 }
 
+fun MoviesRepository.asSingleItem() {
+    fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
+
+    val item = generateItem(1)
+    given(listAll()).willReturn(Single.just(listOf(item)))
+}
+
+fun MoviesRepository.asEmptyList() {
+    given(listAll()).willReturn(Single.just(emptyList()))
+}
+
 fun MoviesRepository.asListNextPageValidData(number: Int) {
     fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
     fun generateItems(number: Int): List<Movie> = (1..number).map { generateItem(it) }
@@ -47,13 +58,13 @@ fun MoviesRepository.asSimilarEmptyList(id: Int) {
     given(similar(eq(id))).willReturn(Single.just(emptyList()))
 }
 
-fun MoviesRepository.asSimilarListValidData(number: Int) {
+fun MoviesRepository.asSimilarListValidData(id: Int, number: Int) {
     fun generateSimilarItem(id: Int): Movie = Movie(id, "Similar $id", MovieDetailActivityTest.OVERVIEW,
             Images("", ""), Date(), MovieDetailActivityTest.VOTE, listOf(1, 2))
 
     fun generateSimilarItems(number: Int): List<Movie> = (1..number).map { generateSimilarItem(it) }
 
-    given(similar(eq(MovieDetailActivityTest.ID))).willReturn(Single.just(generateSimilarItems(number)))
+    given(similar(eq(id))).willReturn(Single.just(generateSimilarItems(number)))
 }
 
 fun MoviesRepository.asMovieValidData(id: Int? = null) {

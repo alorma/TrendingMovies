@@ -1,9 +1,6 @@
 package com.alorma.myapplication.ui.detail
 
-import android.content.Intent
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.VerificationModes.times
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.alorma.domain.repository.ConfigurationRepository
 import com.alorma.domain.repository.MoviesRepository
 import com.alorma.myapplication.R
@@ -15,7 +12,6 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
 import com.schibsted.spain.barista.rule.BaristaRule
-import org.hamcrest.Matcher
 import org.junit.Rule
 import org.junit.Test
 import org.koin.dsl.context.ModuleDefinition
@@ -93,7 +89,7 @@ class MovieDetailActivityTest : BaseKoinTest() {
     @Test
     fun onLoadWithSimilarMovies_displaySimilarMoviesLabel() {
         moviesRepository.asMovieValidData(ID)
-        moviesRepository.asSimilarListValidData(30)
+        moviesRepository.asSimilarListValidData(ID, 30)
 
         launchWithId()
 
@@ -103,7 +99,7 @@ class MovieDetailActivityTest : BaseKoinTest() {
     @Test
     fun onLoadWithSimilarMovies_displaySimilarMovies() {
         moviesRepository.asMovieValidData(ID)
-        moviesRepository.asSimilarListValidData(30)
+        moviesRepository.asSimilarListValidData(ID, 30)
 
         launchWithId()
 
@@ -113,20 +109,21 @@ class MovieDetailActivityTest : BaseKoinTest() {
     @Test
     fun onClickSimilarMovie_displayOtherDetail() {
         Intents.init()
-        moviesRepository.asMovieValidData()
-        moviesRepository.asSimilarListValidData(30)
+        intending<MovieDetailActivity>()
+
+        moviesRepository.asMovieValidData(ID)
+        moviesRepository.asSimilarListValidData(ID, 30)
 
         launchWithId()
 
         clickListItem(R.id.similarMoviesRecycler, 1)
 
-        Intents.intended(getMatcherOpenDetailActivity(), times(2))
+        intended<MovieDetailActivity>(2)
+
         Intents.release()
     }
 
     private fun launchWithId(id: Int = ID) {
         rule.launchActivity(MovieDetailActivity.launch(app, id, "Title $id"))
     }
-
-    private fun getMatcherOpenDetailActivity(): Matcher<Intent> = IntentMatchers.hasComponent(MovieDetailActivity::class.java.name)
 }

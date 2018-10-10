@@ -15,7 +15,7 @@ import com.alorma.domain.model.Images
 import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMovieDetailUseCase
-import com.alorma.domain.usecase.ObtainMovieUseCase
+import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.presentation.common.DateFormatter
 import com.alorma.presentation.common.Event
@@ -47,7 +47,7 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
 
         val moviesRepository = MoviesRepositoryImpl(networkDs, cacheDs)
         val movieDetailUseCase = ObtainMovieDetailUseCase(moviesRepository)
-        val similarMoviesUseCase = ObtainMovieUseCase(moviesRepository)
+        val similarMoviesUseCase = ObtainSimilarMoviesUseCase(moviesRepository)
         val configUseCase = mock<ObtainConfigurationUseCase>().apply {
             given(execute()).willReturn(Single.just(mock()))
         }

@@ -1,7 +1,5 @@
 package com.alorma.myapplication.ui.splash
 
-import com.alorma.domain.model.Images
-import com.alorma.domain.model.Movie
 import com.alorma.domain.repository.ConfigurationRepository
 import com.alorma.domain.repository.MoviesRepository
 import com.alorma.myapplication.R
@@ -13,7 +11,6 @@ import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Rule
 import org.junit.Test
 import org.koin.dsl.context.ModuleDefinition
-import java.util.*
 
 class SplashActivityTest : BaseKoinTest() {
 
@@ -31,7 +28,7 @@ class SplashActivityTest : BaseKoinTest() {
     override fun configureMocks() {
         super.configureMocks()
 
-        moviesRepository.asListValidData(1)
+        moviesRepository.asSingleItem()
     }
 
     @Test
@@ -61,8 +58,4 @@ class SplashActivityTest : BaseKoinTest() {
 
         assertDisplayed(R.string.generic_error)
     }
-
-    private fun generateItems(number: Int): List<Movie> = (1..number).map { generateItem(it) }
-
-    private fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
 }

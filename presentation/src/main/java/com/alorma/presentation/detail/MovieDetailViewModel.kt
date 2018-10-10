@@ -42,10 +42,6 @@ class MovieDetailViewModel(
         val movie = obtainMovieDetailUseCase.execute(id)
         val similar = obtainSimilarMoviesUseCase.execute(id)
 
-        Log.i("Alorma-Test", "Configuration: $configuration")
-        Log.i("Alorma-Test", "Movie: $movie")
-        Log.i("Alorma-Test", "Similar: $similar")
-
         val disposable = Single.zip(configuration,
                 movie,
                 similar,

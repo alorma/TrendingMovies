@@ -1,6 +1,5 @@
 package com.alorma.presentation.detail
 
-import android.util.Log
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase

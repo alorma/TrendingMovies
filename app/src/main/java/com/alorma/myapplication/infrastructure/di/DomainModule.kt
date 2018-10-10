@@ -12,7 +12,7 @@ val domainModule = module {
     factory { ObtainConfigurationUseCase(get()) }
     factory { ObtainMoviesUseCase(get()) }
     factory { SearchMoviesUseCase(get()) }
-    factory { ObtainMovieUseCase(get()) }
+    factory { ObtainSimilarMoviesUseCase(get()) }
     factory { ObtainMovieDetailUseCase(get()) }
 
     factory<ConfigurationRepository> { ConfigurationRepositoryImpl(get(), get()) }

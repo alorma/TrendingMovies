@@ -4,7 +4,7 @@ import com.alorma.domain.model.Movie
 import com.alorma.domain.repository.MoviesRepository
 import io.reactivex.Single
 
-class ObtainMovieUseCase(private val moviesRepository: MoviesRepository) {
+class ObtainSimilarMoviesUseCase(private val moviesRepository: MoviesRepository) {
 
     fun execute(id: Int): Single<List<Movie>> = moviesRepository.similar(id)
 

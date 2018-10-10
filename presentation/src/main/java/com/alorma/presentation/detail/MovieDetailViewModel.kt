@@ -4,7 +4,7 @@ import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMovieDetailUseCase
-import com.alorma.domain.usecase.ObtainMovieUseCase
+import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.observeOnUI
@@ -17,7 +17,7 @@ class MovieDetailViewModel(
         private val detailRoutes: DetailRoutes,
         private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-        private val obtainMovieUseCase: ObtainMovieUseCase) :
+        private val obtainSimilarMoviesUseCase: ObtainSimilarMoviesUseCase) :
         BaseViewModel<DetailStates.DetailState, DetailRoutes.DetailRoute,
                 DetailActions.DetailAction, Event>() {
 
@@ -37,9 +37,13 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        val disposable = Single.zip(obtainConfigurationUseCase.execute(),
-                obtainMovieDetailUseCase.execute(id),
-                obtainMovieUseCase.execute(id),
+        val configuration = obtainConfigurationUseCase.execute()
+        val movie = obtainMovieDetailUseCase.execute(id)
+        val similar = obtainSimilarMoviesUseCase.execute(id)
+
+        val disposable = Single.zip(configuration,
+                movie,
+                similar,
                 Function3<Configuration, Movie, List<Movie>,
                         Triple<Configuration, Movie, List<Movie>>> { c, m, l ->
                     Triple(c, m, l)
@@ -59,7 +63,7 @@ class MovieDetailViewModel(
     private fun loadSimilarMovies(id: Int) {
         val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
-                obtainMovieUseCase.executeNextPage(id),
+                obtainSimilarMoviesUseCase.executeNextPage(id),
                 BiFunction<Configuration, List<Movie>,
                         Pair<Configuration, List<Movie>>> { conf, movie ->
                     conf to movie

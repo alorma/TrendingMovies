@@ -11,7 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.0"
-        testInstrumentationRunner "com.github.tmurakami.dexopener.DexOpenerAndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -76,6 +76,5 @@ dependencies {
 
     androidTestImplementation "com.schibsted.spain:barista:2.6.0"
 
-    androidTestImplementation "com.github.tmurakami:dexopener:1.0.4"
     androidTestImplementation "com.willowtreeapps.assertk:assertk:0.10"
 }

@@ -8,10 +8,11 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.alorma.myapplication.R
 import com.alorma.myapplication.config.configureRxThreading
-import com.alorma.domain.repository.MoviesRepository
-import com.alorma.domain.model.Images
-import com.alorma.domain.model.Movie
-import com.alorma.domain.repository.ConfigurationRepository
+import com.alorma.myapplication.domain.model.Configuration
+import com.alorma.myapplication.domain.model.Images
+import com.alorma.myapplication.domain.model.Movie
+import com.alorma.myapplication.domain.repository.ConfigurationRepository
+import com.alorma.myapplication.domain.repository.MoviesRepository
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.alorma.myapplication.ui.search.SearchActivity
 import com.nhaarman.mockito_kotlin.given
@@ -51,7 +52,7 @@ class MoviesActivityTest {
     @Before
     fun setup() {
         loadKoinModules(mockModule)
-        given(configRepository.getConfig()).willReturn(Single.just(mock()))
+        given(configRepository.getConfig()).willReturn(Single.just(generateConfig()))
     }
 
     @Test
@@ -132,4 +133,7 @@ class MoviesActivityTest {
     private fun getMatcherOpenSearchActivity(): Matcher<Intent> = hasComponent(SearchActivity::class.java.name)
 
     private fun getGenericResult(): Instrumentation.ActivityResult = Instrumentation.ActivityResult(2, Intent())
+
+    private fun generateConfig(): Configuration = Configuration("url", "500", "500",
+            listOf(1 to "Comedy", 2 to "Drama"))
 }

@@ -109,7 +109,6 @@ class MovieDetailActivityTest : BaseKoinTest() {
     @Test
     fun onClickSimilarMovie_displayOtherDetail() {
         Intents.init()
-        intending<MovieDetailActivity>()
 
         moviesRepository.asMovieValidData(ID)
         moviesRepository.asSimilarListValidData(ID, 30)

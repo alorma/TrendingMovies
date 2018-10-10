@@ -12,7 +12,8 @@ import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.common.dsl
-import com.alorma.myapplication.ui.movies.MovieItemVM
+import com.alorma.presentation.detail.*
+import com.alorma.presentation.movies.MovieItemVM
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.detail_activity.*

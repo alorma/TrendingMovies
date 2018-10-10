@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import assertk.assert
 import assertk.assertions.isNotNull
 import com.alorma.myapplication.configureRxThreading
-import com.alorma.myapplication.ui.common.*
+import com.alorma.presentation.common.*
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times

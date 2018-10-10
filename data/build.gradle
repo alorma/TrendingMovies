@@ -1,0 +1,18 @@
+apply plugin: 'kotlin'
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation project(":domain")
+
+    implementation "io.reactivex.rxjava2:rxjava:2.2.2"
+
+    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation "com.squareup.okhttp3:okhttp:3.11.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.11.0"
+}

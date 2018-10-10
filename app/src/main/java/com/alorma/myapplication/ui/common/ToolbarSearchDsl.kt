@@ -1,11 +1,9 @@
 package com.alorma.myapplication.ui.common
 
-
+import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import android.view.MenuItem
-
 
 @DslMarker
 annotation class ToolbarSearchDsl

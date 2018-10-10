@@ -12,6 +12,7 @@ import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.alorma.myapplication.ui.search.SearchActivity
+import com.alorma.presentation.movies.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_activity.*

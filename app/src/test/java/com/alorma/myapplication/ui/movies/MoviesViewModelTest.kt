@@ -3,15 +3,16 @@ package com.alorma.myapplication.ui.movies
 import assertk.assert
 import assertk.assertions.*
 import com.alorma.myapplication.common.getResourcesProvider
-import com.alorma.myapplication.data.cache.LocalMoviesDataSource
-import com.alorma.myapplication.data.net.*
-import com.alorma.myapplication.data.repository.MoviesRepositoryImpl
-import com.alorma.myapplication.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.myapplication.domain.usecase.ObtainMoviesUseCase
+import com.alorma.data.cache.LocalMoviesDataSource
+import com.alorma.data.net.*
+import com.alorma.data.repository.MoviesRepositoryImpl
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
+import com.alorma.domain.usecase.ObtainMoviesUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.EventHandler
+import com.alorma.presentation.common.BaseViewModel
+import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.movies.*
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.given
@@ -19,7 +20,7 @@ import com.nhaarman.mockito_kotlin.mock
 import io.reactivex.Single
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
-import com.alorma.myapplication.data.net.MoviesMapper as NetworkMapper
+import com.alorma.data.net.MoviesMapper as NetworkMapper
 
 class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         MoviesRoutes.MovieRoute,

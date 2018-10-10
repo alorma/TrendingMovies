@@ -2,12 +2,15 @@ package com.alorma.myapplication.ui.splash
 
 import assertk.assert
 import assertk.assertions.isEqualTo
-import com.alorma.myapplication.domain.usecase.LoadConfigurationUseCase
+import com.alorma.domain.usecase.LoadConfigurationUseCase
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.myapplication.ui.common.BaseViewModel
-import com.alorma.myapplication.ui.common.Event
-import com.alorma.myapplication.ui.common.EventHandler
-import com.alorma.myapplication.ui.common.State
+import com.alorma.presentation.common.BaseViewModel
+import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.common.State
+import com.alorma.presentation.splash.SplashActions
+import com.alorma.presentation.splash.SplashRoutes
+import com.alorma.presentation.splash.SplashViewModel
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.given

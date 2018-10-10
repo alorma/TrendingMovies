@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Trending</string>
-    <string name="generic_error">An error occurred</string>
-    <string name="data_origin_error">Error loading data</string>
     <string name="detail_description">Show image</string>
-    <string name="no_release_date">No release date available</string>
     <string name="search">Search</string>
     <string name="error_retry">RETRY</string>
     <string name="search_central_hint">Write something in the above text box to start searching!</string>

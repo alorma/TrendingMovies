@@ -1,9 +1,9 @@
 package com.alorma.myapplication.infrastructure.di
 
-import com.alorma.myapplication.data.net.MoviesMapper
-import com.alorma.myapplication.data.net.NetworkMoviesDataSource
-import com.alorma.myapplication.data.net.config.ConfigurationMapper
-import com.alorma.myapplication.data.net.config.NetworkConfigDataSource
+import com.alorma.data.net.MoviesMapper
+import com.alorma.data.net.NetworkMoviesDataSource
+import com.alorma.data.net.config.ConfigurationMapper
+import com.alorma.data.net.config.NetworkConfigDataSource
 import org.koin.dsl.module.module
 
 val networkDataModule = module {

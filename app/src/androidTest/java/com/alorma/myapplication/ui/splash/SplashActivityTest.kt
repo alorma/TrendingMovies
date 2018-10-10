@@ -1,27 +1,21 @@
 package com.alorma.myapplication.ui.splash
 
+import com.alorma.domain.model.Images
+import com.alorma.domain.model.Movie
+import com.alorma.domain.repository.ConfigurationRepository
+import com.alorma.domain.repository.MoviesRepository
 import com.alorma.myapplication.R
-import com.alorma.myapplication.config.configureRxThreading
-import com.alorma.myapplication.domain.exception.DataOriginException
-import com.alorma.myapplication.domain.model.Configuration
-import com.alorma.myapplication.domain.model.Images
-import com.alorma.myapplication.domain.model.Movie
-import com.alorma.myapplication.domain.repository.ConfigurationRepository
-import com.alorma.myapplication.domain.repository.MoviesRepository
-import com.nhaarman.mockito_kotlin.given
+import com.alorma.myapplication.ui.base.*
 import com.nhaarman.mockito_kotlin.mock
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.rule.BaristaRule
-import io.reactivex.Single
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext.loadKoinModules
+import org.koin.dsl.context.ModuleDefinition
 import java.util.*
 
-class SplashActivityTest {
+class SplashActivityTest : BaseKoinTest() {
 
     @get:Rule
     val rule = BaristaRule.create(SplashActivity::class.java)
@@ -29,26 +23,21 @@ class SplashActivityTest {
     val moviesRepository: MoviesRepository = mock()
     val configRepository: ConfigurationRepository = mock()
 
-    val mockModule = module {
+    override fun ModuleDefinition.mockDependencies() {
         factory { moviesRepository }
         factory { configRepository }
     }
 
-    init {
-        configureRxThreading()
-    }
+    override fun configureMocks() {
+        super.configureMocks()
 
-    @Before
-    fun setup() {
-        loadKoinModules(mockModule)
-
-        val items = generateItems(50)
-        given(moviesRepository.listAll()).willReturn(Single.just(items))
+        moviesRepository.asListValidData(1)
     }
 
     @Test
     fun onLoadSplash_configurationRequestSuccess_openMainWithMovies() {
-        given(configRepository.getConfig()).willReturn(Single.just(generateConfig()))
+        configRepository.asValidConfig()
+        moviesRepository.asListValidData(50)
 
         rule.launchActivity()
 
@@ -57,7 +46,7 @@ class SplashActivityTest {
 
     @Test
     fun onLoadSplash_configurationRequestFail_DataException_openMainWithError_data() {
-        given(configRepository.getConfig()).willReturn(Single.error(DataOriginException()))
+        configRepository.asDataOriginError()
 
         rule.launchActivity()
 
@@ -66,7 +55,7 @@ class SplashActivityTest {
 
     @Test
     fun onLoadSplash_configurationRequestFail_DataException_openMainWithError_generic() {
-        given(configRepository.getConfig()).willReturn(Single.error(Exception()))
+        configRepository.asError()
 
         rule.launchActivity()
 
@@ -76,7 +65,4 @@ class SplashActivityTest {
     private fun generateItems(number: Int): List<Movie> = (1..number).map { generateItem(it) }
 
     private fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
-
-    private fun generateConfig(): Configuration = Configuration("url", "500", "500",
-            listOf(1 to "Comedy", 2 to "Drama"))
 }

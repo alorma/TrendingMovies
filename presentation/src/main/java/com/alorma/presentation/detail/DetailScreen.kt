@@ -2,6 +2,7 @@ package com.alorma.presentation.detail
 
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
+import com.alorma.domain.model.MovieDetail
 import com.alorma.presentation.common.Action
 import com.alorma.presentation.common.Route
 import com.alorma.presentation.common.State
@@ -19,9 +20,9 @@ class DetailStates(private val mapper: DetailMapper) {
         data class ErrorSimilarMovies(val text: String) : DetailState()
     }
 
-    infix fun success(it: Triple<Configuration, Movie, List<Movie>>): DetailState =
-            DetailState.Success(mapper.success(it.second, it.first),
-                    mapper.mapSimilar(it.third, it.first))
+    infix fun success(it: MovieDetail): DetailState =
+            DetailState.Success(mapper.success(it.movie, it.config),
+                    mapper.mapSimilar(it.similar, it.config))
 
     infix fun successSimilarMovies(items: Pair<Configuration, List<Movie>>): DetailState =
             DetailState.SimilarMovies(items.second.map { mapper.mapSimilar(it, items.first) })

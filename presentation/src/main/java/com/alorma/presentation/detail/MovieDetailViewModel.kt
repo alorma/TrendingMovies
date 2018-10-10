@@ -2,20 +2,19 @@ package com.alorma.presentation.detail
 
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
+import com.alorma.domain.usecase.LoadMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.observeOnUI
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function3
 
 class MovieDetailViewModel(
         private val detailStates: DetailStates,
         private val detailRoutes: DetailRoutes,
-        private val obtainMovieDetailUseCase: ObtainMovieDetailUseCase,
+        private val loadMovieDetailUseCase: LoadMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
         private val obtainSimilarMoviesUseCase: ObtainSimilarMoviesUseCase) :
         BaseViewModel<DetailStates.DetailState, DetailRoutes.DetailRoute,
@@ -37,17 +36,7 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        val configuration = obtainConfigurationUseCase.execute()
-        val movie = obtainMovieDetailUseCase.execute(id)
-        val similar = obtainSimilarMoviesUseCase.execute(id)
-
-        val disposable = Single.zip(configuration,
-                movie,
-                similar,
-                Function3<Configuration, Movie, List<Movie>,
-                        Triple<Configuration, Movie, List<Movie>>> { c, m, l ->
-                    Triple(c, m, l)
-                })
+        val disposable = loadMovieDetailUseCase.execute(id)
                 .observeOnUI()
                 .subscribe(
                         {

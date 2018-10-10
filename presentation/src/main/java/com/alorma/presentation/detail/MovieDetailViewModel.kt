@@ -1,5 +1,6 @@
 package com.alorma.presentation.detail
 
+import android.util.Log
 import com.alorma.domain.model.Configuration
 import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
@@ -37,9 +38,17 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        val disposable = Single.zip(obtainConfigurationUseCase.execute(),
-                obtainMovieDetailUseCase.execute(id),
-                obtainSimilarMoviesUseCase.execute(id),
+        val configuration = obtainConfigurationUseCase.execute()
+        val movie = obtainMovieDetailUseCase.execute(id)
+        val similar = obtainSimilarMoviesUseCase.execute(id)
+
+        Log.i("Alorma-Test", "Configuration: $configuration")
+        Log.i("Alorma-Test", "Movie: $movie")
+        Log.i("Alorma-Test", "Similar: $similar")
+
+        val disposable = Single.zip(configuration,
+                movie,
+                similar,
                 Function3<Configuration, Movie, List<Movie>,
                         Triple<Configuration, Movie, List<Movie>>> { c, m, l ->
                     Triple(c, m, l)

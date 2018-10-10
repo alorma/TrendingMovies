@@ -58,13 +58,14 @@ fun MoviesRepository.asSimilarEmptyList(id: Int) {
     given(similar(eq(id))).willReturn(Single.just(emptyList()))
 }
 
-fun MoviesRepository.asSimilarListValidData(id: Int, number: Int) {
+fun MoviesRepository.asSimilarListValidData(id: Int? = null, number: Int) {
     fun generateSimilarItem(id: Int): Movie = Movie(id, "Similar $id", MovieDetailActivityTest.OVERVIEW,
             Images("", ""), Date(), MovieDetailActivityTest.VOTE, listOf(1, 2))
 
     fun generateSimilarItems(number: Int): List<Movie> = (1..number).map { generateSimilarItem(it) }
 
-    given(similar(eq(id))).willReturn(Single.just(generateSimilarItems(number)))
+    given(similar(id?.let { eq(id) }
+            ?: anyInt())).willReturn(Single.just(generateSimilarItems(number)))
 }
 
 fun MoviesRepository.asMovieValidData(id: Int? = null) {

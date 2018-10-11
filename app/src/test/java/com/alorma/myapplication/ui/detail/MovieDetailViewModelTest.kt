@@ -4,7 +4,6 @@ import assertk.all
 import assertk.assert
 import assertk.assertions.hasSize
 import assertk.assertions.isInstanceOf
-import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.data.cache.LocalMoviesDataSource
 import com.alorma.data.net.DateParser
 import com.alorma.data.net.MovieApi
@@ -13,9 +12,11 @@ import com.alorma.data.net.NetworkMoviesDataSource
 import com.alorma.data.repository.MoviesRepositoryImpl
 import com.alorma.domain.model.Images
 import com.alorma.domain.model.Movie
+import com.alorma.domain.usecase.LoadMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
+import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.presentation.common.DateFormatter
 import com.alorma.presentation.common.Event
@@ -52,11 +53,13 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
             given(execute()).willReturn(Single.just(mock()))
         }
 
+        val loadDetailUseCase = LoadMovieDetailUseCase(movieDetailUseCase, configUseCase, similarMoviesUseCase)
+
         val resources = getResourcesProvider()
         val mapper = DetailMapper(resources, DateFormatter())
 
         return MovieDetailViewModel(DetailStates(mapper), DetailRoutes(),
-                movieDetailUseCase,
+                loadDetailUseCase,
                 configUseCase,
                 similarMoviesUseCase)
     }

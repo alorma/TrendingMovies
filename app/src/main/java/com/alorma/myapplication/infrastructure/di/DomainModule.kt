@@ -14,6 +14,7 @@ val domainModule = module {
     factory { SearchMoviesUseCase(get()) }
     factory { ObtainSimilarMoviesUseCase(get()) }
     factory { ObtainMovieDetailUseCase(get()) }
+    factory { LoadMovieDetailUseCase(get(), get(), get()) }
 
     factory<ConfigurationRepository> { ConfigurationRepositoryImpl(get(), get()) }
     factory<MoviesRepository> { MoviesRepositoryImpl(get(), get()) }

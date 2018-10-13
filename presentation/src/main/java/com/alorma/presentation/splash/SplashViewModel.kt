@@ -4,8 +4,6 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.State
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
 
 class SplashViewModel(
         private val loadConfigurationUseCase: ObtainConfigurationUseCase,
@@ -20,7 +18,7 @@ class SplashViewModel(
     }
 
     private fun onLoad() {
-        val job = GlobalScope.launch {
+        launch {
             try {
                 loadConfigurationUseCase.execute()
                 navigate(splashRoute.main())
@@ -28,6 +26,5 @@ class SplashViewModel(
                 navigate(splashRoute.error())
             }
         }
-        addJob(job)
     }
 }

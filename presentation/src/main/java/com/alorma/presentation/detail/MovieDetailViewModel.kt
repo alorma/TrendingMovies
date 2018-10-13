@@ -5,8 +5,6 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
 
 class MovieDetailViewModel(
         private val detailStates: DetailStates,
@@ -33,7 +31,7 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        val job = GlobalScope.launch {
+        launch {
             try {
                 val movieDetail = loadMovieDetailUseCase.execute(id)
                 render(detailStates success movieDetail)
@@ -41,11 +39,10 @@ class MovieDetailViewModel(
                 render(detailStates error e)
             }
         }
-        addJob(job)
     }
 
     private fun loadSimilarMovies(id: Int) {
-        val job = GlobalScope.launch {
+        launch {
             try {
                 val configuration = obtainConfigurationUseCase.execute()
                 val similar = obtainSimilarMoviesUseCase.execute(id)
@@ -55,6 +52,5 @@ class MovieDetailViewModel(
             }
 
         }
-        addJob(job)
     }
 }

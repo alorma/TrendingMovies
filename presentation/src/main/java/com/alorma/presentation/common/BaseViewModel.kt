@@ -1,7 +1,10 @@
 package com.alorma.presentation.common
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 
 abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : ViewModel() {
 
@@ -16,6 +19,7 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     private val routeLiveData: MutableLiveData<R> = MutableLiveData()
     private val eventLiveData: MutableLiveData<EventHandler<E>> = MutableLiveData()
 
+    private val parentJob: Job = Job()
     private val jobs: MutableList<Job> = mutableListOf()
 
     abstract infix fun reduce(action: A)
@@ -43,6 +47,13 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
         }
     }
 
+    fun launch(block: suspend CoroutineScope.() -> Unit) {
+        val job = GlobalScope.launch {
+            block()
+        }
+        addJob(job)
+    }
+
     protected fun addJob(job: Job) {
         jobs.add(job)
     }
@@ -56,14 +67,7 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     }
 
     protected fun clear() {
-        jobs.forEach {
-            try {
-                it.cancel()
-            } catch (_: Throwable) {
-
-            }
-        }
-        jobs.clear()
+        parentJob.cancel()
     }
 }
 

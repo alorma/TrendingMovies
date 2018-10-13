@@ -4,8 +4,6 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.SearchMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
 
 class SearchViewModel(
         private val states: SearchStates,
@@ -34,7 +32,7 @@ class SearchViewModel(
 
     private fun search() {
         clear()
-        val job = GlobalScope.launch {
+        launch {
             try {
                 render(states loading true)
                 val configuration = obtainConfigurationUseCase.execute()
@@ -46,11 +44,10 @@ class SearchViewModel(
                 render(states error e)
             }
         }
-        addJob(job)
     }
 
     private fun searchPage() {
-        val job = GlobalScope.launch {
+        launch {
             try {
                 render(states loading true)
                 val configuration = obtainConfigurationUseCase.execute()
@@ -62,7 +59,6 @@ class SearchViewModel(
                 render(states.error(e))
             }
         }
-        addJob(job)
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {

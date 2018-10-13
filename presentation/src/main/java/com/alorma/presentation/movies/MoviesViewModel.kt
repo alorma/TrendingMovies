@@ -5,8 +5,6 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
 
 class MoviesViewModel(private val states: MoviesStates,
                       private val routes: MoviesRoutes,
@@ -24,7 +22,7 @@ class MoviesViewModel(private val states: MoviesStates,
     }
 
     private fun load(action: MoviesActions.MovieAction) {
-        val job = GlobalScope.launch {
+        launch {
             try {
                 render(states loading true)
                 val configuration = obtainConfigurationUseCase.execute()
@@ -36,8 +34,6 @@ class MoviesViewModel(private val states: MoviesStates,
                 render(states.error(e))
             }
         }
-
-        addJob(job)
     }
 
     private suspend fun obtainLoadUseCase(action: MoviesActions.MovieAction): List<Movie> =

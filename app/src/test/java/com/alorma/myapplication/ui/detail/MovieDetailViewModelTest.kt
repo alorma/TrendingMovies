@@ -49,9 +49,16 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
         val moviesRepository = MoviesRepositoryImpl(networkDs, cacheDs)
         val movieDetailUseCase = ObtainMovieDetailUseCase(moviesRepository)
         val similarMoviesUseCase = ObtainSimilarMoviesUseCase(moviesRepository)
+
+        val configUseCase = mock<ObtainConfigurationUseCase>().apply {
+            //given(execute()).willReturn(createC)
+        }
+
+        /*
         val configUseCase = mock<ObtainConfigurationUseCase>().apply {
             given(execute()).willReturn(Single.just(mock()))
         }
+        */
 
         val loadDetailUseCase = LoadMovieDetailUseCase(movieDetailUseCase, configUseCase, similarMoviesUseCase)
 

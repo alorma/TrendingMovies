@@ -3,6 +3,7 @@ package com.alorma.presentation.common
 import androidx.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.experimental.Job
 
 abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : ViewModel() {
 
@@ -46,6 +47,10 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
 
     protected fun addDisposable(d: Disposable) {
         compositeDisposable.addAll(d)
+    }
+
+    protected fun addJob(job: Job) {
+        
     }
 
     fun observe(lifecycleOwner: LifecycleOwner, dsl: ViewModelObserver<S, R, A, E>.() -> Unit) {

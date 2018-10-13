@@ -37,6 +37,7 @@ class SearchViewModel(
 
     private fun search() {
         clear()
+        /*
         val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
                 obtainMoviesUseCase.execute(query),
@@ -51,9 +52,11 @@ class SearchViewModel(
                         { render(states error it) }
                 )
         addDisposable(disposable)
+        */
     }
 
     private fun searchPage() {
+        /*
         val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
                 obtainMoviesUseCase.executeNextPage(query),
@@ -66,6 +69,7 @@ class SearchViewModel(
                         { render(states error it) }
                 )
         addDisposable(disposable)
+        */
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {

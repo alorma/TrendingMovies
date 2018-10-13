@@ -57,6 +57,8 @@ dependencies {
     implementation 'org.koin:koin-android:1.0.1'
     implementation 'org.koin:koin-androidx-viewmodel:1.0.1'
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.2"
+
     testImplementation "junit:junit:4.12"
 
     testImplementation "org.mockito:mockito-core:2.21.0"
@@ -77,4 +79,10 @@ dependencies {
     androidTestImplementation "com.schibsted.spain:barista:2.6.0"
 
     androidTestImplementation "com.willowtreeapps.assertk:assertk:0.10"
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }

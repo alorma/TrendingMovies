@@ -26,6 +26,7 @@ class MoviesViewModel(private val states: MoviesStates,
     }
 
     private fun load(action: MoviesActions.MovieAction) {
+        /*
         val disposable = Single.zip(obtainConfigurationUseCase.execute(), obtainLoadUseCase(action),
                 BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
                     conf to list
@@ -39,6 +40,7 @@ class MoviesViewModel(private val states: MoviesStates,
                         { render(states error it) }
                 )
         addDisposable(disposable)
+        */
     }
 
     private fun obtainLoadUseCase(action: MoviesActions.MovieAction): Single<List<Movie>> =

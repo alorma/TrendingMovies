@@ -50,6 +50,7 @@ class MovieDetailViewModel(
     }
 
     private fun loadSimilarMovies(id: Int) {
+        /*
         val disposable = Single.zip(
                 obtainConfigurationUseCase.execute(),
                 obtainSimilarMoviesUseCase.executeNextPage(id),
@@ -63,5 +64,6 @@ class MovieDetailViewModel(
                         { render(detailStates errorSimilarMovies it) }
                 )
         addDisposable(disposable)
+        */
     }
 }

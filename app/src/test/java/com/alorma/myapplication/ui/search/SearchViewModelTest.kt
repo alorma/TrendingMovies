@@ -42,7 +42,7 @@ class SearchViewModelTest :
     @Test
     fun onActionNewQuery_withNoResults_renderEmpty() {
         given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
-        given(configUseCase.execute()).willReturn(Single.just(mock()))
+        //given(configUseCase.execute()).willReturn(Single.just(mock()))
 
         captureState(3) { actions.query("search test") }
 
@@ -53,7 +53,7 @@ class SearchViewModelTest :
     fun onActionPageQuery_withNoResults_renderEmptyPage() {
         given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
         given(moviesUseCase.executeNextPage(anyString())).willReturn(Single.just(listOf()))
-        given(configUseCase.execute()).willReturn(Single.just(mock()))
+        //given(configUseCase.execute()).willReturn(Single.just(mock()))
 
         runAction(actions.query("search test"))
         captureState(2) { actions.page() }

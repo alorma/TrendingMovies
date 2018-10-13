@@ -54,7 +54,7 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         val moviesRepository = MoviesRepositoryImpl(networkDs, cacheDs)
         val useCase = ObtainMoviesUseCase(moviesRepository)
         val configUseCase = mock<ObtainConfigurationUseCase>().apply {
-            given(execute()).willReturn(Single.just(mock()))
+            //given(execute()).willReturn(Single.just(mock()))
         }
 
         return MoviesViewModel(states, routes, useCase, configUseCase)

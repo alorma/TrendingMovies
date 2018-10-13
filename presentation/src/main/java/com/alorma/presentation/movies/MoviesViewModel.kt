@@ -22,17 +22,18 @@ class MoviesViewModel(private val states: MoviesStates,
     }
 
     private fun load(action: MoviesActions.MovieAction) {
-        launch {
-            try {
-                render(states loading true)
-                val configuration = obtainConfigurationUseCase.execute()
-                val movies = obtainLoadUseCase(action)
-                val success = states.success(configuration, movies)
-                render(states loading false)
-                render(success)
-            } catch (e: Exception) {
-                render(states.error(e))
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(states.error(exception))
             }
+        }
+        launch(error) {
+            render(states loading true)
+            val configuration = obtainConfigurationUseCase.execute()
+            val movies = obtainLoadUseCase(action)
+            val success = states.success(configuration, movies)
+            render(states loading false)
+            render(success)
         }
     }
 

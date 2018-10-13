@@ -18,13 +18,15 @@ class SplashViewModel(
     }
 
     private fun onLoad() {
-        launch {
-            try {
-                loadConfigurationUseCase.execute()
-                navigate(splashRoute.main())
-            } catch (e: Exception) {
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
                 navigate(splashRoute.error())
             }
+        }
+
+        launch(error) {
+            loadConfigurationUseCase.execute()
+            navigate(splashRoute.main())
         }
     }
 }

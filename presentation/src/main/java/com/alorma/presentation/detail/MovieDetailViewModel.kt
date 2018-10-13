@@ -31,7 +31,12 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        launch {
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(detailStates.error(exception))
+            }
+        }
+        launch(error) {
             try {
                 val movieDetail = loadMovieDetailUseCase.execute(id)
                 render(detailStates success movieDetail)
@@ -42,14 +47,15 @@ class MovieDetailViewModel(
     }
 
     private fun loadSimilarMovies(id: Int) {
-        launch {
-            try {
-                val configuration = obtainConfigurationUseCase.execute()
-                val similar = obtainSimilarMoviesUseCase.execute(id)
-                render(detailStates.successSimilarMovies(configuration, similar))
-            } catch (e: Exception) {
-                render(detailStates errorSimilarMovies e)
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(detailStates errorSimilarMovies exception)
             }
+        }
+        launch(error) {
+            val configuration = obtainConfigurationUseCase.execute()
+            val similar = obtainSimilarMoviesUseCase.execute(id)
+            render(detailStates.successSimilarMovies(configuration, similar))
 
         }
     }

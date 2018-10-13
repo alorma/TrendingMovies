@@ -1,10 +1,7 @@
 package com.alorma.presentation.common
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.*
 
 abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : ViewModel() {
 
@@ -47,14 +44,24 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
         }
     }
 
-    fun launch(block: suspend CoroutineScope.() -> Unit) {
-        val job = GlobalScope.launch {
+    fun launch(handler: ErrorHandler? = null,
+               block: suspend CoroutineScope.() -> Unit) {
+
+        val errorHandler = CoroutineExceptionHandler { _, exception ->
+            handler?.onError(exception)
+        }
+
+        val job = GlobalScope.launch(errorHandler) {
             block()
         }
         addJob(job)
     }
 
-    protected fun addJob(job: Job) {
+    interface ErrorHandler {
+        fun onError(exception: Throwable)
+    }
+
+    private fun addJob(job: Job) {
         jobs.add(job)
     }
 

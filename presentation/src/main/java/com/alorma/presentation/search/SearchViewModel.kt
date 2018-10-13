@@ -32,7 +32,12 @@ class SearchViewModel(
 
     private fun search() {
         clear()
-        launch {
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(states.error(exception))
+            }
+        }
+        launch(error) {
             try {
                 render(states loading true)
                 val configuration = obtainConfigurationUseCase.execute()
@@ -47,7 +52,12 @@ class SearchViewModel(
     }
 
     private fun searchPage() {
-        launch {
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(states.error(exception))
+            }
+        }
+        launch(error) {
             try {
                 render(states loading true)
                 val configuration = obtainConfigurationUseCase.execute()

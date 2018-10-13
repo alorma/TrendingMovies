@@ -16,7 +16,7 @@ import java.util.*
 fun ConfigurationRepository.asValidConfig() {
     fun generateConfig(): Configuration = Configuration("url", "500", "500",
             listOf(1 to "Comedy", 2 to "Drama"))
-    given(getConfig()).willReturn(Single.just(generateConfig()))
+    given(getConfig()).willReturn(generateConfig())
 }
 
 fun ConfigurationRepository.asDataOriginError() {

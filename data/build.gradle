@@ -8,15 +8,10 @@ dependencies {
 
     implementation project(":domain")
 
-    implementation "io.reactivex.rxjava2:rxjava:2.2.2"
-
     implementation "com.squareup.retrofit2:retrofit:2.4.0"
     implementation 'com.google.code.gson:gson:2.8.5'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.2"
-
-    implementation "com.squareup.okhttp3:okhttp:3.11.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:3.11.0"
 }
 
 kotlin {

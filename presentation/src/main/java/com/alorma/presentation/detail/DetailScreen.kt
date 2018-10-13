@@ -24,8 +24,8 @@ class DetailStates(private val mapper: DetailMapper) {
             DetailState.Success(mapper.success(it.movie, it.config),
                     mapper.mapSimilar(it.similar, it.config))
 
-    infix fun successSimilarMovies(items: Pair<Configuration, List<Movie>>): DetailState =
-            DetailState.SimilarMovies(items.second.map { mapper.mapSimilar(it, items.first) })
+    fun successSimilarMovies(config: Configuration, movies: List<Movie>): DetailState =
+            DetailState.SimilarMovies(movies.map { mapper.mapSimilar(it, config) })
 
     infix fun error(it: Throwable): DetailState =
             DetailState.Error(mapper mapError it)

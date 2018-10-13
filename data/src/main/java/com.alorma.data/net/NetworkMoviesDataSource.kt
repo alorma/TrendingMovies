@@ -1,49 +1,47 @@
 package com.alorma.data.net
 
 import com.alorma.domain.model.Movie
-import io.reactivex.Single
+import com.alorma.domain.model.MovieList
+import kotlinx.coroutines.experimental.Deferred
 
 class NetworkMoviesDataSource(private val movieApi: MovieApi,
                               private val moviesMapper: MoviesMapper) {
 
-    fun listAll(page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
-        val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.listPage(it) }
-                ?: movieApi.listAll()
+    suspend fun listAll(page: Int? = null): MovieList {
+        val deferred = page?.let {
+            movieApi.listPage(it)
+        } ?: movieApi.listAll()
 
-        return items.map {
-            Triple(
-                    it.page,
-                    it.totalPages,
-                    moviesMapper.map(it.results)
-            )
-        }
+        return loadMovies(deferred)
     }
 
-    fun search(query: String, page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
-        val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.searchPage(query, it) }
-                ?: movieApi.search(query)
+    suspend fun search(query: String, page: Int? = null): MovieList {
+        val deferred = page?.let {
+            movieApi.searchPage(query, it)
+        } ?: movieApi.search(query)
 
-        return items.map {
-            Triple(
-                    it.page,
-                    it.totalPages,
-                    moviesMapper.map(it.results)
-            )
-        }
+        return loadMovies(deferred)
     }
 
-    fun similar(id: Int, page: Int? = null): Single<Triple<Int, Int, List<Movie>>> {
-        val items: Single<PagedResponse<MovieDto>> = page?.let { movieApi.similarPage(id, it) }
-                ?: movieApi.similar(id)
+    suspend fun similar(id: Int, page: Int? = null): MovieList {
+        val deferred = page?.let {
+            movieApi.similarPage(id, it)
+        } ?: movieApi.similar(id)
 
-        return items.map {
-            Triple(
-                    it.page,
-                    it.totalPages,
-                    moviesMapper.map(it.results)
-            )
-        }
+        return loadMovies(deferred)
     }
 
-    fun item(id: Int): Single<Movie> = movieApi.item(id).map { moviesMapper.mapItem(it) }
+    private suspend fun loadMovies(deferred: Deferred<PagedResponse<MovieDto>>): MovieList {
+        val moviesDto = deferred.await()
+
+        return MovieList(
+                moviesDto.page,
+                moviesDto.totalPages,
+                moviesMapper.map(moviesDto.results)
+        )
+    }
+
+    suspend fun item(id: Int): Movie = movieApi.item(id)
+            .await()
+            .let { moviesMapper.mapItem(it) }
 }

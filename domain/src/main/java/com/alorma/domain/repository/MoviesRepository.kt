@@ -1,17 +1,16 @@
 package com.alorma.domain.repository
 
 import com.alorma.domain.model.Movie
-import io.reactivex.Single
 
 interface MoviesRepository {
-    fun listAll(): Single<List<Movie>>
-    fun listNextPage(): Single<List<Movie>>
+    suspend fun listAll(): List<Movie>
+    suspend fun listNextPage(): List<Movie>
 
-    fun similar(id: Int): Single<List<Movie>>
-    fun similarPage(id: Int): Single<List<Movie>>
+    suspend fun similar(id: Int): List<Movie>
+    suspend fun similarPage(id: Int): List<Movie>
 
-    fun search(query: String): Single<List<Movie>>
-    fun searchNextPage(query: String): Single<List<Movie>>
+    suspend fun search(query: String): List<Movie>
+    suspend fun searchNextPage(query: String): List<Movie>
 
-    fun getMovie(id: Int): Single<Movie>
+    suspend fun getMovie(id: Int): Movie
 }

@@ -1,14 +1,11 @@
 package com.alorma.presentation.search
 
-import com.alorma.domain.model.Configuration
-import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.SearchMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import com.alorma.presentation.common.observeOnUI
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
 
 class SearchViewModel(
         private val states: SearchStates,
@@ -37,39 +34,27 @@ class SearchViewModel(
 
     private fun search() {
         clear()
-        /*
-        val disposable = Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainMoviesUseCase.execute(query),
-                BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
-                    conf to list
-                })
-                .doOnSubscribe { render(states loading true) }
-                .doOnSuccess { render(states loading false) }
-                .observeOnUI()
-                .subscribe(
-                        { render(states.success(it)) },
-                        { render(states error it) }
-                )
-        addDisposable(disposable)
-        */
+        val job = GlobalScope.launch {
+            render(states loading true)
+            val configuration = obtainConfigurationUseCase.execute()
+            val movies = obtainMoviesUseCase.execute(query)
+            val success = states.success(configuration, movies)
+            render(states loading false)
+            render(success)
+        }
+        addJob(job)
     }
 
     private fun searchPage() {
-        /*
-        val disposable = Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainMoviesUseCase.executeNextPage(query),
-                BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
-                    conf to list
-                })
-                .observeOnUI()
-                .subscribe(
-                        { render(states.success(it, true)) },
-                        { render(states error it) }
-                )
-        addDisposable(disposable)
-        */
+        val job = GlobalScope.launch {
+            render(states loading true)
+            val configuration = obtainConfigurationUseCase.execute()
+            val movies = obtainMoviesUseCase.executeNextPage(query)
+            val success = states.success(configuration, movies)
+            render(states loading false)
+            render(success)
+        }
+        addJob(job)
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {

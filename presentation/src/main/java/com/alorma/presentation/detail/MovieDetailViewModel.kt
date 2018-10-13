@@ -1,15 +1,12 @@
 package com.alorma.presentation.detail
 
-import com.alorma.domain.model.Configuration
-import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.LoadMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import com.alorma.presentation.common.observeOnUI
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
 
 class MovieDetailViewModel(
         private val detailStates: DetailStates,
@@ -36,34 +33,19 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        val disposable = loadMovieDetailUseCase.execute(id)
-                .observeOnUI()
-                .subscribe(
-                        {
-                            render(detailStates success it)
-                        },
-                        {
-                            render(detailStates error it)
-                        }
-                )
-        addDisposable(disposable)
+        val job = GlobalScope.launch {
+            val movieDetail = loadMovieDetailUseCase.execute(id)
+            render(detailStates success movieDetail)
+        }
+        addJob(job)
     }
 
     private fun loadSimilarMovies(id: Int) {
-        /*
-        val disposable = Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainSimilarMoviesUseCase.executeNextPage(id),
-                BiFunction<Configuration, List<Movie>,
-                        Pair<Configuration, List<Movie>>> { conf, movie ->
-                    conf to movie
-                })
-                .observeOnUI()
-                .subscribe(
-                        { render(detailStates successSimilarMovies it) },
-                        { render(detailStates errorSimilarMovies it) }
-                )
-        addDisposable(disposable)
-        */
+        val job = GlobalScope.launch {
+            val configuration = obtainConfigurationUseCase.execute()
+            val similar = obtainSimilarMoviesUseCase.execute(id)
+            render(detailStates.successSimilarMovies(configuration, similar))
+        }
+        addJob(job)
     }
 }

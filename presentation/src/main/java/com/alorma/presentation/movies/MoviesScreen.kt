@@ -16,9 +16,8 @@ class MoviesStates(private val mapper: MoviesMapper) {
 
     infix fun loading(visible: Boolean): MovieState = MovieState.Loading(visible)
 
-    infix fun success(it: Pair<Configuration, List<Movie>>): MovieState {
-        val configuration = it.first
-        val items = it.second.map { mapper.mapSuccess(it, configuration) }
+    fun success(config: Configuration, movies: List<Movie>): MovieState {
+        val items = movies.map { mapper.mapSuccess(it, config) }
         return MovieState.Success(items)
     }
 

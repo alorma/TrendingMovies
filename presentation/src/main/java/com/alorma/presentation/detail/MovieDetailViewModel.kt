@@ -34,17 +34,26 @@ class MovieDetailViewModel(
 
     private fun load() {
         val job = GlobalScope.launch {
-            val movieDetail = loadMovieDetailUseCase.execute(id)
-            render(detailStates success movieDetail)
+            try {
+                val movieDetail = loadMovieDetailUseCase.execute(id)
+                render(detailStates success movieDetail)
+            } catch (e: Exception) {
+                render(detailStates error e)
+            }
         }
         addJob(job)
     }
 
     private fun loadSimilarMovies(id: Int) {
         val job = GlobalScope.launch {
-            val configuration = obtainConfigurationUseCase.execute()
-            val similar = obtainSimilarMoviesUseCase.execute(id)
-            render(detailStates.successSimilarMovies(configuration, similar))
+            try {
+                val configuration = obtainConfigurationUseCase.execute()
+                val similar = obtainSimilarMoviesUseCase.execute(id)
+                render(detailStates.successSimilarMovies(configuration, similar))
+            } catch (e: Exception) {
+                render(detailStates errorSimilarMovies e)
+            }
+
         }
         addJob(job)
     }

@@ -1,5 +1,6 @@
 package com.alorma.data.net
 
+import com.alorma.domain.exception.DataOriginException
 import com.alorma.domain.model.Movie
 import com.alorma.domain.model.MovieList
 import kotlinx.coroutines.experimental.Deferred
@@ -32,16 +33,25 @@ class NetworkMoviesDataSource(private val movieApi: MovieApi,
     }
 
     private suspend fun loadMovies(deferred: Deferred<PagedResponse<MovieDto>>): MovieList {
-        val moviesDto = deferred.await()
+        try {
+            val moviesDto = deferred.await()
 
-        return MovieList(
-                moviesDto.page,
-                moviesDto.totalPages,
-                moviesMapper.map(moviesDto.results)
-        )
+            return MovieList(
+                    moviesDto.page,
+                    moviesDto.totalPages,
+                    moviesMapper.map(moviesDto.results)
+            )
+        } catch (e: Exception) {
+            throw DataOriginException()
+        }
     }
 
-    suspend fun item(id: Int): Movie = movieApi.item(id)
-            .await()
-            .let { moviesMapper.mapItem(it) }
+    suspend fun item(id: Int): Movie =
+            try {
+                movieApi.item(id)
+                        .await()
+                        .let { moviesMapper.mapItem(it) }
+            } catch (e: Exception) {
+                throw DataOriginException()
+            }
 }

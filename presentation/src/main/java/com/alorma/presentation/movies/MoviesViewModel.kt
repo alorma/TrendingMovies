@@ -25,12 +25,16 @@ class MoviesViewModel(private val states: MoviesStates,
 
     private fun load(action: MoviesActions.MovieAction) {
         val job = GlobalScope.launch {
-            render(states loading true)
-            val configuration = obtainConfigurationUseCase.execute()
-            val movies = obtainLoadUseCase(action)
-            val success = states.success(configuration, movies)
-            render(states loading false)
-            render(success)
+            try {
+                render(states loading true)
+                val configuration = obtainConfigurationUseCase.execute()
+                val movies = obtainLoadUseCase(action)
+                val success = states.success(configuration, movies)
+                render(states loading false)
+                render(success)
+            } catch (e: Exception) {
+                render(states.error(e))
+            }
         }
 
         addJob(job)

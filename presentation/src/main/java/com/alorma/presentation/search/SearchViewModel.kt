@@ -35,24 +35,32 @@ class SearchViewModel(
     private fun search() {
         clear()
         val job = GlobalScope.launch {
-            render(states loading true)
-            val configuration = obtainConfigurationUseCase.execute()
-            val movies = obtainMoviesUseCase.execute(query)
-            val success = states.success(configuration, movies)
-            render(states loading false)
-            render(success)
+            try {
+                render(states loading true)
+                val configuration = obtainConfigurationUseCase.execute()
+                val movies = obtainMoviesUseCase.execute(query)
+                val success = states.success(configuration, movies)
+                render(states loading false)
+                render(success)
+            } catch (e: Exception) {
+                render(states error e)
+            }
         }
         addJob(job)
     }
 
     private fun searchPage() {
         val job = GlobalScope.launch {
-            render(states loading true)
-            val configuration = obtainConfigurationUseCase.execute()
-            val movies = obtainMoviesUseCase.executeNextPage(query)
-            val success = states.success(configuration, movies)
-            render(states loading false)
-            render(success)
+            try {
+                render(states loading true)
+                val configuration = obtainConfigurationUseCase.execute()
+                val movies = obtainMoviesUseCase.executeNextPage(query)
+                val success = states.success(configuration, movies)
+                render(states loading false)
+                render(success)
+            } catch (e: Exception) {
+                render(states.error(e))
+            }
         }
         addJob(job)
     }

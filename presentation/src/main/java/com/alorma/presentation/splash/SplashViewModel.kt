@@ -24,7 +24,7 @@ class SplashViewModel(
             try {
                 loadConfigurationUseCase.execute()
                 navigate(splashRoute.main())
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 navigate(splashRoute.error())
             }
         }

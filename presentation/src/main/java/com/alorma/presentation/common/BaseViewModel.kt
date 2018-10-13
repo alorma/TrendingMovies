@@ -20,6 +20,8 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     private val routeLiveData: MutableLiveData<R> = MutableLiveData()
     private val eventLiveData: MutableLiveData<EventHandler<E>> = MutableLiveData()
 
+    private val jobs: MutableList<Job> = mutableListOf()
+
     abstract infix fun reduce(action: A)
 
     protected fun render(s: S) {
@@ -50,7 +52,7 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     }
 
     protected fun addJob(job: Job) {
-        
+        jobs.add(job)
     }
 
     fun observe(lifecycleOwner: LifecycleOwner, dsl: ViewModelObserver<S, R, A, E>.() -> Unit) {
@@ -58,11 +60,19 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     }
 
     override fun onCleared() {
-        compositeDisposable.clear()
+        clear()
     }
 
     protected fun clear() {
         compositeDisposable.clear()
+        jobs.forEach {
+            try {
+                it.cancel()
+            } catch (_: Throwable) {
+
+            }
+        }
+        jobs.clear()
     }
 }
 

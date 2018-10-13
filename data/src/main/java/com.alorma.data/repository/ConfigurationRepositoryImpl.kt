@@ -9,7 +9,7 @@ class ConfigurationRepositoryImpl(private val network: NetworkConfigDataSource,
                                   private val cache: LocalConfigDataSource) : ConfigurationRepository {
 
     override suspend fun getConfig(): Configuration =
-            cache.get() ?: network.get().await().also {
+            cache.get() ?: network.get().also {
                 cache.save(it)
             }
 }

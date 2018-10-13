@@ -1,13 +1,13 @@
 package com.alorma.data.net.config
 
-import retrofit2.Call
+import kotlinx.coroutines.experimental.Deferred
 import retrofit2.http.GET
 
 interface ConfigApi {
     @GET("configuration")
-    fun getConfigCall(): Call<ConfigurationResponseDto>
+    fun getConfig(): Deferred<ConfigurationResponseDto>
 
     @GET("genre/movie/list")
-    fun getGenreCall(): Call<GenreDtoResponse>
+    fun getGenre(): Deferred<GenreDtoResponse>
 
 }

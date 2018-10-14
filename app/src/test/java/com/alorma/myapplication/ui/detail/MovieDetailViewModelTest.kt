@@ -3,27 +3,22 @@ package com.alorma.myapplication.ui.detail
 import assertk.assert
 import assertk.assertions.isInstanceOf
 import com.alorma.domain.exception.DataOriginException
-import com.alorma.domain.model.Configuration
-import com.alorma.domain.model.Images
-import com.alorma.domain.model.Movie
 import com.alorma.domain.repository.ConfigurationRepository
 import com.alorma.domain.repository.MoviesRepository
 import com.alorma.domain.usecase.LoadMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
-import com.alorma.myapplication.common.TestViewModelDispatchers
-import com.alorma.myapplication.common.getResourcesProvider
+import com.alorma.myapplication.common.*
 import com.alorma.myapplication.ui.BaseViewModelTest
 import com.alorma.presentation.common.DateFormatter
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.common.ViewModelDispatchers
 import com.alorma.presentation.detail.*
-import com.alorma.presentation.movies.MovieItemVM
 import com.nhaarman.mockito_kotlin.*
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
-import java.util.*
 import com.alorma.data.net.MoviesMapper as NetworkMapper
 
 class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
@@ -38,7 +33,7 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
 
 
-    override fun createViewModel(dispatchers: TestViewModelDispatchers): MovieDetailViewModel {
+    override fun createViewModel(dispatchers: ViewModelDispatchers): MovieDetailViewModel {
         val movieDetailUseCase = ObtainMovieDetailUseCase(moviesRepository)
         val similarMoviesUseCase = ObtainSimilarMoviesUseCase(moviesRepository)
         val obtainConfigurationUseCase = ObtainConfigurationUseCase(configRepository)
@@ -98,9 +93,4 @@ class MovieDetailViewModelTest : BaseViewModelTest<DetailStates.DetailState,
 
         assert(routeCaptor.firstValue).isInstanceOf(DetailRoutes.DetailRoute.Detail::class)
     }
-
-    private fun getConfig(): Configuration = Configuration("", "", "", listOf())
-    private fun getMovies(number: Int): List<Movie> = (1..number).map { getMovie(it) }
-    private fun getMovie(id: Int = 0): Movie = Movie(id, "", "", Images("", ""), Date(), 0f, listOf())
-    private fun getMovieVM(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")
 }

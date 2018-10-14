@@ -30,6 +30,7 @@ class MoviesViewModel(private val states: MoviesStates,
     private fun load(action: MoviesActions.MovieAction) {
         val error = object : ErrorHandler {
             override fun onError(exception: Throwable) {
+                render(states loading false)
                 render(states.error(exception))
             }
         }

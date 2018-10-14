@@ -30,7 +30,7 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
     protected lateinit var vm: BaseViewModel<S, R, A, E>
 
     @Before
-    fun setup() {
+    open fun setup() {
         stateCaptor = createStateCaptor()
         routeCaptor = createRouteCaptor()
         eventCaptor = createEventCaptor()
@@ -52,7 +52,7 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     }
 
-    abstract fun createViewModel(dispatchers: TestViewModelDispatchers): BaseViewModel<S, R, A, E>
+    abstract fun createViewModel(dispatchers: ViewModelDispatchers): BaseViewModel<S, R, A, E>
     abstract fun createStateCaptor(): KArgumentCaptor<S>
     abstract fun createEventCaptor(): KArgumentCaptor<EventHandler<E>>
     abstract fun createRouteCaptor(): KArgumentCaptor<R>

@@ -1,16 +1,20 @@
 package com.alorma.presentation.splash
 
-import com.alorma.domain.usecase.LoadConfigurationUseCase
+import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.State
-import com.alorma.presentation.common.observeOnUI
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class SplashViewModel(
-        private val loadConfigurationUseCase: LoadConfigurationUseCase,
-        private val splashRoute: SplashRoutes
+        private val loadConfigurationUseCase: ObtainConfigurationUseCase,
+        private val splashRoute: SplashRoutes,
+        dispatchers: ViewModelDispatchers
 ) :
-        BaseViewModel<State, SplashRoutes.SplashRoute, SplashActions.SplashAction, Event>() {
+        BaseViewModel<State,
+                SplashRoutes.SplashRoute,
+                SplashActions.SplashAction,
+                Event>(dispatchers) {
 
     override infix fun reduce(action: SplashActions.SplashAction) {
         when (action) {
@@ -19,12 +23,15 @@ class SplashViewModel(
     }
 
     private fun onLoad() {
-        val disposable = loadConfigurationUseCase.execute()
-                .observeOnUI()
-                .subscribe(
-                        { navigate(splashRoute.main()) },
-                        { navigate(splashRoute.error()) }
-                )
-        addDisposable(disposable)
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                navigate(splashRoute.error())
+            }
+        }
+
+        launch(error) {
+            loadConfigurationUseCase.execute()
+            navigate(splashRoute.main())
+        }
     }
 }

@@ -18,13 +18,12 @@ class SearchStates(private val mapper: SearchMapper) {
 
     infix fun loading(loading: Boolean): SearchState = SearchState.Loading(loading)
 
-    fun success(it: Pair<Configuration, List<Movie>>, page: Boolean = false): SearchState =
+    fun success(conf: Configuration, movies: List<Movie>, page: Boolean = false): SearchState =
             when {
-                it.second.isEmpty() && !page -> SearchState.Empty
-                it.second.isEmpty() && page -> SearchState.EmptyPage
+                movies.isEmpty() && !page -> SearchState.Empty
+                movies.isEmpty() && page -> SearchState.EmptyPage
                 else -> {
-                    val configuration = it.first
-                    val items = it.second.map { mapper.map(it, configuration) }
+                    val items = movies.map { mapper.map(it, conf) }
                     SearchState.SearchResult(items, page)
                 }
             }

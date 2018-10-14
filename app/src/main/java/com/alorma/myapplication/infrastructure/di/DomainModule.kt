@@ -8,7 +8,6 @@ import com.alorma.domain.usecase.*
 import org.koin.dsl.module.module
 
 val domainModule = module {
-    factory { LoadConfigurationUseCase(get()) }
     factory { ObtainConfigurationUseCase(get()) }
     factory { ObtainMoviesUseCase(get()) }
     factory { SearchMoviesUseCase(get()) }

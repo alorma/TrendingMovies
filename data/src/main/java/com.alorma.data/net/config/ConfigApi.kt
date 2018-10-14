@@ -1,13 +1,13 @@
 package com.alorma.data.net.config
 
-import io.reactivex.Single
+import kotlinx.coroutines.experimental.Deferred
 import retrofit2.http.GET
 
 interface ConfigApi {
     @GET("configuration")
-    fun getConfig(): Single<ConfigurationResponseDto>
+    fun getConfig(): Deferred<ConfigurationResponseDto>
 
     @GET("genre/movie/list")
-    fun getGenre(): Single<GenreDtoResponse>
+    fun getGenre(): Deferred<GenreDtoResponse>
 
 }

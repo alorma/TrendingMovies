@@ -45,6 +45,15 @@ class MoviesActivityTest : BaseKoinTest() {
     }
 
     @Test
+    fun onLoadDataOriginError_showErrorOnScreen() {
+        moviesRepository.asDataOriginError()
+
+        rule.launchActivity()
+
+        assertDisplayed(R.string.data_origin_error)
+    }
+
+    @Test
     fun onLoadItems_showOnScreen() {
         moviesRepository.asListValidData(50)
 

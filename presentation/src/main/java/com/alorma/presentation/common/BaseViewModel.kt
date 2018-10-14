@@ -1,12 +1,11 @@
 package com.alorma.presentation.common
 
 import androidx.lifecycle.*
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.experimental.*
 
-abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : ViewModel() {
-
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
+        private val dispatcher: ViewModelDispatchers
+) : ViewModel() {
 
     val state: LiveData<S>
         get() = stateLiveData
@@ -18,6 +17,9 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     private val stateLiveData: MutableLiveData<S> = MutableLiveData()
     private val routeLiveData: MutableLiveData<R> = MutableLiveData()
     private val eventLiveData: MutableLiveData<EventHandler<E>> = MutableLiveData()
+
+    private val parentJob: Job = Job()
+    private val jobs: MutableList<Job> = mutableListOf()
 
     abstract infix fun reduce(action: A)
 
@@ -44,8 +46,25 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
         }
     }
 
-    protected fun addDisposable(d: Disposable) {
-        compositeDisposable.addAll(d)
+    fun launch(handler: ErrorHandler? = null,
+               block: suspend CoroutineScope.() -> Unit) {
+
+        val errorHandler = CoroutineExceptionHandler { _, exception ->
+            handler?.onError(exception)
+        }
+
+        val job = GlobalScope.launch(dispatcher.main.plus(errorHandler)) {
+            block()
+        }
+        addJob(job)
+    }
+
+    interface ErrorHandler {
+        fun onError(exception: Throwable)
+    }
+
+    private fun addJob(job: Job) {
+        jobs.add(job)
     }
 
     fun observe(lifecycleOwner: LifecycleOwner, dsl: ViewModelObserver<S, R, A, E>.() -> Unit) {
@@ -53,11 +72,11 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
     }
 
     override fun onCleared() {
-        compositeDisposable.clear()
+        clear()
     }
 
     protected fun clear() {
-        compositeDisposable.clear()
+        parentJob.cancel()
     }
 }
 

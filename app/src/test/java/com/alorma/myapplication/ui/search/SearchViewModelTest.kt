@@ -3,46 +3,59 @@ package com.alorma.myapplication.ui.search
 import assertk.assert
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import com.alorma.myapplication.common.getResourcesProvider
+import com.alorma.domain.repository.ConfigurationRepository
+import com.alorma.domain.repository.MoviesRepository
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.SearchMoviesUseCase
+import com.alorma.myapplication.common.getConfig
+import com.alorma.myapplication.common.getMovieSearchVM
+import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.presentation.common.BaseViewModel
-import com.alorma.presentation.common.DateFormatter
-import com.alorma.presentation.common.Event
-import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.common.*
 import com.alorma.presentation.search.*
 import com.nhaarman.mockito_kotlin.*
-import io.reactivex.Single
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyString
 
 class SearchViewModelTest :
-        BaseViewModelTest<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>() {
+        BaseViewModelTest<SearchStates.SearchState,
+                SearchRoutes.SearchRoute,
+                SearchActions.SearchAction,
+                Event>() {
 
-    private lateinit var moviesUseCase: SearchMoviesUseCase
-    private lateinit var configUseCase: ObtainConfigurationUseCase
+    private var moviesRepository: MoviesRepository = mock()
+    private var configRepository: ConfigurationRepository = mock()
+
     private lateinit var actions: SearchActions
 
     override fun createStateCaptor(): KArgumentCaptor<SearchStates.SearchState> = argumentCaptor()
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
     override fun createRouteCaptor(): KArgumentCaptor<SearchRoutes.SearchRoute> = argumentCaptor()
-    override fun createViewModel(): BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event> {
+
+    override fun createViewModel(dispatchers: ViewModelDispatchers): BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event> {
         actions = SearchActions()
 
-        moviesUseCase = mock()
-        configUseCase = mock()
+        val moviesUseCase = SearchMoviesUseCase(moviesRepository)
+        val configUseCase = ObtainConfigurationUseCase(configRepository)
 
         val resources = getResourcesProvider()
 
         val states = SearchStates(SearchMapper(DateFormatter(), resources))
-        return SearchViewModel(states, SearchRoutes(), moviesUseCase, configUseCase)
+        return SearchViewModel(states, SearchRoutes(), moviesUseCase, configUseCase, dispatchers)
+    }
+
+    override fun setup() {
+        super.setup()
+        runBlocking {
+            given(configRepository.getConfig()).willReturn(getConfig())
+        }
     }
 
     @Test
     fun onActionNewQuery_withNoResults_renderEmpty() {
-        given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
-        given(configUseCase.execute()).willReturn(Single.just(mock()))
+        runBlocking {
+            given(moviesRepository.search(any())).willReturn(listOf())
+        }
 
         captureState(3) { actions.query("search test") }
 
@@ -51,14 +64,17 @@ class SearchViewModelTest :
 
     @Test
     fun onActionPageQuery_withNoResults_renderEmptyPage() {
-        given(moviesUseCase.execute(anyString())).willReturn(Single.just(listOf()))
-        given(moviesUseCase.executeNextPage(anyString())).willReturn(Single.just(listOf()))
-        given(configUseCase.execute()).willReturn(Single.just(mock()))
+        runBlocking {
+            given(moviesRepository.search(any())).willReturn(listOf())
+            given(moviesRepository.searchNextPage(any())).willReturn(listOf())
+        }
 
         runAction(actions.query("search test"))
-        captureState(2) { actions.page() }
+        captureState(4) { actions.page() }
 
-        assert(stateCaptor.secondValue).isEqualTo(SearchStates.SearchState.EmptyPage)
+        stateCaptor.allValues.forEach { System.out.println(it) }
+
+        assert(stateCaptor.allValues[3]).isEqualTo(SearchStates.SearchState.EmptyPage)
     }
 
     @Test
@@ -88,7 +104,4 @@ class SearchViewModelTest :
 
         assert(routeCaptor.firstValue).isEqualTo(SearchRoutes.SearchRoute.Back)
     }
-
-    private fun getMovieSearchVM(id: Int = 0): MovieSearchItemVM =
-            MovieSearchItemVM(id, "", "", "", "", "")
 }

@@ -7,55 +7,74 @@ import com.alorma.domain.model.Movie
 import com.alorma.domain.repository.ConfigurationRepository
 import com.alorma.domain.repository.MoviesRepository
 import com.alorma.myapplication.ui.detail.MovieDetailActivityTest
+import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.given
-import io.reactivex.Single
+import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.runBlocking
 import org.mockito.ArgumentMatchers.anyInt
 import java.util.*
 
 fun ConfigurationRepository.asValidConfig() {
     fun generateConfig(): Configuration = Configuration("url", "500", "500",
             listOf(1 to "Comedy", 2 to "Drama"))
-    given(getConfig()).willReturn(Single.just(generateConfig()))
+    runBlocking {
+        given(getConfig()).willReturn(generateConfig())
+    }
 }
 
 fun ConfigurationRepository.asDataOriginError() {
-    given(getConfig()).willReturn(Single.error(DataOriginException()))
+    runBlocking {
+        doAnswer { throw DataOriginException() }.whenever(this@asDataOriginError).getConfig()
+    }
 }
 
 fun ConfigurationRepository.asError() {
-    given(getConfig()).willReturn(Single.error(Exception()))
+    runBlocking {
+        doAnswer { throw Exception() }.whenever(this@asError).getConfig()
+    }
 }
 
 fun MoviesRepository.asListValidData(number: Int) {
     fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
     fun generateItems(number: Int): List<Movie> = (1..number).map { generateItem(it) }
 
-    val items = generateItems(number)
-    given(listAll()).willReturn(Single.just(items))
+    runBlocking {
+        val items = generateItems(number)
+        given(listAll()).willReturn(items)
+
+    }
 }
 
 fun MoviesRepository.asSingleItem() {
     fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
 
-    val item = generateItem(1)
-    given(listAll()).willReturn(Single.just(listOf(item)))
+    runBlocking {
+        val item = generateItem(1)
+        given(listAll()).willReturn(listOf(item))
+    }
 }
 
 fun MoviesRepository.asEmptyList() {
-    given(listAll()).willReturn(Single.just(emptyList()))
+    runBlocking {
+        given(listAll()).willReturn(emptyList())
+    }
 }
 
 fun MoviesRepository.asListNextPageValidData(number: Int) {
     fun generateItem(id: Int): Movie = Movie(id, "Title $id", "", Images("", ""), Date(), 0f, listOf())
     fun generateItems(number: Int): List<Movie> = (1..number).map { generateItem(it) }
 
-    val items = generateItems(number)
-    given(listNextPage()).willReturn(Single.just(items))
+    runBlocking {
+        val items = generateItems(number)
+        given(listNextPage()).willReturn(items)
+    }
 }
 
 fun MoviesRepository.asSimilarEmptyList(id: Int) {
-    given(similar(eq(id))).willReturn(Single.just(emptyList()))
+    runBlocking {
+        given(similar(eq(id))).willReturn(emptyList())
+    }
 }
 
 fun MoviesRepository.asSimilarListValidData(id: Int? = null, number: Int) {
@@ -64,18 +83,32 @@ fun MoviesRepository.asSimilarListValidData(id: Int? = null, number: Int) {
 
     fun generateSimilarItems(number: Int): List<Movie> = (1..number).map { generateSimilarItem(it) }
 
-    given(similar(id?.let { eq(id) }
-            ?: anyInt())).willReturn(Single.just(generateSimilarItems(number)))
+    runBlocking {
+        val list = generateSimilarItems(number)
+        given(similar(id?.let { eq(id) } ?: anyInt())).willReturn(list)
+    }
 }
 
 fun MoviesRepository.asMovieValidData(id: Int? = null) {
     fun generateItem(id: Int): Movie = Movie(id, "Title $id", MovieDetailActivityTest.OVERVIEW,
             Images("", ""), Date(), MovieDetailActivityTest.VOTE, listOf(1, 2))
 
-    given(getMovie(id?.let { eq(id) } ?: anyInt())).willReturn(Single.just(generateItem(id ?: 0)))
+    runBlocking {
+        val movie = generateItem(id ?: 0)
+        given(getMovie(id?.let { eq(id) } ?: anyInt())).willReturn(movie)
+    }
 }
 
 fun MoviesRepository.asError() {
-    given(listAll()).willReturn(Single.error(Exception()))
+    runBlocking {
+        doAnswer { throw java.lang.Exception() }.whenever(this@asError).listAll()
+    }
+}
+
+
+fun MoviesRepository.asDataOriginError() {
+    runBlocking {
+        doAnswer { throw DataOriginException() }.whenever(this@asDataOriginError).listAll()
+    }
 }
 

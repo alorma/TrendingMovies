@@ -1,24 +1,21 @@
 package com.alorma.presentation.detail
 
-import com.alorma.domain.model.Configuration
-import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.LoadMovieDetailUseCase
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import com.alorma.presentation.common.observeOnUI
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class MovieDetailViewModel(
         private val detailStates: DetailStates,
         private val detailRoutes: DetailRoutes,
         private val loadMovieDetailUseCase: LoadMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-        private val obtainSimilarMoviesUseCase: ObtainSimilarMoviesUseCase) :
+        private val obtainSimilarMoviesUseCase: ObtainSimilarMoviesUseCase,
+        dispatchers: ViewModelDispatchers) :
         BaseViewModel<DetailStates.DetailState, DetailRoutes.DetailRoute,
-                DetailActions.DetailAction, Event>() {
+                DetailActions.DetailAction, Event>(dispatchers) {
 
     private var id: Int = -1
 
@@ -36,32 +33,28 @@ class MovieDetailViewModel(
     }
 
     private fun load() {
-        val disposable = loadMovieDetailUseCase.execute(id)
-                .observeOnUI()
-                .subscribe(
-                        {
-                            render(detailStates success it)
-                        },
-                        {
-                            render(detailStates error it)
-                        }
-                )
-        addDisposable(disposable)
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(detailStates.error(exception))
+            }
+        }
+        launch(error) {
+            val movieDetail = loadMovieDetailUseCase.execute(id)
+            render(detailStates success movieDetail)
+        }
     }
 
     private fun loadSimilarMovies(id: Int) {
-        val disposable = Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainSimilarMoviesUseCase.executeNextPage(id),
-                BiFunction<Configuration, List<Movie>,
-                        Pair<Configuration, List<Movie>>> { conf, movie ->
-                    conf to movie
-                })
-                .observeOnUI()
-                .subscribe(
-                        { render(detailStates successSimilarMovies it) },
-                        { render(detailStates errorSimilarMovies it) }
-                )
-        addDisposable(disposable)
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(detailStates errorSimilarMovies exception)
+            }
+        }
+        launch(error) {
+            val configuration = obtainConfigurationUseCase.execute()
+            val similar = obtainSimilarMoviesUseCase.execute(id)
+            render(detailStates.successSimilarMovies(configuration, similar))
+
+        }
     }
 }

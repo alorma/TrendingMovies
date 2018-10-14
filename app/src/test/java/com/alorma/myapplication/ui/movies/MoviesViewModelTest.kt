@@ -2,24 +2,23 @@ package com.alorma.myapplication.ui.movies
 
 import assertk.assert
 import assertk.assertions.*
-import com.alorma.myapplication.common.getResourcesProvider
-import com.alorma.data.cache.LocalMoviesDataSource
-import com.alorma.data.net.*
-import com.alorma.data.repository.MoviesRepositoryImpl
+import com.alorma.domain.exception.DataOriginException
+import com.alorma.domain.repository.ConfigurationRepository
+import com.alorma.domain.repository.MoviesRepository
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMoviesUseCase
+import com.alorma.myapplication.common.getConfig
+import com.alorma.myapplication.common.getMovieVM
+import com.alorma.myapplication.common.getMovies
+import com.alorma.myapplication.common.getResourcesProvider
 import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.EventHandler
+import com.alorma.presentation.common.ViewModelDispatchers
 import com.alorma.presentation.movies.*
-import com.nhaarman.mockito_kotlin.KArgumentCaptor
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.given
-import com.nhaarman.mockito_kotlin.mock
-import io.reactivex.Single
+import com.nhaarman.mockito_kotlin.*
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import com.alorma.data.net.MoviesMapper as NetworkMapper
 
 class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
@@ -27,7 +26,8 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         MoviesActions.MovieAction,
         Event>() {
 
-    private lateinit var movieApi: MovieApi
+    private var moviesRepository: MoviesRepository = mock()
+    private var configRepository: ConfigurationRepository = mock()
 
     private lateinit var actions: MoviesActions
     private lateinit var states: MoviesStates
@@ -37,33 +37,31 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
     override fun createEventCaptor(): KArgumentCaptor<EventHandler<Event>> = argumentCaptor()
     override fun createRouteCaptor(): KArgumentCaptor<MoviesRoutes.MovieRoute> = argumentCaptor()
 
-    override fun createViewModel():
-            BaseViewModel<MoviesStates.MovieState, MoviesRoutes.MovieRoute, MoviesActions.MovieAction, Event> {
-        movieApi = mock()
-
+    override fun createViewModel(dispatchers: ViewModelDispatchers): MoviesViewModel {
         val resources = getResourcesProvider()
-
         val mapper = MoviesMapper(resources)
         states = MoviesStates(mapper)
         actions = MoviesActions()
         routes = MoviesRoutes()
 
-        val networkDs = NetworkMoviesDataSource(movieApi, NetworkMapper(DateParser()))
-        val cacheDs = LocalMoviesDataSource()
-
-        val moviesRepository = MoviesRepositoryImpl(networkDs, cacheDs)
         val useCase = ObtainMoviesUseCase(moviesRepository)
-        val configUseCase = mock<ObtainConfigurationUseCase>().apply {
-            given(execute()).willReturn(Single.just(mock()))
-        }
+        val configUseCase = ObtainConfigurationUseCase(configRepository)
 
-        return MoviesViewModel(states, routes, useCase, configUseCase)
+        return MoviesViewModel(states, routes, useCase, configUseCase, dispatchers)
+    }
+
+    override fun setup() {
+        super.setup()
+        runBlocking {
+            given(configRepository.getConfig()).willReturn(getConfig())
+        }
     }
 
     @Test
     fun onLoad_renderLoadings() {
-        val response = PagedResponse(0, 0, listOf(generateMovieDto()))
-        given(movieApi.listAll()).willReturn(Single.just(response))
+        runBlocking {
+            given(moviesRepository.listAll()).willReturn(getMovies(1))
+        }
 
         captureState(3) { actions.load() }
 
@@ -75,15 +73,15 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
             with(get(1)) {
                 assert(this).isInstanceOf(MoviesStates.MovieState.Loading::class.java)
                 assert((this as MoviesStates.MovieState.Loading).visible).isFalse()
-
             }
         }
     }
 
     @Test
     fun onLoadPage_renderLoadings() {
-        val response = PagedResponse(0, 0, listOf(generateMovieDto()))
-        given(movieApi.listAll()).willReturn(Single.just(response))
+        runBlocking {
+            given(moviesRepository.listNextPage()).willReturn(getMovies(1))
+        }
 
         captureState(3) { actions.loadPage() }
 
@@ -95,15 +93,15 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
             with(get(1)) {
                 assert(this).isInstanceOf(MoviesStates.MovieState.Loading::class.java)
                 assert((this as MoviesStates.MovieState.Loading).visible).isFalse()
-
             }
         }
     }
 
     @Test
     fun onLoad_renderSuccess() {
-        val response = PagedResponse(0, 0, listOf(generateMovieDto()))
-        given(movieApi.listAll()).willReturn(Single.just(response))
+        runBlocking {
+            given(moviesRepository.listAll()).willReturn(getMovies(1))
+        }
 
         captureState(3) { actions.load() }
 
@@ -112,8 +110,9 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
     @Test
     fun onLoadPage_renderSuccess() {
-        val response = PagedResponse(0, 0, listOf(generateMovieDto()))
-        given(movieApi.listAll()).willReturn(Single.just(response))
+        runBlocking {
+            given(moviesRepository.listNextPage()).willReturn(getMovies(1))
+        }
 
         captureState(3) { actions.loadPage() }
 
@@ -122,8 +121,9 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
     @Test
     fun onLoadSomeItems_renderSameNumberSuccess() {
-        val response = PagedResponse(0, 0, listOf(generateMovieDto(), generateMovieDto(), generateMovieDto()))
-        given(movieApi.listAll()).willReturn(Single.just(response))
+        runBlocking {
+            given(moviesRepository.listAll()).willReturn(getMovies(3))
+        }
 
         captureState(3) { actions.load() }
 
@@ -134,11 +134,10 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
     @Test
     fun onLoadPageSomeItems_renderAllItems() {
-        val response = PagedResponse(0, 0,
-                listOf(generateMovieDto(), generateMovieDto(), generateMovieDto()))
-        given(movieApi.listAll()).willReturn(Single.just(response))
-        val responsePage = PagedResponse(0, 0, listOf(generateMovieDto()))
-        given(movieApi.listPage(anyInt())).willReturn(Single.just(responsePage))
+        runBlocking {
+            given(moviesRepository.listAll()).willReturn(getMovies(3))
+            given(moviesRepository.listNextPage()).willReturn(getMovies(4))
+        }
 
         captureState(3) { actions.load() }
 
@@ -155,7 +154,9 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
     @Test
     fun onLoadWithError_renderError() {
-        given(movieApi.listAll()).willReturn(Single.error(Exception()))
+        runBlocking {
+            doAnswer { throw DataOriginException() }.whenever(configRepository).getConfig()
+        }
 
         captureState(3) { actions.load() }
 
@@ -164,12 +165,9 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
 
     @Test
     fun onOpenDetail_navigateToDetailRoute() {
-        captureRoute { actions.detail(getMovie(12)) }
+        captureRoute { actions.detail(getMovieVM(12)) }
 
         assert(routeCaptor.firstValue).isInstanceOf(MoviesRoutes.MovieRoute.DetailRoute::class.java)
         assert((routeCaptor.firstValue as MoviesRoutes.MovieRoute.DetailRoute).id).isEqualTo(12)
     }
-
-    private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
-    private fun getMovie(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")
 }

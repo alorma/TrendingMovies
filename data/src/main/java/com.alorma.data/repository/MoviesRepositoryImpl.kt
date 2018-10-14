@@ -1,82 +1,83 @@
 package com.alorma.data.repository
 
 import com.alorma.data.cache.LocalMoviesDataSource
-import com.alorma.data.common.subscribeOnIO
 import com.alorma.data.net.NetworkMoviesDataSource
 import com.alorma.domain.model.Movie
+import com.alorma.domain.model.MovieList
 import com.alorma.domain.repository.MoviesRepository
-import io.reactivex.Single
 
 class MoviesRepositoryImpl(private val network: NetworkMoviesDataSource,
-                       private val cache: LocalMoviesDataSource): MoviesRepository {
+                           private val cache: LocalMoviesDataSource) : MoviesRepository {
 
     private var page: Int = 1
     private var searchPage: Int = 1
     private var similarPage: Int = 1
 
-    override fun listAll(): Single<List<Movie>> = execute(Single.defer {
-        val cacheItems = cache.get()
-        if (cacheItems.isNotEmpty()) {
-            Single.just(Triple(cache.page, cache.page + 1, cacheItems))
-        } else {
-            network.listAll()
-        }
-    }.doOnSubscribe { cache.clear() })
-
-    override fun listNextPage(): Single<List<Movie>> = execute(network.listAll(page))
-
-    private fun execute(operation: Single<Triple<Int, Int, List<Movie>>>):
-            Single<List<Movie>> =
-            operation.doOnSuccess { page = calculatePage(it) }
-                    .doOnSuccess {
-                        cache.save(it.third)
-                        cache.page = page
-                    }
-                    .map { cache.get() }.subscribeOnIO()
-
-    override fun search(query: String): Single<List<Movie>> =
-            executeSearch(network.search(query).doOnSubscribe { cache.clearSearch() })
-
-    override fun searchNextPage(query: String): Single<List<Movie>> =
-            executeSearch(network.search(query, searchPage))
-
-    private fun executeSearch(operation: Single<Triple<Int, Int, List<Movie>>>):
-            Single<List<Movie>> =
-            operation.doOnSuccess { searchPage = calculatePage(it) }
-                    .doOnSuccess {
-                        cache.saveSearch(it.third)
-                        cache.searchPage = searchPage
-                    }
-                    .map { cache.getSearch() }.subscribeOnIO()
-
-    override fun similar(id: Int): Single<List<Movie>> = executeSimilar(id, getSimilarMovies(id))
-
-    private fun getSimilarMovies(id: Int): Single<Triple<Int, Int, List<Movie>>> = Single.defer {
-        cache.getSimilar(id).takeIf { it.isNotEmpty() }?.let {
-            val page = cache.getSimilarMoviePage(id)
-            Single.just(Triple(page, page + 1, it))
-        } ?: network.similar(id).doOnSubscribe { cache.clearSimilar(id) }
-    }
-
-    override fun similarPage(id: Int): Single<List<Movie>> = executeSimilar(id, network.similar(id, similarPage))
-
-    private fun executeSimilar(id: Int, operation: Single<Triple<Int, Int, List<Movie>>>):
-            Single<List<Movie>> =
-            operation.doOnSuccess {
-                similarPage = calculatePage(it)
-                cache.setPageSimilarMovies(id, similarPage)
+    override suspend fun listAll(): List<Movie> =
+            cache.get().takeIf { it.isNotEmpty() }?.also {
+                page = cache.page
+            } ?: network.listAll().also {
+                page = calculatePage(it)
+            }.movies.also {
+                cache.clear()
+                cache.save(it)
             }
-                    .doOnSuccess { cache.saveSimilar(id, it.third) }
-                    .map { cache.getSimilar(id) }.subscribeOnIO()
 
-    private fun calculatePage(it: Triple<Int, Int, List<Movie>>): Int =
-            it.first + if (it.first <= it.second) {
+    override suspend fun listNextPage(): List<Movie> =
+            network.listAll(page).also {
+                page = calculatePage(it)
+            }.movies.also {
+                cache.save(it)
+            }.let {
+                cache.get()
+            }
+
+    override suspend fun search(query: String): List<Movie> =
+            cache.getSearch().takeIf { it.isNotEmpty() }?.also {
+
+                searchPage = cache.searchPage
+            } ?: network.search(query).also {
+                page = calculatePage(it)
+            }.movies.also {
+                cache.clearSearch()
+                cache.saveSearch(it)
+            }
+
+    override suspend fun searchNextPage(query: String): List<Movie> =
+            network.search(query, searchPage).also {
+                page = calculatePage(it)
+            }.movies.also {
+                cache.saveSearch(it)
+            }.let {
+                cache.getSearch()
+            }
+
+    override suspend fun similar(id: Int): List<Movie> =
+            cache.getSimilar(id).takeIf { it.isNotEmpty() }?.also {
+                similarPage = cache.getSimilarMoviePage(id)
+            } ?: network.similar(id).also {
+                page = calculatePage(it)
+            }.movies.also {
+                cache.clearSimilar(id)
+                cache.saveSimilar(id, it)
+            }
+
+    override suspend fun similarPage(id: Int): List<Movie> =
+            network.similar(id, similarPage).also {
+                page = calculatePage(it)
+            }.movies.also {
+                cache.saveSimilar(id, it)
+            }.let {
+                cache.getSimilar(id)
+            }
+
+    private fun calculatePage(it: MovieList): Int =
+            it.page + if (it.page <= it.totalPage) {
                 1
             } else {
                 0
             }
 
-    override fun getMovie(id: Int): Single<Movie> = Single.defer {
-        cache.get(id)?.let { Single.just(it) } ?: network.item(id)
-    }.subscribeOnIO()
+    override suspend fun getMovie(id: Int): Movie =
+            cache.get(id) ?: network.item(id)
 }

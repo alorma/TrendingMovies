@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import assertk.assert
 import assertk.assertions.isNotNull
-import com.alorma.myapplication.configureRxThreading
+import com.alorma.myapplication.common.TestViewModelDispatchers
 import com.alorma.presentation.common.*
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.mock
@@ -29,12 +29,8 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     protected lateinit var vm: BaseViewModel<S, R, A, E>
 
-    init {
-        configureRxThreading()
-    }
-
     @Before
-    fun setup() {
+    open fun setup() {
         stateCaptor = createStateCaptor()
         routeCaptor = createRouteCaptor()
         eventCaptor = createEventCaptor()
@@ -43,7 +39,9 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
         routeObserver = mock()
         eventObserver = mock()
 
-        vm = createViewModel().apply {
+        val dispatchers = TestViewModelDispatchers()
+
+        vm = createViewModel(dispatchers).apply {
             state.observeForever(stateObserver)
             event.observeForever(eventObserver)
             addObservers()
@@ -54,7 +52,7 @@ abstract class BaseViewModelTest<S : State, R : Route, A : Action, E : Event> {
 
     }
 
-    abstract fun createViewModel(): BaseViewModel<S, R, A, E>
+    abstract fun createViewModel(dispatchers: ViewModelDispatchers): BaseViewModel<S, R, A, E>
     abstract fun createStateCaptor(): KArgumentCaptor<S>
     abstract fun createEventCaptor(): KArgumentCaptor<EventHandler<E>>
     abstract fun createRouteCaptor(): KArgumentCaptor<R>

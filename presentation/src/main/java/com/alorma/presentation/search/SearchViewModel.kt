@@ -1,21 +1,21 @@
 package com.alorma.presentation.search
 
-import com.alorma.domain.model.Configuration
-import com.alorma.domain.model.Movie
 import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.SearchMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
-import com.alorma.presentation.common.observeOnUI
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class SearchViewModel(
         private val states: SearchStates,
         private val searchRoutes: SearchRoutes,
         private val obtainMoviesUseCase: SearchMoviesUseCase,
-        private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>() {
+        private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
+        dispatchers: ViewModelDispatchers) :
+        BaseViewModel<SearchStates.SearchState,
+                SearchRoutes.SearchRoute,
+                SearchActions.SearchAction,
+                Event>(dispatchers) {
 
     private lateinit var query: String
 
@@ -37,35 +37,43 @@ class SearchViewModel(
 
     private fun search() {
         clear()
-        val disposable = Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainMoviesUseCase.execute(query),
-                BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
-                    conf to list
-                })
-                .doOnSubscribe { render(states loading true) }
-                .doOnSuccess { render(states loading false) }
-                .observeOnUI()
-                .subscribe(
-                        { render(states.success(it)) },
-                        { render(states error it) }
-                )
-        addDisposable(disposable)
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(states.error(exception))
+            }
+        }
+        launch(error) {
+            try {
+                render(states loading true)
+                val configuration = obtainConfigurationUseCase.execute()
+                val movies = obtainMoviesUseCase.execute(query)
+                val success = states.success(configuration, movies)
+                render(states loading false)
+                render(success)
+            } catch (e: Exception) {
+                render(states error e)
+            }
+        }
     }
 
     private fun searchPage() {
-        val disposable = Single.zip(
-                obtainConfigurationUseCase.execute(),
-                obtainMoviesUseCase.executeNextPage(query),
-                BiFunction<Configuration, List<Movie>, Pair<Configuration, List<Movie>>> { conf, list ->
-                    conf to list
-                })
-                .observeOnUI()
-                .subscribe(
-                        { render(states.success(it, true)) },
-                        { render(states error it) }
-                )
-        addDisposable(disposable)
+        val error = object : ErrorHandler {
+            override fun onError(exception: Throwable) {
+                render(states.error(exception))
+            }
+        }
+        launch(error) {
+            try {
+                render(states loading true)
+                val configuration = obtainConfigurationUseCase.execute()
+                val movies = obtainMoviesUseCase.executeNextPage(query)
+                val success = states.success(configuration, movies, true)
+                render(states loading false)
+                render(success)
+            } catch (e: Exception) {
+                render(states.error(e))
+            }
+        }
     }
 
     private fun openDetail(action: SearchActions.SearchAction.OpenDetail) {

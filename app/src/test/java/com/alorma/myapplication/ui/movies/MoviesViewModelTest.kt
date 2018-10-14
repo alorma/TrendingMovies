@@ -1,27 +1,8 @@
 package com.alorma.myapplication.ui.movies
 
-import assertk.assert
-import assertk.assertions.*
-import com.alorma.myapplication.common.getResourcesProvider
-import com.alorma.data.cache.LocalMoviesDataSource
-import com.alorma.data.net.*
-import com.alorma.data.repository.MoviesRepositoryImpl
-import com.alorma.domain.usecase.ObtainConfigurationUseCase
-import com.alorma.domain.usecase.ObtainMoviesUseCase
-import com.alorma.myapplication.ui.BaseViewModelTest
-import com.alorma.presentation.common.BaseViewModel
-import com.alorma.presentation.common.Event
-import com.alorma.presentation.common.EventHandler
-import com.alorma.presentation.movies.*
-import com.nhaarman.mockito_kotlin.KArgumentCaptor
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.given
-import com.nhaarman.mockito_kotlin.mock
-import io.reactivex.Single
-import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import com.alorma.data.net.MoviesMapper as NetworkMapper
 
+/*
 class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
         MoviesRoutes.MovieRoute,
         MoviesActions.MovieAction,
@@ -173,3 +154,4 @@ class MoviesViewModelTest : BaseViewModelTest<MoviesStates.MovieState,
     private fun generateMovieDto(id: Int = 0): MovieDto = MovieDto(id, "", "", "2017-04-10", "", "", 0f, listOf())
     private fun getMovie(id: Int = 0): MovieItemVM = MovieItemVM(id, "", "", "5.4")
 }
+        */

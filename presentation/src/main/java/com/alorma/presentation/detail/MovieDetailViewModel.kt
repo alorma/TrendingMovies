@@ -5,15 +5,17 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainSimilarMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class MovieDetailViewModel(
         private val detailStates: DetailStates,
         private val detailRoutes: DetailRoutes,
         private val loadMovieDetailUseCase: LoadMovieDetailUseCase,
         private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
-        private val obtainSimilarMoviesUseCase: ObtainSimilarMoviesUseCase) :
+        private val obtainSimilarMoviesUseCase: ObtainSimilarMoviesUseCase,
+        dispatchers: ViewModelDispatchers) :
         BaseViewModel<DetailStates.DetailState, DetailRoutes.DetailRoute,
-                DetailActions.DetailAction, Event>() {
+                DetailActions.DetailAction, Event>(dispatchers) {
 
     private var id: Int = -1
 
@@ -37,12 +39,8 @@ class MovieDetailViewModel(
             }
         }
         launch(error) {
-            try {
-                val movieDetail = loadMovieDetailUseCase.execute(id)
-                render(detailStates success movieDetail)
-            } catch (e: Exception) {
-                render(detailStates error e)
-            }
+            val movieDetail = loadMovieDetailUseCase.execute(id)
+            render(detailStates success movieDetail)
         }
     }
 

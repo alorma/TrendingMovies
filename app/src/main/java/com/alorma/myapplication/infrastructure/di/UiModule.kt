@@ -1,5 +1,6 @@
 package com.alorma.myapplication.infrastructure.di
 
+import com.alorma.presentation.common.ViewModelDispatchers
 import com.alorma.presentation.splash.SplashActions
 import com.alorma.presentation.splash.SplashRoutes
 import com.alorma.presentation.splash.SplashViewModel
@@ -10,10 +11,12 @@ import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
 val uiModule = module {
-    viewModel { SplashViewModel(get(), get()) }
-    viewModel { MoviesViewModel(get(), get(), get(), get()) }
-    viewModel { SearchViewModel(get(), get(), get(), get()) }
-    viewModel { MovieDetailViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SplashViewModel(get(), get(), get()) }
+    viewModel { MoviesViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get(), get()) }
+    viewModel { MovieDetailViewModel(get(), get(), get(), get(), get(), get()) }
+
+    factory { ViewModelDispatchers() }
 
     single { SplashRoutes() }
     single { MoviesRoutes() }

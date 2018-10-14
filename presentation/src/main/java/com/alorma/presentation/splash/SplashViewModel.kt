@@ -4,12 +4,17 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
 import com.alorma.presentation.common.State
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class SplashViewModel(
         private val loadConfigurationUseCase: ObtainConfigurationUseCase,
-        private val splashRoute: SplashRoutes
+        private val splashRoute: SplashRoutes,
+        dispatchers: ViewModelDispatchers
 ) :
-        BaseViewModel<State, SplashRoutes.SplashRoute, SplashActions.SplashAction, Event>() {
+        BaseViewModel<State,
+                SplashRoutes.SplashRoute,
+                SplashActions.SplashAction,
+                Event>(dispatchers) {
 
     override infix fun reduce(action: SplashActions.SplashAction) {
         when (action) {

@@ -3,7 +3,9 @@ package com.alorma.presentation.common
 import androidx.lifecycle.*
 import kotlinx.coroutines.experimental.*
 
-abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : ViewModel() {
+abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
+        private val dispatcher: ViewModelDispatchers
+) : ViewModel() {
 
     val state: LiveData<S>
         get() = stateLiveData
@@ -51,7 +53,7 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event> : View
             handler?.onError(exception)
         }
 
-        val job = GlobalScope.launch(errorHandler) {
+        val job = GlobalScope.launch(dispatcher.main.plus(errorHandler)) {
             block()
         }
         addJob(job)

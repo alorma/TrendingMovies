@@ -5,12 +5,18 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.ObtainMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class MoviesViewModel(private val states: MoviesStates,
                       private val routes: MoviesRoutes,
                       private val obtainMoviesUseCase: ObtainMoviesUseCase,
-                      private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BaseViewModel<MoviesStates.MovieState, MoviesRoutes.MovieRoute, MoviesActions.MovieAction, Event>() {
+                      private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
+                      dispatchers: ViewModelDispatchers
+) :
+        BaseViewModel<MoviesStates.MovieState,
+                MoviesRoutes.MovieRoute,
+                MoviesActions.MovieAction,
+                Event>(dispatchers) {
 
     override fun reduce(action: MoviesActions.MovieAction) {
         when (action) {

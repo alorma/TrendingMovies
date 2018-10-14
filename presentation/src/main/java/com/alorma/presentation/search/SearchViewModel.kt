@@ -4,13 +4,18 @@ import com.alorma.domain.usecase.ObtainConfigurationUseCase
 import com.alorma.domain.usecase.SearchMoviesUseCase
 import com.alorma.presentation.common.BaseViewModel
 import com.alorma.presentation.common.Event
+import com.alorma.presentation.common.ViewModelDispatchers
 
 class SearchViewModel(
         private val states: SearchStates,
         private val searchRoutes: SearchRoutes,
         private val obtainMoviesUseCase: SearchMoviesUseCase,
-        private val obtainConfigurationUseCase: ObtainConfigurationUseCase) :
-        BaseViewModel<SearchStates.SearchState, SearchRoutes.SearchRoute, SearchActions.SearchAction, Event>() {
+        private val obtainConfigurationUseCase: ObtainConfigurationUseCase,
+        dispatchers: ViewModelDispatchers) :
+        BaseViewModel<SearchStates.SearchState,
+                SearchRoutes.SearchRoute,
+                SearchActions.SearchAction,
+                Event>(dispatchers) {
 
     private lateinit var query: String
 

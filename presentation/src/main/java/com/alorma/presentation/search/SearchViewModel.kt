@@ -67,7 +67,7 @@ class SearchViewModel(
                 render(states loading true)
                 val configuration = obtainConfigurationUseCase.execute()
                 val movies = obtainMoviesUseCase.executeNextPage(query)
-                val success = states.success(configuration, movies)
+                val success = states.success(configuration, movies, true)
                 render(states loading false)
                 render(success)
             } catch (e: Exception) {

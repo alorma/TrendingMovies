@@ -1,6 +1,9 @@
 package com.alorma.presentation.common
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.*
 
 abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
@@ -67,8 +70,29 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
         jobs.add(job)
     }
 
-    fun observe(lifecycleOwner: LifecycleOwner, dsl: ViewModelObserver<S, R, A, E>.() -> Unit) {
-        ViewModelObserver(lifecycleOwner, this).apply(dsl).build()
+    fun observe(lifecycleOwner: ViewModelObserver<S, R, E>) {
+        observe(lifecycleOwner, lifecycleOwner, lifecycleOwner)
+    }
+
+    fun observe(stateOwner: ViewModelState<S>? = null,
+                routeOwner: ViewModelRoute<R>? = null,
+                eventOwner: ViewModelEvent<E>? = null) {
+        stateOwner?.let { stateViewModelObserver ->
+            state.observe(stateViewModelObserver, Observer { stateValue ->
+                stateValue?.let { stateHandledValue -> stateViewModelObserver.onState(stateHandledValue) }
+            })
+        }
+        routeOwner?.let { routeViewModelObserver ->
+            route.observe(routeViewModelObserver, Observer { routeValue ->
+                routeValue.let { routeHandledValue -> routeViewModelObserver.onRoute(routeHandledValue) }
+            })
+        }
+
+        eventOwner?.let { eventViewObserver ->
+            event.observe(eventViewObserver, Observer { eventValue ->
+                eventValue?.peekContent()?.let { eventHandledValue -> eventViewObserver.onEvent(eventHandledValue) }
+            })
+        }
     }
 
     override fun onCleared() {
@@ -77,35 +101,5 @@ abstract class BaseViewModel<S : State, R : Route, A : Action, E : Event>(
 
     protected fun clear() {
         parentJob.cancel()
-    }
-}
-
-@DslMarker
-annotation class ViewModelDsl
-
-@ViewModelDsl
-class ViewModelObserver<S : State, R : Route, A : Action, E : Event>(private val lifecycleOwner: LifecycleOwner,
-                                                                     private val vm: BaseViewModel<S, R, A, E>) {
-
-    private lateinit var stateBlock: (S) -> Unit
-    private lateinit var routeBlock: (R) -> Unit
-    private lateinit var eventBlock: (E) -> Unit
-
-    fun build() {
-        vm.state.observe(lifecycleOwner, Observer { it?.let(stateBlock) })
-        vm.route.observe(lifecycleOwner, Observer { it?.let(routeBlock) })
-        vm.event.observe(lifecycleOwner, Observer { it?.peekContent()?.let(eventBlock) })
-    }
-
-    fun onState(block: (S) -> Unit) {
-        this.stateBlock = block
-    }
-
-    fun onRoute(block: (R) -> Unit) {
-        this.routeBlock = block
-    }
-
-    fun onEvent(block: (E) -> Unit) {
-        this.eventBlock = block
     }
 }

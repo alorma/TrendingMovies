@@ -12,6 +12,8 @@ import com.alorma.myapplication.ui.common.DslAdapter
 import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.common.dsl
+import com.alorma.presentation.common.ViewModelRoute
+import com.alorma.presentation.common.ViewModelState
 import com.alorma.presentation.detail.*
 import com.alorma.presentation.movies.MovieItemVM
 import com.bumptech.glide.Glide
@@ -23,7 +25,9 @@ import kotlinx.android.synthetic.main.row_similar_movie.view.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MovieDetailActivity : AppCompatActivity() {
+class MovieDetailActivity : AppCompatActivity(),
+        ViewModelState<DetailStates.DetailState>,
+        ViewModelRoute<DetailRoutes.DetailRoute> {
     companion object {
         private const val EXTRA_ID = "extra_id"
         private const val EXTRA_TITLE = "extra_title"
@@ -52,10 +56,7 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detail_activity)
 
-        movieDetailViewModel.observe(this) {
-            onState { render(it) }
-            onRoute { navigate(it) }
-        }
+        movieDetailViewModel.observe(stateOwner = this, routeOwner = this)
 
         initData()
 
@@ -110,16 +111,16 @@ class MovieDetailActivity : AppCompatActivity() {
                 androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun render(state: DetailStates.DetailState) {
+    override fun onState(state: DetailStates.DetailState) {
         when (state) {
             is DetailStates.DetailState.Success -> onSuccess(state)
             is DetailStates.DetailState.SimilarMovies -> onSimilarMovies(state.movies)
         }
     }
 
-    private fun navigate(it: DetailRoutes.DetailRoute) {
-        when (it) {
-            is DetailRoutes.DetailRoute.Detail -> openDetail(it)
+    override fun onRoute(route: DetailRoutes.DetailRoute) {
+        when (route) {
+            is DetailRoutes.DetailRoute.Detail -> openDetail(route)
             DetailRoutes.DetailRoute.Back -> finish()
         }
     }

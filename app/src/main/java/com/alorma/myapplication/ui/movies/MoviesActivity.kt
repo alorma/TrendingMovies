@@ -12,6 +12,8 @@ import com.alorma.myapplication.ui.common.adapterDsl
 import com.alorma.myapplication.ui.common.createPagination
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
 import com.alorma.myapplication.ui.search.SearchActivity
+import com.alorma.presentation.common.ViewModelRoute
+import com.alorma.presentation.common.ViewModelState
 import com.alorma.presentation.movies.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -20,7 +22,9 @@ import kotlinx.android.synthetic.main.row_tv_movie_list.view.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MoviesActivity : AppCompatActivity() {
+class MoviesActivity : AppCompatActivity(),
+        ViewModelState<MoviesStates.MovieState>,
+        ViewModelRoute<MoviesRoutes.MovieRoute> {
 
     val glide: RequestManager by inject()
     val actions: MoviesActions by inject()
@@ -39,10 +43,7 @@ class MoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        moviesViewModel.observe(this) {
-            onState { render(it) }
-            onRoute { navigate(it) }
-        }
+        moviesViewModel.observe(stateOwner = this, routeOwner = this)
 
         initView()
 
@@ -89,7 +90,7 @@ class MoviesActivity : AppCompatActivity() {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    private fun render(state: MoviesStates.MovieState) {
+    override fun onState(state: MoviesStates.MovieState) {
         when (state) {
             is MoviesStates.MovieState.Loading -> onLoading()
             is MoviesStates.MovieState.Success -> onSuccess(state)
@@ -97,9 +98,9 @@ class MoviesActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigate(it: MoviesRoutes.MovieRoute) {
-        when (it) {
-            is MoviesRoutes.MovieRoute.DetailRoute -> openDetail(it)
+    override fun onRoute(route: MoviesRoutes.MovieRoute) {
+        when (route) {
+            is MoviesRoutes.MovieRoute.DetailRoute -> openDetail(route)
             MoviesRoutes.MovieRoute.Search -> openSearch()
         }
     }

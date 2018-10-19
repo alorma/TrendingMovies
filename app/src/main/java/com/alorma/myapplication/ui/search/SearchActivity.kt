@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alorma.myapplication.R
 import com.alorma.myapplication.ui.common.*
 import com.alorma.myapplication.ui.detail.MovieDetailActivity
+import com.alorma.presentation.common.ViewModelRoute
+import com.alorma.presentation.common.ViewModelState
 import com.alorma.presentation.search.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -18,7 +20,9 @@ import kotlinx.android.synthetic.main.search_activity.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(),
+        ViewModelState<SearchStates.SearchState>,
+        ViewModelRoute<SearchRoutes.SearchRoute> {
     companion object {
         fun launch(context: Context): Intent = Intent(context, SearchActivity::class.java)
     }
@@ -40,10 +44,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_activity)
 
-        searchViewModel.observe(this) {
-            onState { render(it) }
-            onRoute { navigate(it) }
-        }
+        searchViewModel.observe(stateOwner = this, routeOwner = this)
 
         initView()
     }
@@ -113,7 +114,7 @@ class SearchActivity : AppCompatActivity() {
         } ?: image.setImageResource(R.color.grey_300)
     }
 
-    private fun render(state: SearchStates.SearchState) {
+    override fun onState(state: SearchStates.SearchState) {
         when (state) {
             is SearchStates.SearchState.Loading -> onLoading()
             is SearchStates.SearchState.SearchResult -> onResult(state)
@@ -121,9 +122,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigate(it: SearchRoutes.SearchRoute) {
-        when (it) {
-            is SearchRoutes.SearchRoute.OpenDetail -> openDetail(it)
+    override fun onRoute(route: SearchRoutes.SearchRoute) {
+        when (route) {
+            is SearchRoutes.SearchRoute.OpenDetail -> openDetail(route)
             SearchRoutes.SearchRoute.Back -> finish()
         }
     }
